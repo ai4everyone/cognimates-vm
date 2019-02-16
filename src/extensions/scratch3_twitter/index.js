@@ -3,11 +3,9 @@ const BlockType = require('../../extension-support/block-type');
 const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
-const request = require('request');
-const RenderedTarget = require('../../sprites/rendered-target');
+const nets = require('nets');
 
-//twitter vars 
-const ajax = require('es-ajax');
+//twitter vars
 const iconURI = require('./assets/twitter_icon');
 // let server_url = 'http://cognimate.me:3276/twitter/call';
 let server_url = 'https://cognimate.me:3276/twitter/call';
@@ -24,7 +22,7 @@ let classifyRequestState = REQUEST_STATE.IDLE;
 class Scratch3Twitter {
     constructor (runtime) {
         this.runtime = runtime;
-  
+
     }
 
     getInfo () {
@@ -60,7 +58,7 @@ class Scratch3Twitter {
                         }
                     }
                 }
-                
+
             ],
             menus: {
              	categories: ['recent', 'popular']
@@ -132,19 +130,32 @@ class Scratch3Twitter {
         var uri = params.uri;
         if(params.user){
             var user = params.user;
-            request.post({
+            var formData = JSON.stringify({ uri: uri, user: user});
+            nets({
                 url: server_url,
-                form: { uri: uri, user: user}
-                }, function(err, response){
+                headers: {
+                  'Content-Type': 'application/json' // important header to be included henceforth
+                }, // couldn't figure out how to get x-url-encoded content-type to work
+                method: 'POST',
+                body: formData,
+                encoding: undefined // This is important to get response as a string otherwise it returns a buffer array
+              }, function(err, response){
                     callback(err, response);
                 });
         } else{
             var category = params.category;
             var hashtag = params.hashtag;
-            request.post({
+            var formData = JSON.stringify({ uri: uri, hashtag: hashtag, category: category});
+            nets({
                 url: server_url,
-                form: { uri: uri, hashtag: hashtag, category: category}
-                }, function(err, response){
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: formData,
+                encoding: undefined
+              }, function(err, response){
+                    console.log(response);
                     callback(err, response);
                 });
         }
