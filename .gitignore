@@ -18,5 +18,8 @@ npm-*
 /playground
 /benchmark
 
+# Node
+package-lock.json
+
 # Localization
 /translations
