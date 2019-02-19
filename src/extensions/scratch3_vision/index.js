@@ -31,7 +31,7 @@ const REQUEST_STATE = {
 let classifyRequestState = REQUEST_STATE.IDLE;
 
 //server info
-let classifyURL = 'http://cognimate.me:2635/vision/classify';
+let classifyURL = 'https://cognimate.me:2635/vision/classify';
 // let updateURL = 'https://cognimate.me:3477/vision/update';
 
 //classifier_id
