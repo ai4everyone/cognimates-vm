@@ -206,12 +206,6 @@ class Scratch3Watson {
         return VideoState;
     }
 
-    /**
-     * An array of info on video state options for the "turn video [STATE]" block.
-     * @type {object[]} an array of objects
-     * @param {string} name - the translatable name to display in the video state menu
-     * @param {string} value - the serializable value stored in the block
-     */
     get VIDEO_STATE_INFO () {
         return [
             {
