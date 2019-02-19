@@ -368,8 +368,8 @@ class Scratch3Watson {
         if(api_key == null){
             return 'No api key set';
         }
-        if(image_class == null){
-            return 'No image class set';
+        if(classifier_id == null){
+            return 'No Classifier ID set';
         }
         if(classifyRequestState == REQUEST_STATE.FINISHED) {
           classifyRequestState = REQUEST_STATE.IDLE;
