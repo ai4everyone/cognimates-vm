@@ -364,9 +364,19 @@ class Scratch3Watson {
 
     takePhoto (args, util) {
         imageData = this.runtime.ioDevices.video.getSnapshot();
+        console.log(imageData);
     }
 
     recognizeObject(args,util) {
+        if(imageData == null){
+            return 'No Image set';
+        }
+        if(api_key == null){
+            return 'No api key set';
+        }
+        if(image_class == null){
+            return 'No image class set';
+        }
         if(classifyRequestState == REQUEST_STATE.FINISHED) {
           classifyRequestState = REQUEST_STATE.IDLE;
           image_class = this.parseResponse(watson_response);
@@ -385,7 +395,7 @@ class Scratch3Watson {
                 if (err)
                     console.log(err);
                 else {
-                    watson_response = JSON.parse(response, null, 2);
+                    watson_response = JSON.parse(response.body, null, 2);
                 }
                 classifyRequestState = REQUEST_STATE.FINISHED;
             });
@@ -418,14 +428,21 @@ class Scratch3Watson {
         if(!api_key){
             return 'No API key set';
         }
+        var formData = JSON.stringify({classifier_id: classifier, image_data:image});
         if(image.substring(0,4) === 'data'){
-            request.post({
-                url:     classifyURL,
-                headers: {'apikey': api_key},
-                form: {classifier_id: classifier, image_data: image}
-                }, function(error, response, body){
-                callback(error, body);
-                });
+            nets({
+                url: classifyURL,
+                headers: {
+                  'apikey': api_key,
+                  'Content-Type': 'application/json' // important header to be included henceforth
+                }, // couldn't figure out how to get x-url-encoded content-type to work
+                method: 'POST',
+                body: formData,
+                encoding: undefined // This is important to get response as a string otherwise it returns a buffer array
+              }, function(err, response){
+                  console.log(response);
+                    callback(err, response);
+            });
         } else{
             request.post({
                 url:     classifyURL,
