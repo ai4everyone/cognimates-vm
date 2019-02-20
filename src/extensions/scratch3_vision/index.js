@@ -371,33 +371,80 @@ class Scratch3Watson {
         if(classifier_id == null){
             return 'No Classifier ID set';
         }
-        if(classifyRequestState == REQUEST_STATE.FINISHED) {
-          classifyRequestState = REQUEST_STATE.IDLE;
-          image_class = this.parseResponse(watson_response);
-          return image_class;
+
+        image_class = null
+        classes = {};
+        let image = imageData;
+
+        if (this._lastImage === image &&
+            this._lastResult !== null) {
+            return this._lastResult;
         }
-        if(classifyRequestState == REQUEST_STATE.PENDING) {
-          util.yield()
-        }
-        if(classifyRequestState == REQUEST_STATE.IDLE) {
-            image_class = null
-            classes = {};
-            let image = imageData
-            this.classify(classifier_id,
-                image,
-                function(err, response) {
-                if (err)
-                    console.log(err);
-                else {
-                    watson_response = JSON.parse(response.body, null, 2);
-                }
-                classifyRequestState = REQUEST_STATE.FINISHED;
-            });
-            if(classifyRequestState == REQUEST_STATE.IDLE) {
-            classifyRequestState = REQUEST_STATE.PENDING;
-            util.yield();
+
+        this._lastImage = image;
+        const _this = this;
+        let promise = new Promise((resolve)=>{
+        this.classify(classifier_id, image,
+            function(err, response) {
+            if (err){
+                console.log(err);
             }
-        }
+            else {
+                watson_response = JSON.parse(response.body, null, 2);
+                console.log(watson_response);
+
+                //store everything
+                for (var i = 0, length = watson_response.length; i < length; i++) {
+                    classes[watson_response[i].class] = watson_response[i].score;
+                }
+                //figure out the highest scoring class
+                var class_label;
+                var best_score = 0;
+                for (var key in classes) {
+                    if (classes.hasOwnProperty(key)) {
+                        if(classes[key]>best_score){
+                            best_score = classes[key];
+                            class_label = key;
+                        }
+                    }
+                }
+
+                image_class = class_label;
+                _this._lastResult = image_class;
+                resolve(image_class);
+            }});
+        });
+        promise.then(output => output);
+
+        return promise;
+        
+        // if(classifyRequestState == REQUEST_STATE.FINISHED) {
+        //   classifyRequestState = REQUEST_STATE.IDLE;
+        //   image_class = this.parseResponse(watson_response);
+        //   return image_class;
+        // }
+        // if(classifyRequestState == REQUEST_STATE.PENDING) {
+        //   util.yield()
+        // }
+        // if(classifyRequestState == REQUEST_STATE.IDLE) {
+        //     image_class = null
+        //     classes = {};
+        //     let image = imageData
+        //     this.classify(classifier_id,
+        //         image,
+        //         function(err, response) {
+        //         if (err)
+        //             console.log(err);
+        //         else {
+        //             watson_response = JSON.parse(response.body, null, 2);
+        //         }
+        //         classifyRequestState = REQUEST_STATE.FINISHED;
+        //     });
+        //     if(classifyRequestState == REQUEST_STATE.IDLE) {
+        //     classifyRequestState = REQUEST_STATE.PENDING;
+        //     util.yield();
+        //     }
+        // }
       }
 
     parseResponse(input){
@@ -419,10 +466,8 @@ class Scratch3Watson {
     }
 
     classify(classifier, image, callback) {
-        if(!api_key){
-            return 'No API key set';
-        }
         var formData = JSON.stringify({classifier_id: classifier, image_data:image});
+        console.log(formData);
         if(image.substring(0,4) === 'data'){
             nets({
                 url: classifyURL,
