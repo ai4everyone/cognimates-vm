@@ -50,7 +50,7 @@ class Scratch3TextClassify {
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: 'key'
+                            defaultValue: 'user'
                         }
                     }
                 },
@@ -61,7 +61,29 @@ class Scratch3TextClassify {
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'model id'
+                            defaultValue: 'classifier name'
+                        }
+                    }
+                },
+                {
+                    opcode: 'getClass',
+                    blockType: BlockType.COMMAND,
+                    text: 'Set class to train: [CLASS]',
+                    arguments: {
+                        IDSTRING: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'class name'
+                        }
+                    }
+                },
+                {
+                    opcode: 'trainText',
+                    blockType: BlockType.COMMAND,
+                    text: 'Send texts [TEXT] to train',
+                    arguments: {
+                        IDSTRING: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'insert text'
                         }
                     }
                 },
@@ -86,17 +108,6 @@ class Scratch3TextClassify {
                     blockType: BlockType.COMMAND,
                     text: 'Clear results'
                 }
-                // {
-                //     opcode: 'updateClassifier',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'Add photo to [LABEL]',
-                //     arguments:{
-                //         LABEL:{
-                //             type: ArgumentType.STRING,
-                //             defaultValue: 'add category here'
-                //         }
-                //     }
-                // }
             ],
             menus: {
                 models: ['Default','RockPaperScissors'],
