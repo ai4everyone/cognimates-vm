@@ -7,7 +7,7 @@ const Timer = require('../../util/timer');
 const RenderedTarget = require('../../sprites/rendered-target');
 
 // sentiment
-// const sentiment = require('sentiment');
+const sentiment = require('sentiment');
 let localSentiment = 1;
 let feeling;
 const iconURI = require('./assets/sentiment_icon');
