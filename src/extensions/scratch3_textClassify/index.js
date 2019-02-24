@@ -6,8 +6,14 @@ const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/text_icon');
 
-
-let base_url = 'https://cognimate.me:2635/nlc';
+let base_url = 'https://cognimate.me:2636/nlc';
+let read_api; 
+let write_api;
+let username; 
+let classifier_name; //name of classifier to use
+let class_name; //name of class that goes w/ the classifier
+let results; //stores all results and probability
+let label; //result with the highest probability
 
 class Scratch3TextClassify {
     constructor (runtime) {
@@ -17,7 +23,7 @@ class Scratch3TextClassify {
 
     getInfo () {
         return {
-            id: 'text_classify',
+            id: 'text',
             name: 'Text',
             blockIconURI: iconURI,
             blocks: [
@@ -48,7 +54,7 @@ class Scratch3TextClassify {
                     blockType: BlockType.COMMAND,
                     text: 'Set username to [USER]',
                     arguments:{
-                        KEY:{
+                        USER:{
                             type: ArgumentType.STRING,
                             defaultValue: 'user'
                         }
@@ -70,7 +76,7 @@ class Scratch3TextClassify {
                     blockType: BlockType.COMMAND,
                     text: 'Set class to train: [CLASS]',
                     arguments: {
-                        IDSTRING: {
+                        CLASS: {
                             type: ArgumentType.STRING,
                             defaultValue: 'class name'
                         }
@@ -81,7 +87,7 @@ class Scratch3TextClassify {
                     blockType: BlockType.COMMAND,
                     text: 'Send texts [TEXT] to train',
                     arguments: {
-                        IDSTRING: {
+                        TEXT: {
                             type: ArgumentType.STRING,
                             defaultValue: 'insert text'
                         }
@@ -90,7 +96,13 @@ class Scratch3TextClassify {
                 {
                     opcode: 'classifyText',
                     blockType: BlockType.REPORTER,
-                    text: 'What do you see in the photo?',
+                    text: 'What kind of [TEXT] is this?',
+                    arguments: {
+                        TEXT: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'phrase'
+                        }
+                    }
                 },
                 {
                     opcode: 'getScore',
@@ -102,11 +114,6 @@ class Scratch3TextClassify {
                             defaultValue: 'add category here'
                         }
                     }
-                },
-                {
-                    opcode: 'clearResults',
-                    blockType: BlockType.COMMAND,
-                    text: 'Clear results'
                 }
             ],
             menus: {
@@ -115,102 +122,78 @@ class Scratch3TextClassify {
         };
     }
 
-
-    latestUserTweet(args, util) {
-        var user = args.USER;
-        if (this._lastUser === user &&
-            this._lastResult !== null) {
-            return this._lastResult;
-        }
-        this._lastUser = user;
-        const _this = this;
-        var uri = 'statuses/user_timeline.json';
-        var params = {uri: uri, user: user};
-        let promise = new Promise((resolve)=>{
-        this.makeCall(params,
-            function(err, response) {
-            if (err){
-                console.log(err);
-                this._lastResult = '';
-                resolve('');
-            }
-            else {
-                console.log(response.body);
-                output = JSON.parse(response.body);
-                _this._lastResult = output;
-                resolve(output);
-            }});
-        });
-        promise.then(output => output);
-        return promise
+    setReadAPI(args, util){
+        read_api = args.KEY;
     }
 
+    setWriteAPI(args, util){
+        write_api = args.KEY;
+    }
 
-    getTopTweet(args, util){
-        if(classifyRequestState == REQUEST_STATE.FINISHED) {
-            classifyRequestState = REQUEST_STATE.IDLE;
-            return top_output;
-          }
-          if(classifyRequestState == REQUEST_STATE.PENDING) {
-            util.yield()
-          }
-          if(classifyRequestState == REQUEST_STATE.IDLE) {
-            var hashtag = encodeURIComponent(args.HASH);
-            var uri = '/search/tweets';
-            var category = args.CATEGORY;
-            var params = {uri: uri, hashtag: hashtag, category: category};
-            this.makeCall(params,
-                function(err, response) {
-                if (err){
+    setUsername(args, util){
+        username = args.USER;
+    }
+
+    getClassifier(args, util){
+        classifier_name = args.IDSTRING;
+    }
+
+    getClass(args, util){
+        class_name = args.CLASS;
+    }
+
+    classifyText(args, util, callback){
+        //make sure everything necessary has been set
+        if(read_api == null){
+            return 'Set a Read API Key';
+        } else if (username == null){
+            return 'No username was set';
+        } else if(classifier_name == null){
+            return 'No classifier name was set';
+        }
+
+        this.makeClassifyCall(args.TEXT, 
+            function(err, response){
+                if(err){
                     console.log(err);
+                } else {
+                    parsed_response = JSON.parse(response.body, null, 2);
+                    console.log(parsed_response);
                 }
-                else {
-                    console.log(response.body);
-                    top_output = JSON.parse(response.body);
-                    classifyRequestState = REQUEST_STATE.FINISHED;
-                }});
-            if(classifyRequestState == REQUEST_STATE.IDLE) {
-                classifyRequestState = REQUEST_STATE.PENDING;
-                util.yield();
             }
-          }
-        }
+        )
 
-    makeCall(params, callback){
-        var uri = params.uri;
-        if(params.user){
-            var user = params.user;
-            var formData = JSON.stringify({ uri: uri, user: user});
-            nets({
-                url: server_url,
-                headers: {
-                  'Content-Type': 'application/json' // important header to be included henceforth
-                }, // couldn't figure out how to get x-url-encoded content-type to work
-                method: 'POST',
-                body: formData,
-                encoding: undefined // This is important to get response as a string otherwise it returns a buffer array
-              }, function(err, response){
-                    callback(err, response);
-                });
-        } else{
-            var category = params.category;
-            var hashtag = params.hashtag;
-            var formData = JSON.stringify({ uri: uri, hashtag: hashtag, category: category});
-            nets({
-                url: server_url,
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                method: 'POST',
-                body: formData,
-                encoding: undefined
-              }, function(err, response){
-                    console.log(response);
-                    callback(err, response);
-                });
-        }
+        return parsed_response;
     }
+
+    makeClassifyCall(phrase, callback){
+        nets({
+            url: base_url + "/nlc/classify",
+            headers: {
+              'Content-Type': 'application/json' // important header to be included henceforth
+            }, // couldn't figure out how to get x-url-encoded content-type to work
+            method: 'POST',
+            body: { 
+                classifier_id: classifier_name,
+                classify_username: username,
+                phrase: phrase,
+                token: read_api
+            },
+            encoding: undefined // This is important to get response as a string otherwise it returns a buffer array
+          }, function(err, response){
+                callback(err, response);
+        });
+    }
+
+    trainText(args, util){
+        return;
+    }
+
+    getScore(args, util){
+        return;
+    }
+
 
 }
 
-module.exports = Scratch3Classify;
+module.exports = Scratch3TextClassify;
