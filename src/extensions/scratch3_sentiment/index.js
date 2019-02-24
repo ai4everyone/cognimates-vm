@@ -3,12 +3,13 @@ const BlockType = require('../../extension-support/block-type');
 const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
-// const nets = require('nets');
+const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
 
 // sentiment
 const sentiment = require('sentiment');
 let localSentiment = 1;
+let server_url = 'http://text-processing.com/api/sentiment/';
 let feeling;
 const iconURI = require('./assets/sentiment_icon');
 
