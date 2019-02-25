@@ -240,14 +240,14 @@ class Scratch3TextClassify {
 
     makeTrainingCall(phrase, callback){
         var formData = JSON.stringify({ 
-            classifier_id: classifier_name,
+            classifier_name: classifier_name,
             class_name: class_name,
-            phrase: [phrase],
-            token: write_api
+            texts: [phrase],
+            write_token: write_api
         });
 
         nets({
-            url: base_url + "/addExamples/",
+            url: base_url + "/addExamples",
             headers: {
               'Content-Type': 'application/json' // important header to be included henceforth
             }, // couldn't figure out how to get x-url-encoded content-type to work
