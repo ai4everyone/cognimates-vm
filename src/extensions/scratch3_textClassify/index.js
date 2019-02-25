@@ -13,7 +13,7 @@ let write_api;
 let username; 
 let classifier_name; //name of classifier to use
 let class_name; //name of class that goes w/ the classifier
-let results; //stores all results and probability
+let results = {}; //stores all results and probability
 let label; //result with the highest probability
 
 class Scratch3TextClassify {
@@ -170,8 +170,25 @@ class Scratch3TextClassify {
             }
             else {
                 console.log(response);
-                results = JSON.parse(response.body, null, 2);
-                label = results[0].className;
+                resp_result = JSON.parse(response.body, null, 2);
+
+                //store everything
+                for (var i = 0, length = resp_result.length; i < length; i++) {
+                    results[resp_result[i].className] = resp_result[i].p;
+                }
+                //figure out the highest scoring class
+                var class_label;
+                var best_score = 0;
+                for (var key in results) {
+                    if (results.hasOwnProperty(key)) {
+                        if(results[key]>best_score){
+                            best_score = results[key];
+                            class_label = key;
+                        }
+                    }
+                }
+
+                label = class_label;
                 _this._lastResult = label;
                 resolve(label);
             }});
@@ -262,15 +279,15 @@ class Scratch3TextClassify {
 
     getScore(args, util){
         //check that classes is not empty
-        if(classes === null){
+        if(results === null){
             return 'did you classify any text yet?'
         }
         var comparison_class = args.CLASS;
         //make sure the class entered is valid
-        if(!classes.hasOwnProperty(comparison_class)){
+        if(!results.hasOwnProperty(comparison_class)){
             return 'this is not a valid class'
         }
-        return classes[comparison_class];
+        return results[comparison_class];
     }
 
 
