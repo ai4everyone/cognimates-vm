@@ -154,6 +154,7 @@ class Scratch3TextClassify {
         }
 
         let phrase = args.TEXT;
+        let results = {};
 
         if (this._lastPhrase === phrase &&
             this._lastResult !== null) {
