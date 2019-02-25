@@ -6,7 +6,7 @@ const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/text_icon');
 
-let base_url = 'https://cognimate.me:2636/nlc';
+let base_url = 'https://cognimate.me:2635/nlc';
 let read_api; 
 let write_api;
 let username; 
@@ -152,33 +152,49 @@ class Scratch3TextClassify {
             return 'No classifier name was set';
         }
 
-        this.makeClassifyCall(args.TEXT, 
-            function(err, response){
-                if(err){
-                    console.log(err);
-                } else {
-                    parsed_response = JSON.parse(response.body, null, 2);
-                    console.log(parsed_response);
-                }
-            }
-        )
+        let phrase = args.TEXT;
 
-        return parsed_response;
+        if (this._lastPhrase === image &&
+            this._lastResult !== null) {
+            return this._lastResult;
+        }
+
+        this._lastPhrase = phrase;
+        const _this = this;
+        let promise = new Promise((resolve)=>{
+        this.makeClassifyCall(phrase,
+            function(err, response) {
+            if (err){
+                console.log(err);
+            }
+            else {
+                results = JSON.parse(response, null, 2);
+                console.log(results);
+                label = results[0].className;
+                _this._lastResult = label;
+                resolve(label);
+            }});
+        });
+        promise.then(output => output);
+
+        return promise;
     }
 
     makeClassifyCall(phrase, callback){
+        var formData = JSON.stringify({ 
+            classifier_id: classifier_name,
+            classify_username: username,
+            phrase: phrase,
+            token: read_api
+        });
+
         nets({
-            url: base_url + "/nlc/classify",
+            url: base_url + "/classify/",
             headers: {
               'Content-Type': 'application/json' // important header to be included henceforth
             }, // couldn't figure out how to get x-url-encoded content-type to work
             method: 'POST',
-            body: { 
-                classifier_id: classifier_name,
-                classify_username: username,
-                phrase: phrase,
-                token: read_api
-            },
+            body: formData,
             encoding: undefined // This is important to get response as a string otherwise it returns a buffer array
           }, function(err, response){
                 callback(err, response);
@@ -186,11 +202,74 @@ class Scratch3TextClassify {
     }
 
     trainText(args, util){
-        return;
+         //make sure everything necessary has been set
+         if(write_api == null){
+            return 'Set a Write API Key';
+        } else if (class_name == null){
+            return 'No class name was set';
+        } else if(classifier_name == null){
+            return 'No classifier name was set';
+        }
+
+        let phrase = args.TEXT;
+
+        if (this._lastPhrase === phrase &&
+            this._lastResult !== null) {
+            return this._lastResult;
+        }
+
+        this._lastPhrase = phrase;
+        const _this = this;
+        let promise = new Promise((resolve)=>{
+        this.makeTrainingCall(phrase,
+            function(err, response) {
+            if (err){
+                console.log(err);
+            }
+            else {
+                result = 'Text Data Sent';
+                _this._lastResult = result;
+                resolve(result);
+            }});
+        });
+        promise.then(output => output);
+
+        return promise;
+    }
+
+    makeTrainingCall(phrase, callback){
+        var formData = JSON.stringify({ 
+            classifier_id: classifier_name,
+            class_name: class_name,
+            phrase: [phrase],
+            token: write_api
+        });
+
+        nets({
+            url: base_url + "/addExamples/",
+            headers: {
+              'Content-Type': 'application/json' // important header to be included henceforth
+            }, // couldn't figure out how to get x-url-encoded content-type to work
+            method: 'POST',
+            body: formData,
+            encoding: undefined // This is important to get response as a string otherwise it returns a buffer array
+          }, function(err, response){
+                callback(err, response);
+        });
+
     }
 
     getScore(args, util){
-        return;
+        //check that classes is not empty
+        if(classes === null){
+            return 'did you classify any text yet?'
+        }
+        var comparison_class = args.CLASS;
+        //make sure the class entered is valid
+        if(!classes.hasOwnProperty(comparison_class)){
+            return 'this is not a valid class'
+        }
+        return classes[comparison_class];
     }
 
 
