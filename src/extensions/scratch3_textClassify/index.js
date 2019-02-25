@@ -6,7 +6,8 @@ const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/text_icon');
 
-let base_url = 'https://cognimate.me:2635/nlc';
+let base_url = 'https://cognimate.me:2636/nlc';
+// let base_url = 'http://localhost:2635/nlc';
 let read_api; 
 let write_api;
 let username; 
@@ -154,7 +155,7 @@ class Scratch3TextClassify {
 
         let phrase = args.TEXT;
 
-        if (this._lastPhrase === image &&
+        if (this._lastPhrase === phrase &&
             this._lastResult !== null) {
             return this._lastResult;
         }
@@ -168,8 +169,8 @@ class Scratch3TextClassify {
                 console.log(err);
             }
             else {
-                results = JSON.parse(response, null, 2);
-                console.log(results);
+                console.log(response);
+                results = JSON.parse(response.body, null, 2);
                 label = results[0].className;
                 _this._lastResult = label;
                 resolve(label);
