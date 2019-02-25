@@ -19,6 +19,7 @@ const Scratch3Ev3Blocks = require('../extensions/scratch3_ev3');
 const Scratch3MakeyMakeyBlocks = require('../extensions/scratch3_makeymakey');
 const Scratch3TwitterBlocks = require('../extensions/scratch3_twitter');
 const Scratch3VisionBlocks = require('../extensions/scratch3_vision');
+const Scratch3TextBlocks = require('../extensions/scratch3_textclassify');
 // todo: only load this extension once we have a compatible way to load its
 // Vernier module dependency.
 // const Scratch3GdxForBlocks = require('../extensions/scratch3_gdx_for');
@@ -35,7 +36,8 @@ const builtinExtensions = {
     ev3: Scratch3Ev3Blocks,
     makeymakey: Scratch3MakeyMakeyBlocks,
     twitter: Scratch3TwitterBlocks,
-    vision: Scratch3VisionBlocks
+    vision: Scratch3VisionBlocks,
+    text: Scratch3TextBlocks
     // gdxfor: Scratch3GdxForBlocks
 };
 
