@@ -97,7 +97,7 @@ class Scratch3TextClassify {
                 {
                     opcode: 'classifyText',
                     blockType: BlockType.REPORTER,
-                    text: 'What kind of [TEXT] is this?',
+                    text: 'What kind of phrase is [TEXT]?',
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
