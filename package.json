@@ -48,6 +48,7 @@
     "scratch-parser": "4.3.4",
     "scratch-sb1-converter": "0.2.6",
     "scratch-translate-extension-languages": "0.0.20181205140428",
+    "sentiment": "^5.0.1",
     "socket.io-client": "2.0.4",
     "text-encoding": "0.6.4",
     "uglifyjs-webpack-plugin": "^2.1.1",
