@@ -7,8 +7,9 @@ const RenderedTarget = require('../../sprites/rendered-target');
 
 
 //socket
-const request = require('request');
+// const request = require('request');
 const SocketIO = require('socket.io-client');
+const nets = require('nets');
 
 // cozmo
 
