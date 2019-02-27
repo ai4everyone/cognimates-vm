@@ -7,7 +7,8 @@ const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
 
 // sentiment
-const sentiment = require('sentiment');
+var Sentiment = require('sentiment');
+var sentiment = new Sentiment();
 let localSentiment = 1;
 let server_url = 'http://text-processing.com/api/sentiment/';
 let feeling;
@@ -62,9 +63,9 @@ class Scratch3Sentiment {
 
     getFeeling (args, util){
         const text = args.phrase;
-        localSentiment = sentiment(text);
+        localSentiment = sentiment.analyze(text);
         // debugger;
-        console.log(sentiment(text));
+        console.log(sentiment.analyze(text));
         if (localSentiment.score >= 2){
             feeling = 'positive';
         } else if (localSentiment.score < 0){
