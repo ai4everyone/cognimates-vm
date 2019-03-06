@@ -23,6 +23,7 @@ const Scratch3SentimentBlocks = require('../extensions/scratch3_sentiment');
 const Scratch3AlexaBlocks = require('../extensions/scratch3_alexa');
 const Scratch3CozmoBlocks = require('../extensions/scratch3_cozmo');
 const Scratch3ErgoBlocks = require('../extensions/scratch3_ergo');
+const Scratch3TextBlocks = require('../extensions/scratch3_textClassify');
 // todo: only load this extension once we have a compatible way to load its
 // Vernier module dependency.
 
