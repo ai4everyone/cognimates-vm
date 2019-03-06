@@ -12,7 +12,7 @@ var sentiment = new Sentiment();
 let localSentiment = 1;
 let server_url = 'http://text-processing.com/api/sentiment/';
 let feeling;
-const iconURI = require('./assets/sentiment_icon');
+const iconURI = require('./assets/speech_icon');
 
 const SPEECH_STATES = {
     IDLE: 0,
