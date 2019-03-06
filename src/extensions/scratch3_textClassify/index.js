@@ -13,7 +13,7 @@ let write_api;
 let username; 
 let classifier_name; //name of classifier to use
 let class_name; //name of class that goes w/ the classifier
-let results = {}; //stores all results and probability
+let results; //stores all results and probability
 let label; //result with the highest probability
 
 class Scratch3TextClassify {
@@ -154,7 +154,7 @@ class Scratch3TextClassify {
         }
 
         let phrase = args.TEXT;
-        let results = {};
+        results = {};
 
         if (this._lastPhrase === phrase &&
             this._lastResult !== null) {
@@ -188,7 +188,7 @@ class Scratch3TextClassify {
                         }
                     }
                 }
-
+                console.log(results);
                 label = class_label;
                 _this._lastResult = label;
                 resolve(label);
@@ -284,6 +284,7 @@ class Scratch3TextClassify {
             return 'did you classify any text yet?'
         }
         var comparison_class = args.CLASS;
+        console.log(results);
         //make sure the class entered is valid
         if(!results.hasOwnProperty(comparison_class)){
             return 'this is not a valid class'
