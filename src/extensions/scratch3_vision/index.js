@@ -237,8 +237,8 @@ class Scratch3Watson {
     }
     getInfo () {
         return {
-            id: 'watson',
-            name: 'Watson',
+            id: 'vision',
+            name: 'Vision',
             blockIconURI: iconURI,
             blocks: [
                 {
