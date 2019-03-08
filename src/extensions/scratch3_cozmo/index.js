@@ -21,7 +21,7 @@ var rawData = null;
 var shutdown = false;
 let deg = 0;
 let expression = "happy";
-let emotionsArray={happy: "happy", sad: "sad", shocked :"shocked", surprised: "surprised", bored: "bored"};
+let emotionsArray={happy: "happy", sad: "sad", shocked :"shocked", bored: "bored"};
 let angleArray={"90": "90", "180": "180", "-90": "-90", "-180": "-180"};
 var CMD_SPEAK = 0x01,
   CMD_DRIVE = 0x02,
@@ -143,7 +143,7 @@ class Scratch3Cozmo {
             ],
             menus: {
                 robots: ['robot1', 'robot2', 'robot3'],
-                emotions: ['happy', 'sad', 'shocked','surprised','bored'],
+                emotions: ['happy', 'sad', 'shocked','bored'],
                 angle:['90','180','-90', '-180']
             }
         };
