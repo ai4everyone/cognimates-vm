@@ -348,7 +348,7 @@ class Scratch3Watson {
         if(classes === null){
             return 'did you classify an object yet?'
         }
-        var comparison_class = args.CLASS;
+        var comparison_class = args.CLASS.toLowerCase();
         //make sure the class entered is valid
         console.log(classes);
         console.log(comparison_class);
@@ -396,7 +396,7 @@ class Scratch3Watson {
                 classes = {};
                 //store everything
                 for (var i = 0, length = watson_response.length; i < length; i++) {
-                    classes[watson_response[i].class] = watson_response[i].score;
+                    classes[watson_response[i].class.toLowerCase()] = watson_response[i].score;
                 }
                 //figure out the highest scoring class
                 var class_label;
