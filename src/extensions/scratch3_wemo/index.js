@@ -4,7 +4,6 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
-const iconURI = require('./assets/vision_icon');
 
 //wemo extension
 const iconURI = require('./assets/wemo_icon');
@@ -43,7 +42,7 @@ class Scratch3Wemo {
 
     turnOn (args, util){
         if(args.TOGGLE === 'on'){
-            nets.get({url: wemoURL +'on', function(err, response){
+            nets({url: wemoURL +'on', function(err, response){
                 if (err){
                     console.log(err);
                 }
@@ -52,7 +51,7 @@ class Scratch3Wemo {
                 }
             }});
         } else{
-            nets.get({url: wemoURL +'off', function(err, response){
+            nets({url: wemoURL +'off', function(err, response){
                 if (err){
                     console.log(err);
                 }
