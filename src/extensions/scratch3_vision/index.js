@@ -31,7 +31,8 @@ const REQUEST_STATE = {
 let classifyRequestState = REQUEST_STATE.IDLE;
 
 //server info
-let classifyURL = 'https://cognimate.me:2635/vision/classify';
+// let classifyURL = 'https://cognimate.me:2635/vision/classify';
+let classifyURL = 'http://localhost:2635/vision/classify';
 // let updateURL = 'https://cognimate.me:3477/vision/update';
 
 //classifier_id
@@ -281,17 +282,17 @@ class Scratch3Watson {
                     blockType: BlockType.COMMAND,
                     text: 'Take photo from webcam'
                 },
-                // {
-                //     opcode: 'setPhotoFromURL',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'Use photo from url [URL]',
-                //     arguments: {
-                //         URL: {
-                //             type: ArgumentType.STRING,
-                //             defaultValue: 'add link here'
-                //         }
-                //     }
-                // },
+                {
+                    opcode: 'urlPhoto',
+                    blockType: BlockType.COMMAND,
+                    text: 'Take photo from URL [URL]',
+                    arguments:{
+                        URL: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'add link here'
+                        }
+                    }
+                },
                 {
                     opcode: 'recognizeObject',
                     blockType: BlockType.REPORTER,
@@ -418,34 +419,6 @@ class Scratch3Watson {
         promise.then(output => output);
 
         return promise;
-        
-        // if(classifyRequestState == REQUEST_STATE.FINISHED) {
-        //   classifyRequestState = REQUEST_STATE.IDLE;
-        //   image_class = this.parseResponse(watson_response);
-        //   return image_class;
-        // }
-        // if(classifyRequestState == REQUEST_STATE.PENDING) {
-        //   util.yield()
-        // }
-        // if(classifyRequestState == REQUEST_STATE.IDLE) {
-        //     image_class = null
-        //     classes = {};
-        //     let image = imageData
-        //     this.classify(classifier_id,
-        //         image,
-        //         function(err, response) {
-        //         if (err)
-        //             console.log(err);
-        //         else {
-        //             watson_response = JSON.parse(response.body, null, 2);
-        //         }
-        //         classifyRequestState = REQUEST_STATE.FINISHED;
-        //     });
-        //     if(classifyRequestState == REQUEST_STATE.IDLE) {
-        //     classifyRequestState = REQUEST_STATE.PENDING;
-        //     util.yield();
-        //     }
-        // }
       }
 
     parseResponse(input){
@@ -484,13 +457,19 @@ class Scratch3Watson {
                     callback(err, response);
             });
         } else{
-            request.post({
-                url:     classifyURL,
-                headers: {'apikey': api_key},
-                form:    { classifier_id: classifier,
-                            image_data: image}
-                }, function(error, response, body){
-                    callback(error, body);
+            let url_classify_url = "http://localhost:2635/vision/classifyURLImage";
+            // let url_classify_url = "https://cognimates.me:2635/vision/classifyURLImage";
+            nets({
+                url: url_classify_url,
+                headers: {'apikey': api_key,
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: formData,
+                encoding: undefined
+                }, function(error, response){
+                    console.log(response);
+                    callback(error, response);
                 });
         }
     }
@@ -500,13 +479,13 @@ class Scratch3Watson {
         api_key = args.KEY
     }
 
-    // setPhotoFromURL(args,util){
-    //     if(args.URL === 'add link here'){
-    //         return 'invalid link'
-    //     } else{
-    //         imageData = args.URL
-    //     }
-    // }
+    urlPhoto(args,util){
+        if(args.URL === 'add link here'){
+            return 'invalid link'
+        } else{
+            imageData = args.URL;
+        }
+    }
 
     clearResults () {
         image_class = null;
