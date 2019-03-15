@@ -350,6 +350,8 @@ class Scratch3Watson {
         }
         var comparison_class = args.CLASS;
         //make sure the class entered is valid
+        console.log(classes);
+        console.log(comparison_class);
         if(!classes.hasOwnProperty(comparison_class)){
             return 'this is not a valid class'
         }
@@ -373,7 +375,6 @@ class Scratch3Watson {
         }
 
         image_class = null
-        classes = {};
         let image = imageData;
 
         if (this._lastImage === image &&
@@ -392,7 +393,7 @@ class Scratch3Watson {
             else {
                 watson_response = JSON.parse(response.body, null, 2);
                 console.log(watson_response);
-
+                classes = {};
                 //store everything
                 for (var i = 0, length = watson_response.length; i < length; i++) {
                     classes[watson_response[i].class] = watson_response[i].score;
