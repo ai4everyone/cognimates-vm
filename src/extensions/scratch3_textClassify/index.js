@@ -6,8 +6,8 @@ const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/text_icon');
 
-let base_url = 'https://cognimate.me:2636/nlc';
-// let base_url = 'http://localhost:2635/nlc';
+// let base_url = 'https://cognimate.me:2636/nlc';
+let base_url = 'https://cognimate.me:2635/nlc';
 let read_api; 
 let write_api;
 let username; 
@@ -154,7 +154,6 @@ class Scratch3TextClassify {
         }
 
         let phrase = args.TEXT;
-        results = {};
 
         if (this._lastPhrase === phrase &&
             this._lastResult !== null) {
@@ -172,10 +171,10 @@ class Scratch3TextClassify {
             else {
                 console.log(response);
                 resp_result = JSON.parse(response.body, null, 2);
-
+                results = {};
                 //store everything
                 for (var i = 0, length = resp_result.length; i < length; i++) {
-                    results[resp_result[i].className] = resp_result[i].p;
+                    results[resp_result[i].className.toLowerCase()] = resp_result[i].p;
                 }
                 //figure out the highest scoring class
                 var class_label;
@@ -283,7 +282,7 @@ class Scratch3TextClassify {
         if(results === null){
             return 'did you classify any text yet?'
         }
-        var comparison_class = args.CLASS;
+        var comparison_class = args.CLASS.toLowerCase();
         console.log(results);
         //make sure the class entered is valid
         if(!results.hasOwnProperty(comparison_class)){
