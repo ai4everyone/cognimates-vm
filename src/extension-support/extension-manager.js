@@ -125,15 +125,14 @@ class ExtensionManager {
         dispatch.setService('extensions', this).catch(e => {
             log.error(`ExtensionManager was unable to register extension service: ${JSON.stringify(e)}`);
         });
-        // this.loadExtensionURL('videoSensing');
-        // this.loadExtensionURL('vision');
-        // this.loadExtensionURL('text');
-        // this.loadExtensionURL('twitter');
-        // this.loadExtensionURL('alexa');
-        // this.loadExtensionURL('sentiment');
-        // this.loadExtensionURL('cozmo');
-        // this.loadExtensionURL('speech');
-        // this.loadExtensionURL('ergo');
+
+        this.loadExtensionURL('vision');
+        this.loadExtensionURL('text');
+        this.loadExtensionURL('sentiment');
+        this.loadExtensionURL('twitter');
+        this.loadExtensionURL('speech');
+        this.loadExtensionURL('text2speech');
+        this.loadExtensionURL('translate');
     }
 
     /**

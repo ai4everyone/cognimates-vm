@@ -32,6 +32,7 @@ let classifyRequestState = REQUEST_STATE.IDLE;
 
 //server info
 let classifyURL = 'https://cognimate.me:2635/vision/classify';
+// let classifyURL = 'http://localhost:2635/vision/classify';
 // let updateURL = 'https://cognimate.me:3477/vision/update';
 
 //classifier_id
@@ -81,12 +82,12 @@ class Scratch3Watson {
             this.setVideoTransparency({
                 TRANSPARENCY: this.globalVideoTransparency
             });
-            this.videoToggle({
-                VIDEO_STATE: this.globalVideoState
-            });
+            // this.videoToggle({
+            //     VIDEO_STATE: this.globalVideoState
+            // });
 
             this.videoToggle({
-                VIDEO_STATE: 'on'
+                VIDEO_STATE: 'off'
             });
         }
     }
@@ -238,9 +239,20 @@ class Scratch3Watson {
     getInfo () {
         return {
             id: 'vision',
-            name: 'Vision',
+            name: 'Image Training',
             blockIconURI: iconURI,
             blocks: [
+                {
+                    opcode: 'videoToggle',
+                    text: 'turn video [VIDEO_STATE]',
+                    arguments: {
+                        VIDEO_STATE: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'VIDEO_STATE',
+                            defaultValue: VideoState.ON
+                        }
+                    }
+                },
                 {
                     opcode: 'setAPI',
                     blockType: BlockType.COMMAND,
@@ -252,22 +264,10 @@ class Scratch3Watson {
                         }
                     }
                 },
-                // {
-                //     opcode: 'getModelFromList',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'Choose image model from list: [MODELNAME]',
-                //     arguments: {
-                //         MODELNAME: {
-                //             type: ArgumentType.STRING,
-                //             menu: 'models',
-                //             defaultValue: 'RockPaperScissors'
-                //         }
-                //     }
-                // },
                 {
                     opcode: 'getModelfromString',
                     blockType: BlockType.COMMAND,
-                    text: 'What is your training model id: [IDSTRING]',
+                    text: 'Choose image model: [IDSTRING]',
                     //[THIS] needs to be equal to THIS in arguments
                     arguments: {
                         IDSTRING: {
@@ -282,10 +282,10 @@ class Scratch3Watson {
                     text: 'Take photo from webcam'
                 },
                 // {
-                //     opcode: 'setPhotoFromURL',
+                //     opcode: 'urlPhoto',
                 //     blockType: BlockType.COMMAND,
-                //     text: 'Use photo from url [URL]',
-                //     arguments: {
+                //     text: 'Search image using link [URL]',
+                //     arguments:{
                 //         URL: {
                 //             type: ArgumentType.STRING,
                 //             defaultValue: 'add link here'
@@ -298,6 +298,11 @@ class Scratch3Watson {
                     text: 'What do you see in the photo?',
                 },
                 {
+                    opcode: 'recognizeObjectCommand',
+                    blockType: BlockType.COMMAND,
+                    text: 'Search prediction for your photo',
+                },
+                {
                     opcode: 'getScore',
                     blockType: BlockType.REPORTER,
                     text: 'How sure are you the photo is a [CLASS]?',
@@ -305,6 +310,17 @@ class Scratch3Watson {
                         CLASS: {
                             type: ArgumentType.STRING,
                             defaultValue: 'add category here'
+                        }
+                    }
+                },
+                {
+                    opcode:'trackLabel',
+                    blockType: BlockType.HAT,
+                    text: 'When image is [LABEL]',
+                    arguments:{
+                        LABEL:{
+                            type: ArgumentType.STRING, 
+                            default: 'add category here'
                         }
                     }
                 },
@@ -323,10 +339,12 @@ class Scratch3Watson {
                 //             defaultValue: 'add category here'
                 //         }
                 //     }
-                // },
+                // }
+
             ],
             menus: {
                 models: ['Default','RockPaperScissors'],
+                VIDEO_STATE: this._buildMenu(this.VIDEO_STATE_INFO)
             }
         };
     }
@@ -361,6 +379,10 @@ class Scratch3Watson {
     takePhoto (args, util) {
         imageData = this.runtime.ioDevices.video.getSnapshot();
         console.log(imageData);
+    }
+
+    recognizeObjectCommand(args, util){
+        return this.recognizeObject();
     }
 
     recognizeObject(args,util) {
@@ -418,34 +440,6 @@ class Scratch3Watson {
         promise.then(output => output);
 
         return promise;
-        
-        // if(classifyRequestState == REQUEST_STATE.FINISHED) {
-        //   classifyRequestState = REQUEST_STATE.IDLE;
-        //   image_class = this.parseResponse(watson_response);
-        //   return image_class;
-        // }
-        // if(classifyRequestState == REQUEST_STATE.PENDING) {
-        //   util.yield()
-        // }
-        // if(classifyRequestState == REQUEST_STATE.IDLE) {
-        //     image_class = null
-        //     classes = {};
-        //     let image = imageData
-        //     this.classify(classifier_id,
-        //         image,
-        //         function(err, response) {
-        //         if (err)
-        //             console.log(err);
-        //         else {
-        //             watson_response = JSON.parse(response.body, null, 2);
-        //         }
-        //         classifyRequestState = REQUEST_STATE.FINISHED;
-        //     });
-        //     if(classifyRequestState == REQUEST_STATE.IDLE) {
-        //     classifyRequestState = REQUEST_STATE.PENDING;
-        //     util.yield();
-        //     }
-        // }
       }
 
     parseResponse(input){
@@ -484,13 +478,19 @@ class Scratch3Watson {
                     callback(err, response);
             });
         } else{
-            request.post({
-                url:     classifyURL,
-                headers: {'apikey': api_key},
-                form:    { classifier_id: classifier,
-                            image_data: image}
-                }, function(error, response, body){
-                    callback(error, body);
+            let url_classify_url = "http://localhost:2635/vision/classifyURLImage";
+            // let url_classify_url = "https://cognimates.me:2635/vision/classifyURLImage";
+            nets({
+                url: url_classify_url,
+                headers: {'apikey': api_key,
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: formData,
+                encoding: undefined
+                }, function(error, response){
+                    console.log(response);
+                    callback(error, response);
                 });
         }
     }
@@ -500,13 +500,13 @@ class Scratch3Watson {
         api_key = args.KEY
     }
 
-    // setPhotoFromURL(args,util){
-    //     if(args.URL === 'add link here'){
-    //         return 'invalid link'
-    //     } else{
-    //         imageData = args.URL
-    //     }
-    // }
+    urlPhoto(args,util){
+        if(args.URL === 'add link here'){
+            return 'invalid link'
+        } else{
+            imageData = args.URL;
+        }
+    }
 
     clearResults () {
         image_class = null;
@@ -514,6 +514,14 @@ class Scratch3Watson {
         classes = {};
     }
 
+    trackLabel(args, util){
+        let label = args.LABEL;
+        if(label == image_class){
+            return true;
+        } else {
+            return false;
+        }
+    }
     // updateClassifier(args, util){
     //     if(imageData.substring(0,4) === 'data'){
     //         request.post({

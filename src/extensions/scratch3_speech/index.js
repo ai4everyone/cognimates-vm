@@ -13,6 +13,7 @@ let localSentiment = 1;
 let server_url = 'http://text-processing.com/api/sentiment/';
 let feeling;
 const iconURI = require('./assets/speech_icon');
+var audioCtx; 
 
 const SPEECH_STATES = {
     IDLE: 0,
@@ -33,7 +34,7 @@ class Scratch3Speech {
         this.AudioContext = window.AudioContext || 
                             window.webkitAudioContext;
 
-        this._setupMicrophone();
+        // this._setupMicrophone();
 
         /**
          * A flag to indicate that speech recognition is paused during a speech synthesis utterance
@@ -72,6 +73,18 @@ class Scratch3Speech {
             name: 'Speech to Text',
             blockIconURI: iconURI,
             blocks: [
+                // {
+                //     opcode: 'changeState',
+                //     blockType: BlockType.COMMAND, 
+                //     text: 'turn microphone [STATE]',
+                //     arguments:{
+                //         STATE: {
+                //             type:ArgumentType.STRING,
+                //             menu: 'STATES',
+                //             defaultValue:'on'
+                //         }
+                //     }
+                // },
                 {
                     opcode: 'startSpeechRecognition',
                     blockType: BlockType.COMMAND,
@@ -101,22 +114,35 @@ class Scratch3Speech {
                 
             ],
             menus: {
-                trueFalse: ['true', 'false']
+                trueFalse: ['true', 'false'],
+                STATES: ['on', 'off']
             }
         };
     }
 
-    _setupMicrophone(){
-        var audioCtx = new this.AudioContext();
-        navigator.getUserMedia({
-            audio: true,
-        }, (stream) => {
-            var source = audioCtx.createMediaStreamSource(stream);
-            console.log('Microphone on');
-        }, (err) => {
-            console.error(err);
-        });
-    }
+    // changeState(args, util){
+    //     let state = args.STATE;
+    //     if(state == 'on' && audioCtx == null){
+    //         if(audioCtx == null){
+    //             audioCtx = new this.AudioContext();
+    //         }
+    //         navigator.getUserMedia({
+    //             audio: true,
+    //         }, (stream) => {
+    //             var source = audioCtx.createMediaStreamSource(stream);
+    //             console.log('Microphone on');
+    //         }, (err) => {
+    //             console.error(err);
+    //         });
+    //     } else if(state == 'on'){
+    //         audioCtx.resume();
+    //     } else if (state == 'off' && audioCtx != null) {
+    //         audioCtx.close();
+    //         console.log('Microphone off');
+    //         audioCtx = null;
+    //     }
+    // }
+
 
     getHats() {
         return {

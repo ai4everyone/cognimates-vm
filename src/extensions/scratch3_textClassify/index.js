@@ -25,7 +25,7 @@ class Scratch3TextClassify {
     getInfo () {
         return {
             id: 'text',
-            name: 'Text',
+            name: 'Text Training',
             blockIconURI: iconURI,
             blocks: [
                 {
@@ -64,22 +64,22 @@ class Scratch3TextClassify {
                 {
                     opcode: 'getClassifier',
                     blockType: BlockType.COMMAND,
-                    text: 'Choose text classifier using name: [IDSTRING]',
+                    text: 'Choose text model: [IDSTRING]',
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'classifier name'
+                            defaultValue: 'model name'
                         }
                     }
                 },
                 {
                     opcode: 'getClass',
                     blockType: BlockType.COMMAND,
-                    text: 'Set class to train: [CLASS]',
+                    text: 'Set category to train: [CLASS]',
                     arguments: {
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'class name'
+                            defaultValue: 'category name'
                         }
                     }
                 },
@@ -109,6 +109,17 @@ class Scratch3TextClassify {
                     opcode: 'getScore',
                     blockType: BlockType.REPORTER,
                     text: 'How sure are you the text is a [CLASS]?',
+                    arguments:{
+                        CLASS: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'add category here'
+                        }
+                    }
+                },
+                {
+                    opcode: 'textHat',
+                    blockType: BlockType.HAT,
+                    text: 'When text is [CLASS]',
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
@@ -289,6 +300,15 @@ class Scratch3TextClassify {
             return 'this is not a valid class'
         }
         return results[comparison_class];
+    }
+
+    textHat(args, util){
+        let category = args.CLASS;
+        if(label == category){
+            return true;
+        } else{
+            return false;
+        }
     }
 
 
