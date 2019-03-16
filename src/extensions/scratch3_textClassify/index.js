@@ -119,7 +119,7 @@ class Scratch3TextClassify {
                 {
                     opcode: 'textHat',
                     blockType: BlockType.HAT,
-                    text: 'When text is [LABEL]',
+                    text: 'When text is [CLASS]',
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
@@ -303,7 +303,7 @@ class Scratch3TextClassify {
     }
 
     textHat(args, util){
-        let category = args.LABEL;
+        let category = args.CLASS;
         if(label == category){
             return true;
         } else{
