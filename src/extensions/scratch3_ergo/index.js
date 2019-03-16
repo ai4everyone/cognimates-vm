@@ -239,37 +239,37 @@ class Scratch3Ergo {
                         }
                     }
                 },
-                {
-                    opcode: 'recordMoveForTime',
-                    blockType: BlockType.BOOLEAN,
-                    text: 'Record move [MOTORS] for [DURATION]',
-                    arguments: {
-                        MOTORS: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'm1'
-                        },
-                        DURATION: {
-                            type: ArgumentType.STRING,
-                            defaultValue: '10 SEC'
-                        }
-                    }
-                },
-                {
-                    opcode: 'recordMoveForName',
-                    blockType: BlockType.BOOLEAN,
-                    text: 'Record move [MOTORS] for [MOVENAME]',
-                    arguments: {
-                        MOTORS: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'm1'
-                        },
-                        MOVENAME: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'Move name'
-                        }
+                // {
+                //     opcode: 'recordMoveForTime',
+                //     blockType: BlockType.BOOLEAN,
+                //     text: 'Record move [MOTORS] for [DURATION]',
+                //     arguments: {
+                //         MOTORS: {
+                //             type: ArgumentType.STRING,
+                //             defaultValue: 'm1'
+                //         },
+                //         DURATION: {
+                //             type: ArgumentType.STRING,
+                //             defaultValue: '10 SEC'
+                //         }
+                //     }
+                // },
+                // {
+                //     opcode: 'recordMoveForName',
+                //     blockType: BlockType.BOOLEAN,
+                //     text: 'Record move [MOTORS] for [MOVENAME]',
+                //     arguments: {
+                //         MOTORS: {
+                //             type: ArgumentType.STRING,
+                //             defaultValue: 'm1'
+                //         },
+                //         MOVENAME: {
+                //             type: ArgumentType.STRING,
+                //             defaultValue: 'Move name'
+                //         }
 
-                    }
-                }
+                //     }
+                // }
 
             ],
             menus: {

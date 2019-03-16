@@ -31,7 +31,6 @@ class Scratch3Alexa {
 
     constructor (runtime) {
         this.runtime = runtime;
-        console.log('Constructor');
     }
 
     getInfo () {
