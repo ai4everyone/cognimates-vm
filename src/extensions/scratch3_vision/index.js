@@ -31,8 +31,8 @@ const REQUEST_STATE = {
 let classifyRequestState = REQUEST_STATE.IDLE;
 
 //server info
-// let classifyURL = 'https://cognimate.me:2635/vision/classify';
-let classifyURL = 'http://localhost:2635/vision/classify';
+let classifyURL = 'https://cognimate.me:2635/vision/classify';
+// let classifyURL = 'http://localhost:2635/vision/classify';
 // let updateURL = 'https://cognimate.me:3477/vision/update';
 
 //classifier_id
@@ -82,12 +82,12 @@ class Scratch3Watson {
             this.setVideoTransparency({
                 TRANSPARENCY: this.globalVideoTransparency
             });
-            this.videoToggle({
-                VIDEO_STATE: this.globalVideoState
-            });
+            // this.videoToggle({
+            //     VIDEO_STATE: this.globalVideoState
+            // });
 
             this.videoToggle({
-                VIDEO_STATE: 'on'
+                VIDEO_STATE: 'off'
             });
         }
     }
@@ -243,6 +243,17 @@ class Scratch3Watson {
             blockIconURI: iconURI,
             blocks: [
                 {
+                    opcode: 'videoToggle',
+                    text: 'turn video [VIDEO_STATE]',
+                    arguments: {
+                        VIDEO_STATE: {
+                            type: ArgumentType.NUMBER,
+                            menu: 'VIDEO_STATE',
+                            defaultValue: VideoState.ON
+                        }
+                    }
+                },
+                {
                     opcode: 'setAPI',
                     blockType: BlockType.COMMAND,
                     text: 'Set API key to [KEY]',
@@ -253,18 +264,6 @@ class Scratch3Watson {
                         }
                     }
                 },
-                // {
-                //     opcode: 'getModelFromList',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'Choose image model from list: [MODELNAME]',
-                //     arguments: {
-                //         MODELNAME: {
-                //             type: ArgumentType.STRING,
-                //             menu: 'models',
-                //             defaultValue: 'RockPaperScissors'
-                //         }
-                //     }
-                // },
                 {
                     opcode: 'getModelfromString',
                     blockType: BlockType.COMMAND,
@@ -285,7 +284,7 @@ class Scratch3Watson {
                 {
                     opcode: 'urlPhoto',
                     blockType: BlockType.COMMAND,
-                    text: 'Take photo from URL [URL]',
+                    text: 'Search image using link [URL]',
                     arguments:{
                         URL: {
                             type: ArgumentType.STRING,
@@ -299,6 +298,11 @@ class Scratch3Watson {
                     text: 'What do you see in the photo?',
                 },
                 {
+                    opcode: 'recognizeObjectCommand',
+                    blockType: BlockType.COMMAND,
+                    text: 'Search prediction for your photo',
+                },
+                {
                     opcode: 'getScore',
                     blockType: BlockType.REPORTER,
                     text: 'How sure are you the photo is a [CLASS]?',
@@ -306,6 +310,17 @@ class Scratch3Watson {
                         CLASS: {
                             type: ArgumentType.STRING,
                             defaultValue: 'add category here'
+                        }
+                    }
+                },
+                {
+                    opcode:'trackLabel',
+                    blockType: BlockType.HAT,
+                    text: 'When image is [LABEL]',
+                    arguments:{
+                        LABEL:{
+                            type: ArgumentType.STRING, 
+                            default: 'add category here'
                         }
                     }
                 },
@@ -325,9 +340,11 @@ class Scratch3Watson {
                 //         }
                 //     }
                 // }
+
             ],
             menus: {
                 models: ['Default','RockPaperScissors'],
+                VIDEO_STATE: this._buildMenu(this.VIDEO_STATE_INFO)
             }
         };
     }
@@ -362,6 +379,10 @@ class Scratch3Watson {
     takePhoto (args, util) {
         imageData = this.runtime.ioDevices.video.getSnapshot();
         console.log(imageData);
+    }
+
+    recognizeObjectCommand(args, util){
+        return this.recognizeObject();
     }
 
     recognizeObject(args,util) {
@@ -493,6 +514,14 @@ class Scratch3Watson {
         classes = {};
     }
 
+    trackLabel(args, util){
+        let label = args.LABEL;
+        if(label == image_class){
+            return true;
+        } else {
+            return false;
+        }
+    }
     // updateClassifier(args, util){
     //     if(imageData.substring(0,4) === 'data'){
     //         request.post({
