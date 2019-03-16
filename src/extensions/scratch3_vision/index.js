@@ -320,7 +320,7 @@ class Scratch3Watson {
                     arguments:{
                         LABEL:{
                             type: ArgumentType.STRING, 
-                            default: 'add category here'
+                            defaultValue: 'add category here'
                         }
                     }
                 },
