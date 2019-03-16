@@ -281,17 +281,17 @@ class Scratch3Watson {
                     blockType: BlockType.COMMAND,
                     text: 'Take photo from webcam'
                 },
-                {
-                    opcode: 'urlPhoto',
-                    blockType: BlockType.COMMAND,
-                    text: 'Search image using link [URL]',
-                    arguments:{
-                        URL: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'add link here'
-                        }
-                    }
-                },
+                // {
+                //     opcode: 'urlPhoto',
+                //     blockType: BlockType.COMMAND,
+                //     text: 'Search image using link [URL]',
+                //     arguments:{
+                //         URL: {
+                //             type: ArgumentType.STRING,
+                //             defaultValue: 'add link here'
+                //         }
+                //     }
+                // },
                 {
                     opcode: 'recognizeObject',
                     blockType: BlockType.REPORTER,
