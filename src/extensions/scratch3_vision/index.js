@@ -267,7 +267,7 @@ class Scratch3Watson {
                 {
                     opcode: 'getModelfromString',
                     blockType: BlockType.COMMAND,
-                    text: 'Choose image model using id: [IDSTRING]',
+                    text: 'What is your training model id: [IDSTRING]',
                     //[THIS] needs to be equal to THIS in arguments
                     arguments: {
                         IDSTRING: {
@@ -312,7 +312,7 @@ class Scratch3Watson {
                     opcode: 'clearResults',
                     blockType: BlockType.COMMAND,
                     text: 'Clear results'
-                }
+                },
                 // {
                 //     opcode: 'updateClassifier',
                 //     blockType: BlockType.COMMAND,
@@ -323,7 +323,7 @@ class Scratch3Watson {
                 //             defaultValue: 'add category here'
                 //         }
                 //     }
-                // }
+                // },
             ],
             menus: {
                 models: ['Default','RockPaperScissors'],
