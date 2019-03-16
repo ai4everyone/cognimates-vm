@@ -267,7 +267,7 @@ class Scratch3Watson {
                 {
                     opcode: 'getModelfromString',
                     blockType: BlockType.COMMAND,
-                    text: 'Choose image model using id: [IDSTRING]',
+                    text: 'Choose image model: [IDSTRING]',
                     //[THIS] needs to be equal to THIS in arguments
                     arguments: {
                         IDSTRING: {
