@@ -52,6 +52,7 @@
     "scratch-translate-extension-languages": "0.0.20181205140428",
     "sentiment": "^5.0.1",
     "socket.io-client": "2.0.4",
+    "speech-synth": "^1.0.1",
     "text-encoding": "0.6.4",
     "tls": "0.0.1",
     "uglifyjs-webpack-plugin": "^2.1.1",

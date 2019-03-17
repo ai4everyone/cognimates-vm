@@ -3,8 +3,6 @@ const BlockType = require('../../extension-support/block-type');
 const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
-
-const iconURI = require('./assets/cognimate_icon');
 let connected = false;
 const socket = null;
 
