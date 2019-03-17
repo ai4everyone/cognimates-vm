@@ -22,19 +22,9 @@ const VideoState = {
     ON_FLIPPED: 'on-flipped'
 };
 
-//variables to make sure requests are complete before continuing
-const REQUEST_STATE = {
-    IDLE: 0,
-    PENDING: 1,
-    FINISHED: 2
-  };
-let classifyRequestState = REQUEST_STATE.IDLE;
-
 //server info
 let classifyURL = 'https://cognimate.me:2635/vision/classify';
-// let classifyURL = 'http://localhost:2635/vision/classify';
-let updateURL = 'http://localhost:2635/vision/updateClassifier';
-//let updateURL = 'https://cognimate.me:2635/vision/updateClassifier;
+let updateURL = 'https://cognimate.me:2635/vision/updateClassifier';
 
 //classifier_id
 let classifier_id;
@@ -50,7 +40,6 @@ let update_response;
 
 //image that user takes
 let videoElement;
-let hidden_canvas;
 let imageData;
 let _track;
 
@@ -473,8 +462,8 @@ class Scratch3Watson {
                     callback(err, response);
             });
         } else{
-            let url_classify_url = "http://localhost:2635/vision/classifyURLImage";
-            // let url_classify_url = "https://cognimates.me:2635/vision/classifyURLImage";
+            // let url_classify_url = "http://localhost:2635/vision/classifyURLImage";
+            let url_classify_url = "https://cognimate.me:2635/vision/classifyURLImage";
             nets({
                 url: url_classify_url,
                 headers: {'apikey': api_key,
