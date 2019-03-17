@@ -33,7 +33,8 @@ let classifyRequestState = REQUEST_STATE.IDLE;
 //server info
 let classifyURL = 'https://cognimate.me:2635/vision/classify';
 // let classifyURL = 'http://localhost:2635/vision/classify';
-// let updateURL = 'https://cognimate.me:3477/vision/update';
+let updateURL = 'http://localhost:2635/vision/updateClassifier';
+//let updateURL = 'https://cognimate.me:2635/vision/updateClassifier;
 
 //classifier_id
 let classifier_id;
@@ -281,17 +282,17 @@ class Scratch3Watson {
                     blockType: BlockType.COMMAND,
                     text: 'Take photo from webcam'
                 },
-                // {
-                //     opcode: 'urlPhoto',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'Search image using link [URL]',
-                //     arguments:{
-                //         URL: {
-                //             type: ArgumentType.STRING,
-                //             defaultValue: 'add link here'
-                //         }
-                //     }
-                // },
+                {
+                    opcode: 'urlPhoto',
+                    blockType: BlockType.COMMAND,
+                    text: 'Search image using link [URL]',
+                    arguments:{
+                        URL: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'add link here'
+                        }
+                    }
+                },
                 {
                     opcode: 'recognizeObject',
                     blockType: BlockType.REPORTER,
@@ -328,18 +329,18 @@ class Scratch3Watson {
                     opcode: 'clearResults',
                     blockType: BlockType.COMMAND,
                     text: 'Clear results'
+                },
+                {
+                    opcode: 'updateClassifier',
+                    blockType: BlockType.COMMAND,
+                    text: 'Add photo to [LABEL]',
+                    arguments:{
+                        LABEL:{
+                            type: ArgumentType.STRING,
+                            defaultValue: 'category name'
+                        }
+                    }
                 }
-                // {
-                //     opcode: 'updateClassifier',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'Add photo to [LABEL]',
-                //     arguments:{
-                //         LABEL:{
-                //             type: ArgumentType.STRING,
-                //             defaultValue: 'add category here'
-                //         }
-                //     }
-                // }
 
             ],
             menus: {
@@ -348,12 +349,6 @@ class Scratch3Watson {
             }
         };
     }
-
-
-    // getModelFromList (args, util){
-    //     classifier_id = modelDictionary[args.MODELNAME];
-    //     console.log(classifier_id);
-    // }
 
     getModelfromString (args, util){
         if(args.IDSTRING !== 'classifier id'){
@@ -522,27 +517,38 @@ class Scratch3Watson {
             return false;
         }
     }
-    // updateClassifier(args, util){
-    //     if(imageData.substring(0,4) === 'data'){
-    //         request.post({
-    //             url:     updateURL,
-    //             form:    { api_key: "1438a8fdb764f1c8af8ada02e6c601cec369fc40",
-    //                         version_date: '2018-03-19', classifier_id: classifier_id,
-    //                         label: args.LABEL,
-    //                         positive_example: imageData }
-    //             }, function(err, response, body) {
-    //                 if (err)
-    //                     console.log(err);
-    //                 else {
-    //                     update_response = response.body;
-    //                     console.log(response);
-    //                     console.log(update_response);
-    //                 }
-    //             });
-    //     } else{
-    //         return 'Only use webcam photos!'
-    //     }
-    // }
+    updateClassifier(args, util){
+        let category = args.LABEL;
+        let promise = new Promise((resolve)=>{
+            var formData = JSON.stringify({classifier_id: classifier_id, images:[imageData], class: category});
+            this.updateRequest(formData, function(err, response) {
+                if (err){
+                    console.log(err);
+                }
+                else {
+                    resolve(JSON.parse(response.body));
+                }
+            });
+        });
+        promise.then(output => output);
+        return promise;
+    }
+
+    updateRequest(formData, callback){
+        nets({
+            url: updateURL,
+            headers: {
+            'apikey': api_key,
+            'Content-Type': 'application/json' // important header to be included henceforth
+            }, // couldn't figure out how to get x-url-encoded content-type to work
+            method: 'POST',
+            body: formData,
+            encoding: undefined // This is important to get response as a string otherwise it returns a buffer array
+        }, function(err, response){
+            console.log(response);
+            callback(err, response);
+        });
+    }
 
     videoToggle (args) {
         const state = args.VIDEO_STATE;
