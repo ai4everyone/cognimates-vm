@@ -25,6 +25,7 @@ const Scratch3CozmoBlocks = require('../extensions/scratch3_cozmo');
 const Scratch3ErgoBlocks = require('../extensions/scratch3_ergo');
 const Scratch3TextBlocks = require('../extensions/scratch3_textClassify');
 const Scratch3SpeechBlocks = require('../extensions/scratch3_speech');
+const Scratch3MuseBlocks = require('../extensions/scratch3_muse');
 const Scratch3WemoBlocks = require('../extensions/scratch3_wemo');
 
 // todo: only load this extension once we have a compatible way to load its
@@ -50,7 +51,8 @@ const builtinExtensions = {
     ergo: Scratch3ErgoBlocks,
     sentiment: Scratch3SentimentBlocks,
     speech: Scratch3SpeechBlocks,
-    wemo: Scratch3WemoBlocks
+    wemo: Scratch3WemoBlocks,
+    muse: Scratch3MuseBlocks
     // gdxfor: Scratch3GdxForBlocks
 };
 
