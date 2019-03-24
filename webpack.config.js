@@ -81,7 +81,8 @@ module.exports = [
             'nets': true,
             'scratch-parser': true,
             'socket.io-client': true,
-            'text-encoding': true
+            'text-encoding': true,
+            'googleapis': true
         }
     }),
     // Playground

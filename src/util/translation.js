@@ -1,0 +1,82 @@
+class Translations {
+
+    static csvJSON(csv){
+
+      var lines=csv.split("\n");
+
+      var result = [];
+
+      var headers=lines[0].split(",");
+
+      for(var i=1;i<lines.length;i++){
+
+          var obj = {};
+          var currentline=lines[i].split(",");
+
+          for(var j=0;j<headers.length;j++){
+              obj[headers[j]] = currentline[j];
+          }
+
+          result.push(obj);
+
+      }
+
+      //return result; //JavaScript object
+      return JSON.stringify(result); //JSON
+    } 
+
+    static makeRequest (url, method) {
+
+        // Create the XHR request
+        var request = new XMLHttpRequest();
+
+        // Return it as a Promise
+        return new Promise(function (resolve, reject) {
+
+            // Setup our listener to process compeleted requests
+            request.onreadystatechange = function () {
+
+                // Only run if the request is complete
+                if (request.readyState !== 4) return;
+
+                // Process the response
+                if (request.status >= 200 && request.status < 300) {
+                    // If successful
+                    resolve(request);
+                } else {
+                    // If failed
+                    reject({
+                        status: request.status,
+                        statusText: request.statusText
+                    });
+                }
+
+            };
+
+            // Setup our HTTP request
+            request.open('POST', url, true);
+
+            // Send the request
+            request.send();
+
+        });
+    };
+
+    static Get() {
+        url = 'https://sheetsu.com/apis/v1.0su/2749ada2e00e'
+        var request = new XMLHttpRequest();
+        request.open('GET', url, false)
+        request.send()
+        var trans = JSON.parse(request.responseText)
+        return trans
+    }
+
+    static getTrans(lang) {
+        var json_obj = Translations.Get()
+        console.log(json_obj)
+        console.log("this is the author name: "+ json_obj['Name:']);
+    }
+
+}
+
+module.exports = Translations;
