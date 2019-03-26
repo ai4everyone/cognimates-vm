@@ -9,16 +9,16 @@ const RenderedTarget = require('../../sprites/rendered-target');
 
 const iconURI = require('./assets/ergo_icon');
 let hostURL = 'http://169.254.41.44:6969/';
-let connectionURL = `${hostURL  }ip/`;
-let motorsURL = `${hostURL  }motors/motors`;
-let motorsPositionURL = `${hostURL  }motors/set/goto/`;
-let motorsPositionGetURL = `${hostURL  }motors/get/positions`;
-let motorRegisterURL = `${hostURL  }motors/set/registers/`;
-let moveRecordURL = `${hostURL  }primitive/MoveRecorder/`;
-let movePlayerURL = `${hostURL  }primitive/MovePlayer/`;
-let primitivesURL = `${hostURL  }primitive/`;
-let detectURL = `${hostURL  }detect/`;
-let imageURL = `${hostURL  }camera/`;
+let connectionURL = `${hostURL}ip/`;
+let motorsURL = `${hostURL}motors/motors`;
+let motorsPositionURL = `${hostURL}motors/set/goto/`;
+let motorsPositionGetURL = `${hostURL}motors/get/positions`;
+let motorRegisterURL = `${hostURL}motors/set/registers/`;
+let moveRecordURL = `${hostURL}primitive/MoveRecorder/`;
+let movePlayerURL = `${hostURL}primitive/MovePlayer/`;
+let primitivesURL = `${hostURL}primitive/`;
+let detectURL = `${hostURL}detect/`;
+let imageURL = `${hostURL}camera/`;
 var connected = false;
 let motors = [];
 let markersQueue = [];
@@ -99,19 +99,24 @@ function getMotorsList (callback) {
     });
 }
 
-// function setHost (host) {
-//     hostURL = host;
-//     connectionURL = `${hostURL  }ip/`;
-//     motorsURL = `${hostURL  }motors/motors`;
-//     motorsPositionGetURL = `${hostURL  }motors/get/positions`;
-//     motorsPositionURL = `${hostURL  }motors/set/goto/`;
-//     motorRegisterURL = `${hostURL  }motors/set/registers/`;
-//     moveRecordURL = `${hostURL  }primitive/MoveRecorder/`;
-//     movePlayerURL = `${hostURL  }primitive/MovePlayer/`;
-//     primitivesURL = `${hostURL  }primitive/`;
-//     detectURL = `${hostURL  }detect/`;
-//     imageURL = `${hostURL  }camera/`;
-// }
+function setHost (host) {
+    if (host != undefined && host.length != 0) {
+      if (host[host.length-1] != '/') {
+      		host += '/';
+      }
+    }
+    hostURL = host;
+    connectionURL = `${hostURL}ip/`;
+    motorsURL = `${hostURL}motors/motors`;
+    motorsPositionGetURL = `${hostURL}motors/get/positions`;
+    motorsPositionURL = `${hostURL}motors/set/goto/`;
+    motorRegisterURL = `${hostURL}motors/set/registers/`;
+    moveRecordURL = `${hostURL}primitive/MoveRecorder/`;
+    movePlayerURL = `${hostURL}primitive/MovePlayer/`;
+    primitivesURL = `${hostURL}primitive/`;
+    detectURL = `${hostURL}detect/`;
+    imageURL = `${hostURL}camera/`;
+}
 
 function sendRequest (requestURL, params, callback) {
     const request = new XMLHttpRequest();
@@ -184,7 +189,6 @@ function getImage  (params = '') {
 class Scratch3Ergo {
     constructor (runtime) {
         this.runtime = runtime;
-
     }
 
     getInfo () {
@@ -193,6 +197,17 @@ class Scratch3Ergo {
             name: 'Ergo',
             blockIconURI: iconURI,
             blocks: [
+                {
+                    opcode: 'setIPAddress',
+                    blockType: BlockType.COMMAND,
+                    text: 'Set robot IP address: [ADDRESS]',
+                    arguments: {
+                        ADDRESS: {
+                            type: ArgumentType.STRING.
+                            defaultValue: 'http://169.254.41.44:6969/'
+                        }
+                    }
+                },
                 {
                     opcode: 'connectErgo',
                     blockType: BlockType.COMMAND,
@@ -283,17 +298,21 @@ class Scratch3Ergo {
         };
     }
 
+    setIPAddress (args) {
+        setHost(args.ADDRESS);
+    }
+
 
     connectErgo () {
         sendRequest(connectionURL, null, (e) => {
-        if(e.length > 0) {
-          connected = true;
-          getMotorsList(callback);
-          updateInterval = setInterval(update, 1000);
-        } else {
-          connected = false;
-        }
-      });
+          if(e.length > 0) {
+            connected = true;
+            getMotorsList(callback);
+            updateInterval = setInterval(update, 1000);
+          } else {
+            connected = false;
+          }
+        });
     }
 
 
