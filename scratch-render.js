@@ -14887,13 +14887,13 @@ var __SilhouetteUpdateCanvas = void 0;
 var getPoint = function getPoint(_ref, x, y) {
     var width = _ref._width,
         height = _ref._height,
-        data = _ref._colorData;
+        data = _ref._data;
 
     // 0 if outside bouds, otherwise read from data.
     if (x >= width || y >= height || x < 0 || y < 0) {
         return 0;
     }
-    return data[(y * width + x) * 4 + 3];
+    return data[y * width + x];
 };
 
 /**
@@ -14946,6 +14946,7 @@ var Silhouette = function () {
          * The data representing a skin's silhouette shape.
          * @type {Uint8ClampedArray}
          */
+        this._data = null;
         this._colorData = null;
 
         this.colorAtNearest = this.colorAtLinear = function (_, dst) {
@@ -14975,11 +14976,16 @@ var Silhouette = function () {
             ctx.drawImage(bitmapData, 0, 0, width, height);
             var imageData = ctx.getImageData(0, 0, width, height);
 
+            this._data = new Uint8ClampedArray(imageData.data.length / 4);
             this._colorData = imageData.data;
             // delete our custom overriden "uninitalized" color functions
             // let the prototype work for itself
             delete this.colorAtNearest;
             delete this.colorAtLinear;
+
+            for (var i = 0; i < imageData.data.length; i += 4) {
+                this._data[i / 4] = imageData.data[i + 3];
+            }
         }
 
         /**
@@ -15040,7 +15046,7 @@ var Silhouette = function () {
     }, {
         key: 'isTouchingNearest',
         value: function isTouchingNearest(vec) {
-            if (!this._colorData) return;
+            if (!this._data) return;
             return getPoint(this, Math.floor(vec[0] * (this._width - 1)), Math.floor(vec[1] * (this._height - 1))) > 0;
         }
 
@@ -15054,7 +15060,7 @@ var Silhouette = function () {
     }, {
         key: 'isTouchingLinear',
         value: function isTouchingLinear(vec) {
-            if (!this._colorData) return;
+            if (!this._data) return;
             var x = Math.floor(vec[0] * (this._width - 1));
             var y = Math.floor(vec[1] * (this._height - 1));
             return getPoint(this, x, y) > 0 || getPoint(this, x + 1, y) > 0 || getPoint(this, x, y + 1) > 0 || getPoint(this, x + 1, y + 1) > 0;
@@ -16995,25 +17001,31 @@ class SvgRenderer {
      * a natural and performant way.
      */
     _transformMeasurements () {
+        // Save `svgText` for later re-parsing.
+        const svgText = this.toString();
+
         // Append the SVG dom to the document.
         // This allows us to use `getBBox` on the page,
         // which returns the full bounding-box of all drawn SVG
         // elements, similar to how Scratch 2.0 did measurement.
         const svgSpot = document.createElement('span');
-        // Clone the svg tag. This tag becomes unusable/undrawable in browsers
-        // once it's appended to the page, perhaps for security reasons?
-        const tempTag = this._svgTag.cloneNode(/* deep */ true);
         let bbox;
         try {
-            svgSpot.appendChild(tempTag);
             document.body.appendChild(svgSpot);
+            svgSpot.appendChild(this._svgTag);
             // Take the bounding box.
-            bbox = tempTag.getBBox();
+            bbox = this._svgTag.getBBox();
         } finally {
             // Always destroy the element, even if, for example, getBBox throws.
             document.body.removeChild(svgSpot);
-            svgSpot.removeChild(tempTag);
         }
+
+        // Re-parse the SVG from `svgText`. The above DOM becomes
+        // unusable/undrawable in browsers once it's appended to the page,
+        // perhaps for security reasons?
+        const parser = new DOMParser();
+        this._svgDom = parser.parseFromString(svgText, 'text/xml');
+        this._svgTag = this._svgDom.documentElement;
 
         // Enlarge the bbox from the largest found stroke width
         // This may have false-positives, but at least the bbox will always
