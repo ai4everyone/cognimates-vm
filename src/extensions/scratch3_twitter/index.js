@@ -4,6 +4,7 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
+const Translations = require('../../util/translation');
 
 //twitter vars
 const iconURI = require('./assets/twitter_icon');
@@ -11,6 +12,7 @@ const iconURI = require('./assets/twitter_icon');
 let server_url = 'https://cognimate.me:3276/twitter/call';
 let output = null;
 let top_output = null;
+var Translation = new Translations();
 
 const REQUEST_STATE = {
     IDLE: 0,

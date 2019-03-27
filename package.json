@@ -41,6 +41,7 @@
     "eslint": "^4.0.0",
     "format-message": "6.2.1",
     "fs": "0.0.1-security",
+    "generate-json-webpack-plugin": "^0.3.1",
     "google-spreadsheet": "^2.0.7",
     "googleapis": "^38.0.0",
     "htmlparser2": "3.10.0",
@@ -58,7 +59,9 @@
     "text-encoding": "0.6.4",
     "tls": "0.0.1",
     "uglifyjs-webpack-plugin": "^2.1.1",
-    "worker-loader": "^1.1.1"
+    "worker-loader": "^1.1.1",
+    "write-json-webpack-plugin": "^1.1.0",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

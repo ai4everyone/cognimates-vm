@@ -6,9 +6,6 @@ const Timer = require('../../util/timer');
 const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
 const Translations = require('../../util/translation');
-var lookupClosestLocale = require('lookup-closest-locale')
-const formatMessage = require('format-message');
-
 
 // sentiment
 var Sentiment = require('sentiment');
@@ -16,10 +13,11 @@ var sentiment = new Sentiment();
 let localSentiment = 1;
 let server_url = 'http://text-processing.com/api/sentiment/';
 let feeling;
-const iconURI = require('./assets/sentiment_icon');
-var Translation = new Translations();
-Translation.setup();
+var Translation;
 
+const iconURI = require('./assets/sentiment_icon');
+
+var Translation = new Translations();
 
 class Scratch3Sentiment {
     constructor (runtime) {
