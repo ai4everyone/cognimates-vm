@@ -204,7 +204,7 @@ class Scratch3Ergo {
                     arguments: {
                         ADDRESS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'http://169.254.41.44:6969/'
+                            defaultValue: 'add your robot IP here'
                         }
                     }
                 },
