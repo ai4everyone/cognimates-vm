@@ -118,22 +118,22 @@ function setHost (host) {
     imageURL = `${hostURL}camera/`;
 }
 
-function sendRequest (requestURL, params, callback) {
-    const request = new XMLHttpRequest();
-    request.onreadystatechange = function () {
-        if (request.readyState == 4) {
-            if (callback != undefined) {
-                callback(request.responseText);
-            }
-        }
-    };
-    if (params != null) {
-        request.open('GET', requestURL + params, true);
-    } else {
-        request.open('GET', requestURL, true);
-    }
-    request.send();
-}
+// function sendRequest (requestURL, params, callback) {
+//     const request = new XMLHttpRequest();
+//     request.onreadystatechange = function () {
+//         if (request.readyState == 4) {
+//             if (callback != undefined) {
+//                 callback(request.responseText);
+//             }
+//         }
+//     };
+//     if (params != null) {
+//         request.open('GET', requestURL + params, true);
+//     } else {
+//         request.open('GET', requestURL, true);
+//     }
+//     request.send();
+// }
 
 function setRegisterValues (selectedMotors, register, values, callback) {
     if(selectedMotors.length != values.length) {
