@@ -2,29 +2,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const defaultsDeep = require('lodash.defaultsdeep');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const GenerateJsonPlugin = require('generate-json-webpack-plugin');
-var WriteJsonPlugin = require('write-json-webpack-plugin');
-
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
-
-function Get() {
-    var trans;
-    url = 'https://sheetsu.com/apis/v1.0su/2749ada2e00e'
-    var request = new XMLHttpRequest();
-    request.open('GET', url, false)
-    request.send()
-    trans = JSON.parse(request.responseText)
-    return trans
-}
-
-function reformat(arr) {
-    var trans = {};
-    for (row in arr) {
-        trans[arr[row]['Language']] = arr[row];
-    }
-    return trans;
-}
 
 const base = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -50,10 +27,6 @@ const base = {
         {
             test: /\.mp3$/,
             loader: 'file-loader'
-        },
-        {
-            test: /\.json$/,
-            loader: 'json-loader'
         }]
     },
     optimization: {
@@ -63,14 +36,7 @@ const base = {
             })
         ]
     },
-    plugins: [
-        new WriteJsonPlugin({
-            object: reformat(Get()),
-            path: '../',
-            filename: 'trans.json',
-            pretty: true
-        })
-    ]
+    plugins: []
 };
 
 module.exports = [
@@ -116,8 +82,8 @@ module.exports = [
             'scratch-parser': true,
             'socket.io-client': true,
             'text-encoding': true,
+            'googleapis': true
         }
-
     }),
     // Playground
     defaultsDeep({}, base, {
