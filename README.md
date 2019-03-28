@@ -12,4 +12,4 @@ Cognimates is platform where parents and children (7-10 years old) participate i
 * Tammy Qiu 
 * Steven Dale 
 
-Cognimates VM is building on [Scratch VM](https://github.com/LLK/scratch-vm/)provided as open source library by MIT Lifelong Kindergarten Group.
+Cognimates VM is building on [Scratch VM](https://github.com/LLK/scratch-vm/) provided as open source library by MIT Lifelong Kindergarten Group.
