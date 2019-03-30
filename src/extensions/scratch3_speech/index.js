@@ -5,6 +5,8 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
+const Translations = require('../../util/translation');
+
 
 // sentiment
 var Sentiment = require('sentiment');
@@ -88,34 +90,34 @@ class Scratch3Speech {
                 {
                     opcode: 'startSpeechRecognition',
                     blockType: BlockType.COMMAND,
-                    text: 'Start listening'
+                    text: Translations('Start listening')
                 },
                 {
                     opcode: 'stopSpeechRecognition',
                     blockType: BlockType.COMMAND,
-                    text: 'Stop listening'
+                    text: Translations('Stop listening')
                 },
                 {
                     opcode: 'whenIHear',
                     blockType: BlockType.HAT,
-                    text: 'When I hear[TEXT]',
+                    text: Translations('When I hear') + ' [TEXT]',
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'hello'
+                            defaultValue: Translations('hello')
                         }
                     }
                 },
                  {
                     opcode: 'getLatestSpeech',
                     blockType: BlockType.REPORTER,
-                    text: 'Get latest speech'
+                    text: Translations('Get latest speech')
                 }
                 
             ],
             menus: {
                 trueFalse: ['true', 'false'],
-                STATES: ['on', 'off']
+                STATES: [Translations('on'), Translations('off')]
             }
         };
     }

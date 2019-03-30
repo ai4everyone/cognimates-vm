@@ -12,7 +12,6 @@ const iconURI = require('./assets/twitter_icon');
 let server_url = 'https://cognimate.me:3276/twitter/call';
 let output = null;
 let top_output = null;
-var Translation = new Translations();
 
 const REQUEST_STATE = {
     IDLE: 0,
@@ -36,7 +35,7 @@ class Scratch3Twitter {
                 {
                     opcode: 'latestUserTweet',
                     blockType: BlockType.REPORTER,
-                    text: 'Get the latest tweet from @[USER]',
+                    text: Translations('Get the latest tweet from') +  '@[USER]',
                     arguments:{
                         USER: {
                             type: ArgumentType.STRING,
@@ -47,12 +46,12 @@ class Scratch3Twitter {
                 {
                     opcode: 'getTopTweet',
                     blockType: BlockType.REPORTER,
-                    text: 'Most [CATEGORY] tweet containing #[HASH]',
+                    text: Translations('Most [CATEGORY] tweet containing #[HASH]'),
                     arguments:{
                         CATEGORY:{
                             type: ArgumentType.STRING,
                             menu: 'categories',
-                            defaultValue: 'recent'
+                            defaultValue: Translations('recent')
                         },
                         HASH:{
                             type: ArgumentType.STRING,
@@ -63,7 +62,7 @@ class Scratch3Twitter {
 
             ],
             menus: {
-             	categories: ['recent', 'popular']
+             	categories: [Translations('recent'), Translations('popular')]
             }
         };
     }

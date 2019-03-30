@@ -3,6 +3,9 @@ const BlockType = require('../../extension-support/block-type');
 const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
+const Translations = require('../../util/translation');
+
+
 let connected = false;
 const socket = null;
 
@@ -149,18 +152,18 @@ class Scratch3Cognimate {
                 {
                     opcode: 'speak',
                     blockType: BlockType.COMMAND,
-                    text: 'Say: [phrase]',
+                    text: Translations('Say') + ' : [phrase]',
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'hey'
+                            defaultValue: Translations('hey')
                         }
                     }
                 },
                 {                
                     opcode: 'tutorVoice',
                     blockType: BlockType.COMMAND,
-                    text: 'set voice to [VOICE]',
+                    text: Translations('Set voice to') + ' [VOICE]',
                     arguments: {
                         VOICE: {
                             type: ArgumentType.STRING,
@@ -172,19 +175,19 @@ class Scratch3Cognimate {
                 {
                     opcode: 'mission',
                     blockType: BlockType.COMMAND,
-                    text: 'Mission number: [missionNum]',
+                    text: Translations('Mission number') + ': [missionNum]',
                     arguments: {
                         missionNum: {
                             type: ArgumentType.STRING,
                             menu: 'mission',
-                            defaultValue: 'Introduction'
+                            defaultValue: Translations('Introduction')
                         }
                     }
                 },
                 {
                     opcode: 'closeMission',
                     blockType: BlockType.COMMAND,
-                    text: 'End current mission'
+                    text: Translations('End current mission')
                 }
                 // {
                 //     opcode: 'playAudio',
