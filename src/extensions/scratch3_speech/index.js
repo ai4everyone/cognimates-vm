@@ -116,7 +116,7 @@ class Scratch3Speech {
                 
             ],
             menus: {
-                trueFalse: ['true', 'false'],
+                trueFalse: [Translations('true'), Translations('false')],
                 STATES: [Translations('on'), Translations('off')]
             }
         };

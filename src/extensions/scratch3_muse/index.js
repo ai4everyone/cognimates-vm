@@ -5,6 +5,7 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
+const Translations = require('../../util/translation');
 
 const muse = require('muse-js');
 const rxjs = require('rxjs');
@@ -47,30 +48,31 @@ class Scratch3Muse {
                 {
                     opcode: 'connect',
                     blockType: BlockType.COMMAND,
-                    text: 'Connect Muse'
+                    text: Translations('Connect Muse')
                 },
                 {
                     opcode: 'museBlink',
                     blockType: BlockType.HAT,
-                    text: 'When I blink'
+                    text: Translations('When I blink')
                 },
                 {
                     opcode: 'getSignal',
                     blockType: BlockType.REPORTER,
-                    text: 'Get value of [TEXT]?',
+                    text: Translations('Get value of') + ' [TEXT]?',
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
                             menu: 'signals',
-                            defaultValue: 'left sensor'
+                            defaultValue: Translations('left sensor')
                         }
                     }
                 }
                 
             ],
             menus: {
-                 trueFalse: ['true', 'false'],
-                 signals: ['left sensor', 'right sensor', 'left ear', 'right ear']
+                 trueFalse: [Translations('true'), Translations('false')],
+                 signals: [Translations('left sensor'), Translations('right sensor'), 
+                            Translations('left ear'), Translations('right ear')]
             }
         };
     }
