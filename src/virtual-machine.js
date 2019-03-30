@@ -1508,6 +1508,23 @@ class VirtualMachine extends EventEmitter {
         }
         return null;
     }
+
+    /**
+     * Load an extension based on its URL using the Extension Manager instance
+     * @param {!string} extensionUrl The remote URL to the extension JS file.
+     */
+    loadExtensionFromURL (extensionUrl) {
+        const loadExtensionPromise = new Promise((resolve, reject) => {
+          this.extensionManager.loadExtensionURL(extensionUrl)
+              .then(() => {
+                  resolve();
+              })
+              .catch((e) => {
+                  reject(e);
+              })
+        });
+        return loadExtensionPromise;
+    }
 }
 
 module.exports = VirtualMachine;

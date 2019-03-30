@@ -25,9 +25,11 @@ const VideoState = {
 //server info
 let classifyURL = 'https://cognimate.me:2635/vision/classify';
 let updateURL = 'https://cognimate.me:2635/vision/updateClassifier';
+// let classifyURL = 'http://localhost:2635/vision/classify';
+// let updateURL = 'http://localhost:2635/vision/updateClassifier';
 
 //classifier_id
-let classifier_id;
+let classifier_id = 'general1234';
 let api_key;
 
 //for parsing image response
@@ -267,6 +269,18 @@ class Scratch3Watson {
                     }
                 },
                 {
+                    opcode: 'setGenModel',
+                    blockType: BlockType.COMMAND,
+                    text: 'Choose pre-trained model',
+                    //[THIS] needs to be equal to THIS in arguments
+                    arguments: {
+                        IDSTRING: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'model id'
+                        }
+                    }
+                },
+                {
                     opcode: 'takePhoto',
                     blockType: BlockType.COMMAND,
                     text: 'Take photo from webcam'
@@ -343,6 +357,10 @@ class Scratch3Watson {
         if(args.IDSTRING !== 'classifier id'){
             classifier_id = args.IDSTRING;
         }
+    }
+
+    setGenModel (args, util){
+        classifier_id = 'general1234';
     }
 
     getScore(args, util){
