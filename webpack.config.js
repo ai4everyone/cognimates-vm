@@ -40,6 +40,11 @@ const base = {
 };
 
 module.exports = [
+    // resolve: {
+    //     alias: {
+    //         'osc': path.join(__dirname, 'node_modules/osc/osc.js')
+    //     }
+    // },
     // Web-compatible
     defaultsDeep({}, base, {
         target: 'web',
@@ -82,7 +87,14 @@ module.exports = [
             'scratch-parser': true,
             'socket.io-client': true,
             'text-encoding': true,
-            'googleapis': true
+            'googleapis': true,
+            'rxjs': true,
+            'muse-js': true
+        },
+        resolve: {
+            alias: {
+                'osc': path.resolve(__dirname, 'node_modules/osc/')
+            }
         }
     }),
     // Playground
