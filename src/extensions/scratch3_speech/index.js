@@ -72,7 +72,7 @@ class Scratch3Speech {
     getInfo () {
         return {
             id: 'speech',
-            name: 'Speech to Text',
+            name: Translations('Speech to Text'),
             blockIconURI: iconURI,
             blocks: [
                 // {

@@ -1,7 +1,9 @@
 const formatMessage = require('format-message');
 
 const language_codes = {
-    'German': 'de'
+    //'German': 'de',
+    'Spanish': 'es',
+    'French': 'fr'
 }
 
 toLower = function(dict) {
@@ -15,7 +17,8 @@ toLower = function(dict) {
 reformat = function(arr) {
     var trans = {};
     for (row in arr) {
-        var lang = language_codes[arr[row]['Language']]
+        var lang = language_codes[arr[row]['Language'].trim()]
+        console.log(arr[row]['Language'])
         trans[lang] = toLower(arr[row]);
     }
     console.log(trans)
