@@ -5,7 +5,6 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/text_icon');
-const Translations = require('../../util/translation');
 
 // let base_url = 'https://cognimate.me:2636/nlc';
 let base_url = 'https://cognimate.me:2635/nlc';
@@ -87,7 +86,7 @@ class Scratch3TextClassify {
                 {
                     opcode: 'trainText',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Send text [TEXT] to train'),
+                    text: Translations('Send texts [TEXT] to train'),
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
@@ -98,33 +97,33 @@ class Scratch3TextClassify {
                 {
                     opcode: 'classifyText',
                     blockType: BlockType.REPORTER,
-                    text: Translations('What kind of phrase is [TEXT]?'),
+                    text: 'What kind of phrase is [TEXT]?',
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('phrase')
+                            defaultValue: 'phrase'
                         }
                     }
                 },
                 {
                     opcode: 'getScore',
                     blockType: BlockType.REPORTER,
-                    text: Translations('How sure are you the text is a [CLASS]?'),
+                    text: 'How sure are you the text is a [CLASS]?',
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('add category here')
+                            defaultValue: 'add category here'
                         }
                     }
                 },
                 {
                     opcode: 'textHat',
                     blockType: BlockType.HAT,
-                    text: Translations('When text is [CLASS]'),
+                    text: 'When text is [CLASS]',
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('add category here')
+                            defaultValue: 'add category here'
                         }
                     }
                 }

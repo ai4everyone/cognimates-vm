@@ -5,7 +5,6 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/vision_icon');
-const Translations = require('../../util/translation');
 
 let image;
 
@@ -237,7 +236,7 @@ class Scratch3Watson {
             blocks: [
                 {
                     opcode: 'videoToggle',
-                    text: Translations('Turn video') + ' [VIDEO_STATE]',
+                    text: 'turn video [VIDEO_STATE]',
                     arguments: {
                         VIDEO_STATE: {
                             type: ArgumentType.NUMBER,
@@ -249,35 +248,35 @@ class Scratch3Watson {
                 {
                     opcode: 'setAPI',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set API key to') + ' [KEY]',
+                    text: 'Set API key to [KEY]',
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('key')
+                            defaultValue: 'key'
                         }
                     }
                 },
                 {
                     opcode: 'getModelfromString',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Choose image model') + ': [IDSTRING]',
+                    text: 'Choose image model: [IDSTRING]',
                     //[THIS] needs to be equal to THIS in arguments
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('model id')
+                            defaultValue: 'model id'
                         }
                     }
                 },
                 {
                     opcode: 'setGenModel',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Choose pre-trained model'),
+                    text: 'Choose pre-trained model',
                     //[THIS] needs to be equal to THIS in arguments
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('model id')
+                            defaultValue: 'model id'
                         }
                     }
                 },
@@ -296,64 +295,64 @@ class Scratch3Watson {
                 {
                     opcode: 'takePhoto',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Take photo from webcam')
+                    text: 'Take photo from webcam'
                 },
                 {
                     opcode: 'urlPhoto',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Search image using link') + ' [URL]',
+                    text: 'Search image using link [URL]',
                     arguments:{
                         URL: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('add link here')
+                            defaultValue: 'add link here'
                         }
                     }
                 },
                 {
                     opcode: 'recognizeObject',
                     blockType: BlockType.REPORTER,
-                    text: Translations('What do you see in the photo?'),
+                    text: 'What do you see in the photo?',
                 },
                 {
                     opcode: 'recognizeObjectCommand',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Search prediction for your photo'),
+                    text: 'Search prediction for your photo',
                 },
                 {
                     opcode: 'getScore',
                     blockType: BlockType.REPORTER,
-                    text: Translations('How sure are you the photo is a [CLASS]?'),
+                    text: 'How sure are you the photo is a [CLASS]?',
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('add category here')
+                            defaultValue: 'add category here'
                         }
                     }
                 },
                 {
                     opcode:'trackLabel',
                     blockType: BlockType.HAT,
-                    text: Translations('When image is') + ' [LABEL]',
+                    text: 'When image is [LABEL]',
                     arguments:{
                         LABEL:{
                             type: ArgumentType.STRING, 
-                            defaultValue: Translations('add category here')
+                            defaultValue: 'add category here'
                         }
                     }
                 },
                 {
                     opcode: 'clearResults',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Clear results')
+                    text: 'Clear results'
                 },
                 {
                     opcode: 'updateClassifier',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Add photo to') + ' [LABEL]',
+                    text: 'Add photo to [LABEL]',
                     arguments:{
                         LABEL:{
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('category name')
+                            defaultValue: 'category name'
                         }
                     }
                 }

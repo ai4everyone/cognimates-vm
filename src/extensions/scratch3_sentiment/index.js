@@ -63,7 +63,7 @@ class Scratch3Sentiment {
                 
             ],
             menus: {
-             	trueFalse: [Translations('true'), Translations('false')]
+             	trueFalse: ['true', 'false']
             }
         };
     }
