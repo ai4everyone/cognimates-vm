@@ -4,7 +4,6 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const nets = require('nets');
 const SocketIO = require('socket.io-client');
-const Translations = require('../../util/translation');
 
 
 // const BASE_URL = 'http://35.169.45.24:6456';
@@ -43,7 +42,7 @@ class Scratch3Alexa {
                 {
                     opcode: 'registerUser',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Create account') + ':' + Translations('Username') + '[USERNAME]   ' + Translations('Passphrase') + ' [PASSPHRASE]',
+                    text: 'Create account: Username [USERNAME]   Passphrase [PASSPHRASE]',
                     arguments: {
                         USERNAME: {
                             type: ArgumentType.STRING,
@@ -58,7 +57,7 @@ class Scratch3Alexa {
                 {
                     opcode: 'loginUser',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Access account') + ' :' + Translations('Username') + ' [USERNAME]   ' + Translations('Passphrase') + ' [PASSPHRASE]',
+                    text: 'Access account: Username [USERNAME]   Passphrase [PASSPHRASE]',
                     arguments: {
                         USERNAME: {
                             type: ArgumentType.STRING,
@@ -73,11 +72,11 @@ class Scratch3Alexa {
                 {
                     opcode: 'addUserAttribute',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Tell Alexa my favourite [ATTRIBUTE] is [VALUE]'),
+                    text: 'Tell Alexa my favourite [ATTRIBUTE] is [VALUE]',
                     arguments: {
                         ATTRIBUTE: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('band')
+                            defaultValue: 'band'
                         },
                         VALUE: {
                             type: ArgumentType.STRING,
@@ -88,11 +87,11 @@ class Scratch3Alexa {
                 {
                     opcode: 'addUserAttribute2',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Tell Alexa my current [ATTRIBUTE] is [VALUE]'),
+                    text: 'Tell Alexa my current [ATTRIBUTE] is [VALUE]',
                     arguments: {
                         ATTRIBUTE: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('age')
+                            defaultValue: 'age'
                         },
                         VALUE: {
                             type: ArgumentType.STRING,
@@ -103,11 +102,11 @@ class Scratch3Alexa {
                 {
                     opcode: 'addUserAttribute3',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Tell Alexa my [ATTRIBUTE] is [VALUE]'),
+                    text: 'Tell Alexa my [ATTRIBUTE] is [VALUE]',
                     arguments: {
                         ATTRIBUTE: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('location')
+                            defaultValue: 'location'
                         },
                         VALUE: {
                             type: ArgumentType.STRING,
@@ -118,11 +117,11 @@ class Scratch3Alexa {
                 {
                     opcode: 'addAlexaAttribute',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Tell Alexa its favourite [ATTRIBUTE] is [VALUE]'),
+                    text: 'Tell Alexa it\'s favourite [ATTRIBUTE] is [VALUE]',
                     arguments: {
                         ATTRIBUTE: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('movie')
+                            defaultValue: 'movie'
                         },
                         VALUE: {
                             type: ArgumentType.STRING,
@@ -133,7 +132,7 @@ class Scratch3Alexa {
                 {
                     opcode: 'addUserMessage',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Message Alexa') + ' : [MESSAGE]',
+                    text: 'Message Alexa: [MESSAGE]',
                     arguments: {
                         MESSAGE: {
                             type: ArgumentType.STRING,
@@ -144,22 +143,22 @@ class Scratch3Alexa {
                 {
                     opcode: 'runBlockSet1',
                     blockType: BlockType.HAT,
-                    text: Translations('Command') + '1'
+                    text: 'Command 1'
                 },
                 {
                     opcode: 'runBlockSet2',
                     blockType: BlockType.HAT,
-                    text: Translations('Command') + '2'
+                    text: 'Command 2'
                 },
                 {
                     opcode: 'runBlockSet3',
                     blockType: BlockType.HAT,
-                    text: Translations('Command') + '3'
+                    text: 'Command 3'
                 },
                 {
                     opcode: 'getAccessCode',
                     blockType: BlockType.REPORTER,
-                    text: Translations('Access Code')
+                    text: 'Access Code'
                 }
             ]
         };

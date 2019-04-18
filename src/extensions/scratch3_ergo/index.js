@@ -4,8 +4,6 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const RenderedTarget = require('../../sprites/rendered-target');
-const Translations = require('../../util/translation');
-
 
 // ergo
 
@@ -213,24 +211,24 @@ class Scratch3Ergo {
                 {
                     opcode: 'connectErgo',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Connect robot')
+                    text: 'Connect robot'
                 },
                 {
                     opcode: 'turnTo',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Turn to') + ' [DIRECTION]',
+                    text: 'Turn to [DIRECTION]',
                     arguments: {
                         DIRECTION: {
                             type: ArgumentType.STRING,
                             menu:'motorDirection',
-                            defaultValue: Translations('Right')
+                            defaultValue: 'Right'
                         }
                     }
                 },
                 {
                     opcode: 'setLED',
                     blockType: BlockType.BOOLEAN,
-                    text: Translations('Set motors [MOTORS] to color [COLOR]'),
+                    text: 'Set motors [MOTORS] to color [COLOR]',
                     arguments: {
                         MOTORS: {
                             type: ArgumentType.STRING,
@@ -239,7 +237,7 @@ class Scratch3Ergo {
                         COLOR: {
                             type: ArgumentType.STRING,
                             menu:'lights',
-                            defaultValue: Translations('green')
+                            defaultValue: 'green'
                         }
 
                     }
@@ -247,12 +245,12 @@ class Scratch3Ergo {
                 {
                     opcode: 'setPosture',
                     blockType: BlockType.BOOLEAN,
-                    text: Translations('Set posture') + ' [POSTURE]',
+                    text: 'Set posture [POSTURE]',
                     arguments: {
                         POSTURE: {
                             type: ArgumentType.STRING,
                             menu:'postures',
-                            defaultValue: Translations('curious')
+                            defaultValue: 'curious'
                         }
                     }
                 },
@@ -290,16 +288,12 @@ class Scratch3Ergo {
 
             ],
             menus: {
-                motorDirection: [Translations('Left'), Translations('Right'), Translations('Front'), Translations('Back')],
-                lights: [Translations('off'), Translations('red'), Translations('green'), 
-                        Translations('blue'), Translations('yellow'), Translations('pink'), 
-                        Translations('cyan'), Translations('white')],
-                danceMenu: [Translations('start'), Translations('stop'), 
-                            Translations('pause'), Translations('resume')],
-                playMenu: [Translations('Play'), Translations('Stop')],
-                postures: [Translations('rest'), Translations('curious'), 
-                            Translations('tetris'), Translations('base')],
-                markerDetection: [Translations('start'), Translations('stop')]
+                motorDirection: ['Left', 'Right', 'Front', 'Back'],
+                lights: ['off', 'red', 'green', 'blue', 'yellow', 'pink', 'cyan', 'white'],
+                danceMenu: ['start', 'stop', 'pause', 'resume'],
+                playMenu: ['Play', 'Stop'],
+                postures: ['rest', 'curious', 'tetris', 'base'],
+                markerDetection: ['start', 'stop']
             }
         };
     }

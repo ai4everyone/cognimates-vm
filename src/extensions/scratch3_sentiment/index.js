@@ -17,6 +17,9 @@ let localSentiment = 1;
 let server_url = 'http://text-processing.com/api/sentiment/';
 let feeling;
 const iconURI = require('./assets/sentiment_icon');
+var Translation = new Translations();
+Translation.setup();
+
 
 class Scratch3Sentiment {
     constructor (runtime) {
@@ -34,29 +37,29 @@ class Scratch3Sentiment {
                     opcode: 'whenPositive',
                     blockType: BlockType.HAT,
                     //text: 'When text is positive'
-                    text: Translations("When text is positive")
+                    text: Translation.getTrans("When text is positive")
                 },
                 {
                     opcode: 'whenNegative',
                     blockType: BlockType.HAT,
                     //text: 'When text is negative'
-                    text: Translations("When text is negative")
+                    text: Translation.getTrans("When text is negative")
                 },
                 {
                     opcode: 'whenNeutral',
                     blockType: BlockType.HAT,
                     //text: 'When text is neutral'
-                    text: Translations("When text is neutral")
+                    text: Translation.getTrans("When text is neutral")
                 },
                 {
                     opcode: 'getFeeling',
                     blockType: BlockType.REPORTER,
                     //text: 'What is the feeling of the text: [phrase]?',
-                    text: Translations("What is the feeling of the text") + ": [phrase]?",
+                    text: Translation.getTrans("What is the feeling of the text") + ": [phrase]?",
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('your text here')
+                            defaultValue: 'your text here'
                         }
                     }
                 }

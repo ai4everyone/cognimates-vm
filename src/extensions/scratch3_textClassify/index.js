@@ -31,66 +31,66 @@ class Scratch3TextClassify {
                 {
                     opcode: 'setReadAPI',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set Read API key to') + ' [KEY]',
+                    text: 'Set Read API key to [KEY]',
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('key')
+                            defaultValue: 'key'
                         }
                     }
                 },
                 {
                     opcode: 'setWriteAPI',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set Write API key to') + ' [KEY]',
+                    text: 'Set Write API key to [KEY]',
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('key')
+                            defaultValue: 'key'
                         }
                     }
                 },
                 {
                     opcode: 'setUsername',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set username to') + ' [USER]',
+                    text: 'Set username to [USER]',
                     arguments:{
                         USER:{
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('user')
+                            defaultValue: 'user'
                         }
                     }
                 },
                 {
                     opcode: 'getClassifier',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Choose text model') + ': [IDSTRING]',
+                    text: 'Choose text model: [IDSTRING]',
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('model name')
+                            defaultValue: 'model name'
                         }
                     }
                 },
                 {
                     opcode: 'getClass',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set category to train') + ': [CLASS]',
+                    text: 'Set category to train: [CLASS]',
                     arguments: {
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('category name')
+                            defaultValue: 'category name'
                         }
                     }
                 },
                 {
                     opcode: 'trainText',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Send texts [TEXT] to train'),
+                    text: 'Send texts [TEXT] to train',
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('insert text')
+                            defaultValue: 'insert text'
                         }
                     }
                 },
