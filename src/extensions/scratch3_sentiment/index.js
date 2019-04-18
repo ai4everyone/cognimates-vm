@@ -5,10 +5,6 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
-const Translations = require('../../util/translation');
-var lookupClosestLocale = require('lookup-closest-locale')
-
-
 
 // sentiment
 var Sentiment = require('sentiment');
@@ -66,7 +62,6 @@ class Scratch3Sentiment {
     }
 
     getFeeling (args, util){
-        console.log(Translations.getTrans())
         const text = args.phrase;
         localSentiment = sentiment.analyze(text);
         // debugger;
