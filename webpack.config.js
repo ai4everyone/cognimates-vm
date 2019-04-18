@@ -10,6 +10,7 @@ const base = {
         host: '0.0.0.0',
         port: process.env.PORT || 8073
     },
+    node: { fs:'empty' },
     devtool: 'cheap-module-source-map',
     output: {
         library: 'VirtualMachine',
@@ -87,14 +88,7 @@ module.exports = [
             'scratch-parser': true,
             'socket.io-client': true,
             'text-encoding': true,
-            'googleapis': true,
-            'rxjs': true,
-            'muse-js': true
-        },
-        resolve: {
-            alias: {
-                'osc': path.resolve(__dirname, 'node_modules/osc/')
-            }
+            "fs": "require('fs')"
         }
     }),
     // Playground
