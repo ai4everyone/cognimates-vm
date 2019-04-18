@@ -7,7 +7,7 @@ const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
 const Translations = require('../../util/translation');
 var lookupClosestLocale = require('lookup-closest-locale')
-const formatMessage = require('format-message');
+
 
 
 // sentiment
@@ -17,8 +17,6 @@ let localSentiment = 1;
 let server_url = 'http://text-processing.com/api/sentiment/';
 let feeling;
 const iconURI = require('./assets/sentiment_icon');
-var Translation = new Translations();
-Translation.setup();
 
 
 class Scratch3Sentiment {
@@ -36,26 +34,22 @@ class Scratch3Sentiment {
                 {
                     opcode: 'whenPositive',
                     blockType: BlockType.HAT,
-                    //text: 'When text is positive'
-                    text: Translation.getTrans("When text is positive")
+                    text: 'When text is positive'
                 },
                 {
                     opcode: 'whenNegative',
                     blockType: BlockType.HAT,
-                    //text: 'When text is negative'
-                    text: Translation.getTrans("When text is negative")
+                    text: 'When text is negative'
                 },
                 {
                     opcode: 'whenNeutral',
                     blockType: BlockType.HAT,
-                    //text: 'When text is neutral'
-                    text: Translation.getTrans("When text is neutral")
+                    text: 'When text is neutral'
                 },
                 {
                     opcode: 'getFeeling',
                     blockType: BlockType.REPORTER,
-                    //text: 'What is the feeling of the text: [phrase]?',
-                    text: Translation.getTrans("What is the feeling of the text") + ": [phrase]?",
+                    text: 'What is the feeling of the text: [phrase]?',
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
@@ -72,6 +66,7 @@ class Scratch3Sentiment {
     }
 
     getFeeling (args, util){
+        console.log(Translations.getTrans())
         const text = args.phrase;
         localSentiment = sentiment.analyze(text);
         // debugger;
