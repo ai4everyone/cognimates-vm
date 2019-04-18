@@ -24,7 +24,7 @@ class Scratch3Sentiment {
     getInfo () {
         return {
             id: 'sentiment',
-            name: Translations('Feelings'),
+            name: 'Feelings',
             blockIconURI: iconURI,
             blocks: [
                 {

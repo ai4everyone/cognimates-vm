@@ -231,7 +231,7 @@ class Scratch3Watson {
     getInfo () {
         return {
             id: 'vision',
-            name: Translations('Vision Training'),
+            name: 'Vision Training',
             blockIconURI: iconURI,
             blocks: [
                 {

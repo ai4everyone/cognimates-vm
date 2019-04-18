@@ -25,7 +25,7 @@ class Scratch3TextClassify {
     getInfo () {
         return {
             id: 'text',
-            name: Translations('Text Training'),
+            name: 'Text Training',
             blockIconURI: iconURI,
             blocks: [
                 {
