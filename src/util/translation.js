@@ -53,6 +53,7 @@ toLower = function(dict) {
 class Translations {
     constructor() {
         this.langs = {};
+<<<<<<< HEAD
 >>>>>>> parent of 2781b696... start integrating translations into extensions
     }
 
@@ -64,6 +65,10 @@ reformat = function(arr) {
         console.log(arr[row]['Language'])
         trans[lang] = toLower(arr[row]);
 =======
+=======
+    }
+
+>>>>>>> parent of ad07412a... get translations to load from a local file
     setup() {
         var langs = Translations.reformat(Translations.Get());
         Translations.langs = langs
