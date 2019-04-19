@@ -282,6 +282,18 @@ class Scratch3Watson {
                     }
                 },
                 {
+                    opcode: 'setGenModel',
+                    blockType: BlockType.COMMAND,
+                    text: 'Choose pre-trained model',
+                    //[THIS] needs to be equal to THIS in arguments
+                    arguments: {
+                        IDSTRING: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'model id'
+                        }
+                    }
+                },
+                {
                     opcode: 'takePhoto',
                     blockType: BlockType.COMMAND,
                     text: Translations('Take photo from webcam')
