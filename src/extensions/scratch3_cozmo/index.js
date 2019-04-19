@@ -4,6 +4,7 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const RenderedTarget = require('../../sprites/rendered-target');
+const formatMessage = require('format-message');
 
 
 //socket
@@ -70,43 +71,75 @@ class Scratch3Cozmo {
                 {
                     opcode: 'speak',
                     blockType: BlockType.COMMAND,
-                    text: 'Speak: [phrase]',
+                    text: formatMessage({
+                        id: 'cozmo.speak',
+                        default: 'Speak',
+                        description: ''
+                    }) + ': [phrase]',
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'hello'
+                            defaultValue: formatMessage({
+                                id: 'cognimate.hello',
+                                default: 'hello',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'pickupBlock',
                     blockType: BlockType.COMMAND,
-                    text: 'Pick up block'
+                    text: formatMessage({
+                        id: 'cozmo.pickUpBlock',
+                        default: 'Pick up block',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'setBlock',
                     blockType: BlockType.COMMAND,
-                    text: 'Set down block'
+                    text: formatMessage({
+                        id: 'cozmo.setDownBlock',
+                        default: 'Set down block',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'forward',
                     blockType: BlockType.COMMAND,
-                    text: 'Forward'
+                    text: formatMessage({
+                        id: 'cozmo.forward',
+                        default: 'Forward',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'reverse',
                     blockType: BlockType.COMMAND,
-                    text: 'Reverse'
+                    text: formatMessage({
+                        id: 'cozmo.reverse',
+                        default: 'Reverse',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'stop',
                     blockType: BlockType.COMMAND,
-                    text: 'Stop'
+                    text: formatMessage({
+                        id: 'cozmo.stop',
+                        default: 'Stop',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'turn',
                     blockType: BlockType.COMMAND,
-                    text: 'Turn [ANGLE] degrees',
+                    text: formatMessage({
+                        id: 'cozmo.turn',
+                        default: 'Turn [ANGLE] degrees',
+                        description: ''
+                    }),
                     arguments: {
                         ANGLE: {
                             type: ArgumentType.NUMBER,
@@ -118,19 +151,31 @@ class Scratch3Cozmo {
                 {
                     opcode: 'express',
                     blockType: BlockType.COMMAND,
-                    text: 'Look [EMOTION]',
+                    text: formatMessage({
+                        id: 'cozmo.look',
+                        default: 'Look [EMOTION]',
+                        description: ''
+                    }),
                     arguments: {
                         EMOTION: {
                             type: ArgumentType.NUMBER,
                             menu: 'emotions',
-                            defaultValue: 'happy'
+                            defaultValue: formatMessage({
+                                id: 'cognimate.happy',
+                                default: 'happy',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'startHelperSocket',
                     blockType: BlockType.COMMAND,
-                    text: 'Connect to robot',
+                    text: formatMessage({
+                        id: 'cozmo.connect',
+                        default: 'Connect to robot',
+                        description: ''
+                    }),
                     // arguments: {
                     //     ROBOT: {
                     //         type: ArgumentType.String,
@@ -143,7 +188,28 @@ class Scratch3Cozmo {
             ],
             menus: {
                 robots: ['robot1', 'robot2', 'robot3'],
-                emotions: ['happy', 'sad', 'shocked','bored'],
+                emotions: [
+                    formatMessage({
+                        id: 'cognimate.happy',
+                        default: 'happy',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'cognimate.sad',
+                        default: 'sad',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'cognimate.shocked',
+                        default: 'shocked',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'cognimate.bored',
+                        default: 'bored',
+                        description: ''
+                    })
+                ],
                 angle:['90','180','-90', '-180']
             }
         };

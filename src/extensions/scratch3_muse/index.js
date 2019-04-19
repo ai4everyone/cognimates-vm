@@ -5,6 +5,7 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
+const formatMessage = require('format-message');
 
 const muse = require('muse-js');
 const rxjs = require('rxjs');
@@ -47,30 +48,78 @@ class Scratch3Muse {
                 {
                     opcode: 'connect',
                     blockType: BlockType.COMMAND,
-                    text: 'Connect Muse'
+                    text: formatMessage({
+                        id: 'muse.connect',
+                        default: 'Connect Muse',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'museBlink',
                     blockType: BlockType.HAT,
-                    text: 'When I blink'
+                    text: formatMessage({
+                        id: 'muse.blink',
+                        default: 'When I blink',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'getSignal',
                     blockType: BlockType.REPORTER,
-                    text: 'Get value of [TEXT]?',
+                    text: formatMessage({
+                        id: 'muse.getSignal',
+                        default: 'Get value of [TEXT]?',
+                        description: ''
+                    }),
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
                             menu: 'signals',
-                            defaultValue: 'left sensor'
+                            defaultValue: formatMessage({
+                                id: 'muse.leftSensor',
+                                default: 'left sensor',
+                                description: ''
+                            })
                         }
                     }
                 }
                 
             ],
             menus: {
-                 trueFalse: ['true', 'false'],
-                 signals: ['left sensor', 'right sensor', 'left ear', 'right ear']
+                 trueFalse: [
+                    formatMessage({
+                        id: 'general.true',
+                        default: 'true',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.false',
+                        default: 'false',
+                        description: ''
+                    })
+                ],
+                 signals: [
+                    formatMessage({
+                        id: 'muse.leftSensor',
+                        default: 'left sensor',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'muse.rightSensor',
+                        default: 'right sensor',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'muse.leftEar',
+                        default: 'left ear',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'muse.rightEar',
+                        default: 'right ear',
+                        description: ''
+                    })
+                ]
             }
         };
     }

@@ -4,6 +4,7 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
+const formatMessage = require('format-message');
 
 //twitter vars
 const iconURI = require('./assets/twitter_icon');
@@ -34,7 +35,11 @@ class Scratch3Twitter {
                 {
                     opcode: 'latestUserTweet',
                     blockType: BlockType.REPORTER,
-                    text: 'Get the latest tweet from @[USER]',
+                    text: formatMessage({
+                        id: 'twitter.latestUserTweet',
+                        default: 'Get the latest tweet from @[USER]',
+                        description: ''
+                    }),
                     arguments:{
                         USER: {
                             type: ArgumentType.STRING,
@@ -45,12 +50,20 @@ class Scratch3Twitter {
                 {
                     opcode: 'getTopTweet',
                     blockType: BlockType.REPORTER,
-                    text: 'Most [CATEGORY] tweet containing #[HASH]',
+                    text: formatMessage({
+                        id: 'twitter.getTopTweet',
+                        default: 'Most [CATEGORY] tweet containing #[HASH]',
+                        description: ''
+                    }),
                     arguments:{
                         CATEGORY:{
                             type: ArgumentType.STRING,
                             menu: 'categories',
-                            defaultValue: 'recent'
+                            defaultValue: formatMessage({
+                                id: 'twitter.recent',
+                                default: 'recent',
+                                description: ''
+                            })
                         },
                         HASH:{
                             type: ArgumentType.STRING,
@@ -61,7 +74,18 @@ class Scratch3Twitter {
 
             ],
             menus: {
-             	categories: ['recent', 'popular']
+             	categories: [
+                    formatMessage({
+                        id: 'twitter.recent',
+                        default: 'recent',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'twitter.popular',
+                        default: 'popular',
+                        description: ''
+                    })
+                ]
             }
         };
     }

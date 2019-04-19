@@ -4,6 +4,7 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
+const formatMessage = require('format-message');
 
 //wemo extension
 const iconURI = require('./assets/wemo_icon');
@@ -24,7 +25,11 @@ class Scratch3Wemo {
                 {
                     opcode: 'turnOn',
                     blockType: BlockType.COMMAND,
-                    text: 'Turn [TOGGLE]',
+                    text: formatMessage({
+                        id: 'wemo.turnOn',
+                        default: 'Turn [TOGGLE]',
+                        description: ''
+                    }),
                     arguments: {
                         TOGGLE: {
                             type: ArgumentType.STRING,
@@ -35,7 +40,18 @@ class Scratch3Wemo {
                 },
             ],
             menus: {
-                toggle: ['on', 'off']
+                toggle: [
+                    formatMessage({
+                        id: 'general.on',
+                        default: 'on',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.off',
+                        default: 'off',
+                        description: ''
+                    })
+                ]
             }
         };
     }

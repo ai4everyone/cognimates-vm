@@ -6,6 +6,7 @@ const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/vision_icon');
 
+
 let image;
 
 const Runtime = require('../../engine/runtime');
@@ -231,12 +232,20 @@ class Scratch3Watson {
     getInfo () {
         return {
             id: 'vision',
-            name: 'Vision Training',
+            name: formatMessage({
+                        id: 'vision.visionTraining',
+                        default: 'Vision Training',
+                        description: ''
+                    }),
             blockIconURI: iconURI,
             blocks: [
                 {
                     opcode: 'videoToggle',
-                    text: 'turn video [VIDEO_STATE]',
+                    text: formatMessage({
+                        id: 'vision.video',
+                        default: 'turn video [VIDEO_STATE]',
+                        description: ''
+                    }),
                     arguments: {
                         VIDEO_STATE: {
                             type: ArgumentType.NUMBER,
@@ -248,111 +257,171 @@ class Scratch3Watson {
                 {
                     opcode: 'setAPI',
                     blockType: BlockType.COMMAND,
-                    text: 'Set API key to [KEY]',
+                    text: formatMessage({
+                        id: 'vision.setAPI',
+                        default: 'Set API key to',
+                        description: ''
+                    }) + ' [KEY]',
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: 'key'
+                            defaultValue: formatMessage({
+                                id: 'general.key',
+                                default: 'key',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'getModelfromString',
                     blockType: BlockType.COMMAND,
-                    text: 'Choose image model: [IDSTRING]',
+                    text: formatMessage({
+                        id: 'vision.getModelfromString',
+                        default: 'Choose image model',
+                        description: ''
+                    }) + ': [IDSTRING]',
                     //[THIS] needs to be equal to THIS in arguments
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'model id'
+                            defaultValue: formatMessage({
+                                id: 'vision.modelId',
+                                default: 'model id',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'setGenModel',
                     blockType: BlockType.COMMAND,
-                    text: 'Choose pre-trained model',
+                    text: formatMessage({
+                        id: 'vision.choosePreTrained',
+                        default: 'Choose pre-trained model',
+                        description: ''
+                    }),
                     //[THIS] needs to be equal to THIS in arguments
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'model id'
-                        }
-                    }
-                },
-                {
-                    opcode: 'setGenModel',
-                    blockType: BlockType.COMMAND,
-                    text: 'Choose pre-trained model',
-                    //[THIS] needs to be equal to THIS in arguments
-                    arguments: {
-                        IDSTRING: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'model id'
+                            defaultValue: formatMessage({
+                                id: 'vision.modelId',
+                                default: 'model id',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'takePhoto',
                     blockType: BlockType.COMMAND,
-                    text: 'Take photo from webcam'
+                    text: formatMessage({
+                        id: 'vision.takePhoto',
+                        default: 'Take photo from webcam',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'urlPhoto',
                     blockType: BlockType.COMMAND,
-                    text: 'Search image using link [URL]',
+                    text: formatMessage({
+                        id: 'vision.searchImage',
+                        default: 'Search image using link',
+                        description: ''
+                    }) + ' [URL]',
                     arguments:{
                         URL: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'add link here'
+                            defaultValue: formatMessage({
+                                id: 'vision.addLink',
+                                default: 'add link here',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'recognizeObject',
                     blockType: BlockType.REPORTER,
-                    text: 'What do you see in the photo?',
+                    text: formatMessage({
+                        id: 'vision.whatDoYouSee',
+                        default: 'What do you see in the photo?',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'recognizeObjectCommand',
                     blockType: BlockType.COMMAND,
-                    text: 'Search prediction for your photo',
+                    text: formatMessage({
+                        id: 'vision.searchPrediction',
+                        default: 'Search prediction for your photo',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'getScore',
                     blockType: BlockType.REPORTER,
-                    text: 'How sure are you the photo is a [CLASS]?',
+                    text: formatMessage({
+                        id: 'vision.howSure',
+                        default: 'How sure are you the photo is a [CLASS]?',
+                        description: ''
+                    }),
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'add category here'
+                            defaultValue: formatMessage({
+                                id: 'general.addCategory',
+                                default: 'add category here',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode:'trackLabel',
                     blockType: BlockType.HAT,
-                    text: 'When image is [LABEL]',
+                    text: formatMessage({
+                        id: 'vision.whenImageIs',
+                        default: 'When image is [LABEL]',
+                        description: ''
+                    }),
                     arguments:{
                         LABEL:{
                             type: ArgumentType.STRING, 
-                            defaultValue: 'add category here'
+                            defaultValue: formatMessage({
+                                id: 'general.addCategory',
+                                default: 'add category here',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'clearResults',
                     blockType: BlockType.COMMAND,
-                    text: 'Clear results'
+                    text: formatMessage({
+                        id: 'vision.clearResults',
+                        default: 'Clear results',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'updateClassifier',
                     blockType: BlockType.COMMAND,
-                    text: 'Add photo to [LABEL]',
+                    text: formatMessage({
+                        id: 'vision.addPhoto',
+                        default: 'Add photo to [LABEL]',
+                        description: ''
+                    }),
                     arguments:{
                         LABEL:{
                             type: ArgumentType.STRING,
-                            defaultValue: 'category name'
+                            defaultValue: formatMessage({
+                                id: 'general.addCategory',
+                                default: 'add category here',
+                                description: ''
+                            })
                         }
                     }
                 }

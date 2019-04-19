@@ -5,13 +5,8 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
+const formatMessage = require('format-message');
 
-// sentiment
-var Sentiment = require('sentiment');
-var sentiment = new Sentiment();
-let localSentiment = 1;
-let server_url = 'http://text-processing.com/api/sentiment/';
-let feeling;
 const iconURI = require('./assets/speech_icon');
 var audioCtx; 
 
@@ -70,7 +65,11 @@ class Scratch3Speech {
     getInfo () {
         return {
             id: 'speech',
-            name: 'Speech to Text',
+            name: formatMessage({
+                id: 'speech.speechToText',
+                default: 'Speech to Text',
+                description: ''
+            }),
             blockIconURI: iconURI,
             blocks: [
                 // {
@@ -88,34 +87,76 @@ class Scratch3Speech {
                 {
                     opcode: 'startSpeechRecognition',
                     blockType: BlockType.COMMAND,
-                    text: 'Start listening'
+                    text: formatMessage({
+                        id: 'speech.startSpeechRecognition',
+                        default: 'Start listening',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'stopSpeechRecognition',
                     blockType: BlockType.COMMAND,
-                    text: 'Stop listening'
+                    text: formatMessage({
+                        id: 'speech.stopSpeechRecognition',
+                        default: 'Stop listening',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'whenIHear',
                     blockType: BlockType.HAT,
-                    text: 'When I hear[TEXT]',
+                    text: formatMessage({
+                        id: 'speech.whenIHearPhrase',
+                        default: 'When I hear',
+                        description: ''
+                    }) + ' [TEXT]',
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'hello'
+                            defaultValue: formatMessage({
+                                id: 'cozmo.hello',
+                                default: 'hello',
+                                description: ''
+                            })
                         }
                     }
                 },
                  {
                     opcode: 'getLatestSpeech',
                     blockType: BlockType.REPORTER,
-                    text: 'Get latest speech'
+                    text: formatMessage({
+                        id: 'speech.getLatestSpeech',
+                        default: 'Get latest speech',
+                        description: ''
+                    })
                 }
                 
             ],
             menus: {
-                trueFalse: ['true', 'false'],
-                STATES: ['on', 'off']
+                trueFalse: [
+                    formatMessage({
+                        id: 'general.true',
+                        default: 'true',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.false',
+                        default: 'false',
+                        description: ''
+                    })
+                ],
+                STATES: [
+                    formatMessage({
+                        id: 'general.on',
+                        default: 'on',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.off',
+                        default: 'off',
+                        description: ''
+                    })
+                ]
             }
         };
     }

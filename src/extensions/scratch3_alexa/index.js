@@ -4,6 +4,7 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const nets = require('nets');
 const SocketIO = require('socket.io-client');
+const formatMessage = require('format-message');
 
 
 // const BASE_URL = 'http://35.169.45.24:6456';
@@ -42,7 +43,11 @@ class Scratch3Alexa {
                 {
                     opcode: 'registerUser',
                     blockType: BlockType.COMMAND,
-                    text: 'Create account: Username [USERNAME]   Passphrase [PASSPHRASE]',
+                    text: formatMessage({
+                        id: 'alexa.createAccount',
+                        default: 'Create account: Username [USERNAME]   Passphrase [PASSPHRASE]',
+                        description: 'create alexa account'
+                    }), 
                     arguments: {
                         USERNAME: {
                             type: ArgumentType.STRING,
@@ -57,7 +62,11 @@ class Scratch3Alexa {
                 {
                     opcode: 'loginUser',
                     blockType: BlockType.COMMAND,
-                    text: 'Access account: Username [USERNAME]   Passphrase [PASSPHRASE]',
+                    text: formatMessage({
+                        id: 'alexa.accessAccount',
+                        default: 'Access account: Username [USERNAME]   Passphrase [PASSPHRASE]',
+                        description: 'access alexa account'
+                    }), 
                     arguments: {
                         USERNAME: {
                             type: ArgumentType.STRING,
@@ -72,11 +81,19 @@ class Scratch3Alexa {
                 {
                     opcode: 'addUserAttribute',
                     blockType: BlockType.COMMAND,
-                    text: 'Tell Alexa my favourite [ATTRIBUTE] is [VALUE]',
+                    text: formatMessage({
+                        id: 'alexa.tellAlexaMyFavorite',
+                        default: 'Tell Alexa my favourite [ATTRIBUTE] is [VALUE]',
+                        description: ''
+                    }), 
                     arguments: {
                         ATTRIBUTE: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'band'
+                            defaultValue: formatMessage({
+                              id: 'alexa.band',
+                              default: 'band',
+                              description: ''
+                          }) 
                         },
                         VALUE: {
                             type: ArgumentType.STRING,
@@ -87,11 +104,19 @@ class Scratch3Alexa {
                 {
                     opcode: 'addUserAttribute2',
                     blockType: BlockType.COMMAND,
-                    text: 'Tell Alexa my current [ATTRIBUTE] is [VALUE]',
+                    text: formatMessage({
+                        id: 'alexa.tellAlexaMyCurrent',
+                        default: 'Tell Alexa my current [ATTRIBUTE] is [VALUE]',
+                        description: ''
+                    }),
                     arguments: {
                         ATTRIBUTE: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'age'
+                            defaultValue: formatMessage({
+                              id: 'alexa.age',
+                              default: 'age',
+                              description: ''
+                          })
                         },
                         VALUE: {
                             type: ArgumentType.STRING,
@@ -102,11 +127,19 @@ class Scratch3Alexa {
                 {
                     opcode: 'addUserAttribute3',
                     blockType: BlockType.COMMAND,
-                    text: 'Tell Alexa my [ATTRIBUTE] is [VALUE]',
+                    text: formatMessage({
+                        id: 'alexa.tellAlexaMy',
+                        default: 'Tell Alexa my [ATTRIBUTE] is [VALUE]',
+                        description: ''
+                    }),
                     arguments: {
                         ATTRIBUTE: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'location'
+                            defaultValue: formatMessage({
+                              id: 'alexa.location',
+                              default: 'location',
+                              description: ''
+                          })
                         },
                         VALUE: {
                             type: ArgumentType.STRING,
@@ -117,11 +150,19 @@ class Scratch3Alexa {
                 {
                     opcode: 'addAlexaAttribute',
                     blockType: BlockType.COMMAND,
-                    text: 'Tell Alexa it\'s favourite [ATTRIBUTE] is [VALUE]',
+                    text: formatMessage({
+                        id: 'alexa.tellAlexaItsFavorite',
+                        default: 'Tell Alexa its favourite [ATTRIBUTE] is [VALUE]',
+                        description: ''
+                    }),
                     arguments: {
                         ATTRIBUTE: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'movie'
+                            defaultValue: formatMessage({
+                              id: 'alexa.movie',
+                              default: 'movie',
+                              description: ''
+                          })
                         },
                         VALUE: {
                             type: ArgumentType.STRING,
@@ -132,7 +173,11 @@ class Scratch3Alexa {
                 {
                     opcode: 'addUserMessage',
                     blockType: BlockType.COMMAND,
-                    text: 'Message Alexa: [MESSAGE]',
+                    text: formatMessage({
+                        id: 'alexa.messageAlexa',
+                        default: 'Message Alexa: [MESSAGE]',
+                        description: ''
+                    }),
                     arguments: {
                         MESSAGE: {
                             type: ArgumentType.STRING,
@@ -143,22 +188,38 @@ class Scratch3Alexa {
                 {
                     opcode: 'runBlockSet1',
                     blockType: BlockType.HAT,
-                    text: 'Command 1'
+                    text: formatMessage({
+                        id: 'alexa.command',
+                        default: 'Command',
+                        description: ''
+                    }) + ' 1',
                 },
                 {
                     opcode: 'runBlockSet2',
                     blockType: BlockType.HAT,
-                    text: 'Command 2'
+                    text: formatMessage({
+                        id: 'alexa.command',
+                        default: 'Command',
+                        description: ''
+                    }) + ' 2',
                 },
                 {
                     opcode: 'runBlockSet3',
                     blockType: BlockType.HAT,
-                    text: 'Command 3'
+                    text: formatMessage({
+                        id: 'alexa.command',
+                        default: 'Command',
+                        description: ''
+                    }) + ' 3',
                 },
                 {
                     opcode: 'getAccessCode',
                     blockType: BlockType.REPORTER,
-                    text: 'Access Code'
+                    text: formatMessage({
+                        id: 'alexa.acessCode',
+                        default: 'Get Access Code',
+                        description: ''
+                    })
                 }
             ]
         };

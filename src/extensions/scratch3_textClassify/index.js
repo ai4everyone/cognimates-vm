@@ -5,6 +5,7 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/text_icon');
+const formatMessage = require('format-message');
 
 // let base_url = 'https://cognimate.me:2636/nlc';
 let base_url = 'https://cognimate.me:2635/nlc';
@@ -25,105 +26,177 @@ class Scratch3TextClassify {
     getInfo () {
         return {
             id: 'text',
-            name: 'Text Training',
+            name: formatMessage({
+                id: 'text.textTraining',
+                default: 'Text Training',
+                description: ''
+            }), 
             blockIconURI: iconURI,
             blocks: [
                 {
                     opcode: 'setReadAPI',
                     blockType: BlockType.COMMAND,
-                    text: 'Set Read API key to [KEY]',
+                    text: formatMessage({
+                        id: 'text.setReadAPI',
+                        default: 'Set Read API key to',
+                        description: ''
+                    }) + ' [KEY]',
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: 'key'
+                            defaultValue: formatMessage({
+                                id: 'general.key',
+                                default: 'key',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'setWriteAPI',
                     blockType: BlockType.COMMAND,
-                    text: 'Set Write API key to [KEY]',
+                    text: formatMessage({
+                        id: 'text.setWriteAPI',
+                        default: 'Set Write API key to',
+                        description: ''
+                    }) + ' [KEY]',
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: 'key'
+                            defaultValue: formatMessage({
+                                id: 'general.key',
+                                default: 'key',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'setUsername',
                     blockType: BlockType.COMMAND,
-                    text: 'Set username to [USER]',
+                    text: formatMessage({
+                        id: 'text.setUsername',
+                        default: 'Set username to',
+                        description: ''
+                    }) + ' [USER]',
                     arguments:{
                         USER:{
                             type: ArgumentType.STRING,
-                            defaultValue: 'user'
+                            defaultValue: ''
                         }
                     }
                 },
                 {
                     opcode: 'getClassifier',
                     blockType: BlockType.COMMAND,
-                    text: 'Choose text model: [IDSTRING]',
+                    text: formatMessage({
+                        id: 'text.getClassifier',
+                        default: 'Choose text model',
+                        description: ''
+                    }) + ': [IDSTRING]',
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'model name'
+                            defaultValue: formatMessage({
+                                id: 'text.modelName',
+                                default: 'model name',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'getClass',
                     blockType: BlockType.COMMAND,
-                    text: 'Set category to train: [CLASS]',
+                    text: formatMessage({
+                        id: 'text.setCategory',
+                        default: 'Set category to train',
+                        description: ''
+                    }) + ': [CLASS]',
                     arguments: {
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'category name'
+                            defaultValue: formatMessage({
+                                id: 'text.categoryName',
+                                default: 'category name',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'trainText',
                     blockType: BlockType.COMMAND,
-                    text: 'Send texts [TEXT] to train',
+                    text: formatMessage({
+                        id: 'text.trainText',
+                        default: 'Send texts [TEXT] to train',
+                        description: ''
+                    }),
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'insert text'
+                            defaultValue: formatMessage({
+                                id: 'general.insertText',
+                                default: 'insert text',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'classifyText',
                     blockType: BlockType.REPORTER,
-                    text: 'What kind of phrase is [TEXT]?',
+                    text: formatMessage({
+                        id: 'text.classifyText',
+                        default: 'What kind of phrase is [TEXT]?',
+                        description: ''
+                    }),
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'phrase'
+                            defaultValue: formatMessage({
+                                id: 'text.phrase',
+                                default: 'phrase',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'getScore',
                     blockType: BlockType.REPORTER,
-                    text: 'How sure are you the text is a [CLASS]?',
+                    text: formatMessage({
+                        id: 'text.getScore',
+                        default: 'How sure are you the text is a [CLASS]?',
+                        description: ''
+                    }),
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'add category here'
+                            defaultValue: formatMessage({
+                                id: 'general.addCategory',
+                                default: 'add category here',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'textHat',
                     blockType: BlockType.HAT,
-                    text: 'When text is [CLASS]',
+                    text: formatMessage({
+                        id: 'text.whenText',
+                        default: 'When text is a [CLASS]?',
+                        description: ''
+                    }),
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'add category here'
+                            defaultValue: formatMessage({
+                                id: 'general.addCategory',
+                                default: 'add category here',
+                                description: ''
+                            })
                         }
                     }
                 }

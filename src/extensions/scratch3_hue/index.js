@@ -6,6 +6,7 @@ const cast = require('../../util/cast');
 const color = require('../../util/color');
 const log = require('../../util/log');
 const math = require('../../util/math-util');
+const formatMessage = require('format-message');
 
 /**
  * Host for discovery of Philips Hue bridge devices on the LAN.
@@ -38,7 +39,23 @@ const HTTP_TIMEOUT = 1000;
  * Accepted color parameters.
  * @type {Array}
  */
-const COLOR_PARMETERS = ['color', 'saturation', 'brightness'];
+const COLOR_PARMETERS = [
+    formatMessage({
+        id: 'hue.color',
+        default: 'color',
+        description: ''
+    }),
+    formatMessage({
+        id: 'hue.saturation',
+        default: 'saturation',
+        description: ''
+    }),
+    formatMessage({
+        id: 'hue.brightness',
+        default: 'brightness',
+        description: ''
+    })
+]
 
 /***
  * The four lights and their values, default is orange
@@ -111,11 +128,19 @@ class Scratch3Hue {
     getInfo () {
         return {
             id: 'hue',
-            name: 'Smart Lights',
+            name: formatMessage({
+                        id: 'hue.smartLights',
+                        default: 'Smart Lights',
+                        description: ''
+                    }),
             blocks: [
                 {
                     opcode: 'setLightColor',
-                    text: 'set light [INDEX] color to [VALUE]',
+                    text: formatMessage({
+                        id: 'hue.setLightColor',
+                        default: 'Set light [INDEX] color to [VALUE]',
+                        description: ''
+                    }),
                     blockType: BlockType.COMMAND,
                     arguments: {
                         VALUE: {
@@ -130,7 +155,11 @@ class Scratch3Hue {
                 },
                 {
                     opcode: 'changeLightProperty',
-                    text: 'change light [INDEX] [PROPERTY] by [VALUE]',
+                    text: formatMessage({
+                        id: 'hue.changeLightProperty',
+                        default: 'Change light [INDEX] [PROPERTY] by [VALUE]',
+                        description: ''
+                    }),
                     blockType: BlockType.COMMAND,
                     arguments: {
                         PROPERTY: {
@@ -151,7 +180,11 @@ class Scratch3Hue {
                 },
                 {
                     opcode: 'setLightProperty',
-                    text: 'set light [INDEX] [PROPERTY] to [VALUE]',
+                    text: formatMessage({
+                        id: 'hue.setLightProperty',
+                        default: 'Set light [INDEX] [PROPERTY] to [VALUE]',
+                        description: ''
+                    }),
                     blockType: BlockType.COMMAND,
                     arguments: {
                         PROPERTY: {
@@ -172,13 +205,21 @@ class Scratch3Hue {
                 },
                 {
                     opcode: 'turnLightOnOff',
-                    text: 'turn light [INDEX] [VALUE]',
+                    text: formatMessage({
+                        id: 'hue.turnLightOnOff',
+                        default: 'Turn light [INDEX] [VALUE]',
+                        description: ''
+                    }),
                     blockType: BlockType.COMMAND,
                     arguments: {
                         VALUE: {
                             type: ArgumentType.NUMBER,
                             menu: 'LIGHT_STATE',
-                            defaultValue: 'on'
+                            defaultValue: formatMessage({
+                                id: 'general.on',
+                                default: 'on',
+                                description: ''
+                            })
                         },
                         INDEX:{
                             type: ArgumentType.STRING,
@@ -190,7 +231,18 @@ class Scratch3Hue {
             ],
             menus: {
                 COLOR_PARAM: COLOR_PARMETERS,
-                LIGHT_STATE: ['on', 'off'],
+                LIGHT_STATE: [
+                    formatMessage({
+                        id: 'general.on',
+                        default: 'on',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.off',
+                        default: 'off',
+                        description: ''
+                    })
+                ],
                 LIGHTS: ['1', '2', '3', '4','5','6']
             }
         };

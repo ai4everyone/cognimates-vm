@@ -5,6 +5,7 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
+const formatMessage = require('format-message');
 
 // sentiment
 var Sentiment = require('sentiment');
@@ -24,39 +25,74 @@ class Scratch3Sentiment {
     getInfo () {
         return {
             id: 'sentiment',
-            name: 'Feelings',
+            name: formatMessage({
+                id: 'feelings.feelings',
+                default: 'Feelings',
+                description: ''
+            }),
             blockIconURI: iconURI,
             blocks: [
                 {
                     opcode: 'whenPositive',
                     blockType: BlockType.HAT,
-                    text: 'When text is positive'
+                    text: formatMessage({
+                        id: 'feelings.whenPositive',
+                        default: 'When text is positive',
+                        description: ''
+                    }),
                 },
                 {
                     opcode: 'whenNegative',
                     blockType: BlockType.HAT,
-                    text: 'When text is negative'
+                    text: formatMessage({
+                        id: 'feelings.whenNegative',
+                        default: 'When text is negative',
+                        description: ''
+                    }),
                 },
                 {
                     opcode: 'whenNeutral',
                     blockType: BlockType.HAT,
-                    text: 'When text is neutral'
+                    text: formatMessage({
+                        id: 'feelings.whenNeutral',
+                        default: 'When text is neutral',
+                        description: ''
+                    })                
                 },
                 {
                     opcode: 'getFeeling',
                     blockType: BlockType.REPORTER,
-                    text: 'What is the feeling of the text: [phrase]?',
+                    text: formatMessage({
+                        id: 'feelings.getFeeling',
+                        default: 'What is the feeling of the text',
+                        description: ''
+                    }) + ': [phrase]?',
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'your text here'
+                            defaultValue: formatMessage({
+                                id: 'general.yourTextHere',
+                                default: 'your text here',
+                                description: ''
+                            }) 
                         }
                     }
                 }
                 
             ],
             menus: {
-             	trueFalse: ['true', 'false']
+             	trueFalse: [
+                    formatMessage({
+                        id: 'general.true',
+                        default: 'true',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.false',
+                        default: 'false',
+                        description: ''
+                    })
+                ]
             }
         };
     }

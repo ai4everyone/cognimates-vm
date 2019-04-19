@@ -4,6 +4,7 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const RenderedTarget = require('../../sprites/rendered-target');
+const formatMessage = require('format-message');
 
 // ergo
 
@@ -200,35 +201,60 @@ class Scratch3Ergo {
                 {
                     opcode: 'setIPAddress',
                     blockType: BlockType.COMMAND,
-                    text: 'Set robot IP address: [ADDRESS]',
+                    text: formatMessage({
+                        id: 'ergo.setRobotIP',
+                        default: 'Set robot IP address',
+                        description: ''
+                    }) + ': [ADDRESS]',
                     arguments: {
                         ADDRESS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'add your robot IP here'
+                            defaultValue: formatMessage({
+                                id: 'ergo.addRobotIP',
+                                default: 'add your robot IP here',
+                                description: ''
+                            })
+                            
                         }
                     }
                 },
                 {
                     opcode: 'connectErgo',
                     blockType: BlockType.COMMAND,
-                    text: 'Connect robot'
+                    text: formatMessage({
+                        id: 'ergo.connect',
+                        default: 'Connect Ergo',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'turnTo',
                     blockType: BlockType.COMMAND,
-                    text: 'Turn to [DIRECTION]',
+                    text: formatMessage({
+                        id: 'ergo.turnTo',
+                        default: 'Turn to [DIRECTION]',
+                        description: ''
+                    }),
                     arguments: {
                         DIRECTION: {
                             type: ArgumentType.STRING,
                             menu:'motorDirection',
-                            defaultValue: 'Right'
+                            defaultValue: formatMessage({
+                                id: 'general.right',
+                                default: 'right',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'setLED',
                     blockType: BlockType.BOOLEAN,
-                    text: 'Set motors [MOTORS] to color [COLOR]',
+                    text: formatMessage({
+                        id: 'ergo.setMotors',
+                        default: 'Set motors [MOTORS] to color [COLOR]',
+                        description: ''
+                    }),
                     arguments: {
                         MOTORS: {
                             type: ArgumentType.STRING,
@@ -237,7 +263,11 @@ class Scratch3Ergo {
                         COLOR: {
                             type: ArgumentType.STRING,
                             menu:'lights',
-                            defaultValue: 'green'
+                            defaultValue: formatMessage({
+                                id: 'general.green',
+                                default: 'green',
+                                description: ''
+                            })
                         }
 
                     }
@@ -245,12 +275,20 @@ class Scratch3Ergo {
                 {
                     opcode: 'setPosture',
                     blockType: BlockType.BOOLEAN,
-                    text: 'Set posture [POSTURE]',
+                    text: formatMessage({
+                        id: 'ergo.setPosture',
+                        default: 'Set posture',
+                        description: ''
+                    }) + ' [POSTURE]',
                     arguments: {
                         POSTURE: {
                             type: ArgumentType.STRING,
                             menu:'postures',
-                            defaultValue: 'curious'
+                            defaultValue: formatMessage({
+                                id: 'ergo.curious',
+                                default: 'curious',
+                                description: ''
+                            })
                         }
                     }
                 },
@@ -288,12 +326,138 @@ class Scratch3Ergo {
 
             ],
             menus: {
-                motorDirection: ['Left', 'Right', 'Front', 'Back'],
-                lights: ['off', 'red', 'green', 'blue', 'yellow', 'pink', 'cyan', 'white'],
-                danceMenu: ['start', 'stop', 'pause', 'resume'],
-                playMenu: ['Play', 'Stop'],
-                postures: ['rest', 'curious', 'tetris', 'base'],
-                markerDetection: ['start', 'stop']
+                motorDirection: [
+                    formatMessage({
+                        id: 'general.left',
+                        default: 'left',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.right',
+                        default: 'right',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.front',
+                        default: 'front',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.back',
+                        default: 'back',
+                        description: ''
+                    })
+                ],
+                lights: [
+                    formatMessage({
+                        id: 'general.off',
+                        default: 'off',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.red',
+                        default: 'red',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.green',
+                        default: 'green',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.blue',
+                        default: 'blue',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.yellow',
+                        default: 'yellow',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.pink',
+                        default: 'pink',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.cyan',
+                        default: 'cyan',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.white',
+                        default: 'white',
+                        description: ''
+                    })
+                ],
+                danceMenu: [
+                    formatMessage({
+                        id: 'general.start',
+                        default: 'start',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.stop',
+                        default: 'stop',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.pause',
+                        default: 'pause',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.resume',
+                        default: 'resume',
+                        description: ''
+                    })
+                ],
+                playMenu: [
+                    formatMessage({
+                        id: 'general.play',
+                        default: 'play',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.stop',
+                        default: 'stop',
+                        description: ''
+                    })
+                ],
+                postures: [
+                    formatMessage({
+                        id: 'ergo.rest',
+                        default: 'rest',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'ergo.curious',
+                        default: 'curious',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'ergo.tetris',
+                        default: 'tetris',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'ergo.base',
+                        default: 'base',
+                        description: ''
+                    })
+                ],
+                markerDetection: [
+                    formatMessage({
+                        id: 'general.start',
+                        default: 'start',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.stop',
+                        default: 'stop',
+                        description: ''
+                    })
+                ]            
             }
         };
     }
@@ -351,7 +515,7 @@ class Scratch3Ergo {
         sendRequest(motorRegisterURL, params, (response) => {
         console.log("Turn ergo to", args.DIRECTION);
       });
-    }
+    }   
 
 
     setLED (args, util) {

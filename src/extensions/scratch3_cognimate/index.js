@@ -3,6 +3,7 @@ const BlockType = require('../../extension-support/block-type');
 const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
+const formatMessage = require('format-message');
 let connected = false;
 const socket = null;
 
@@ -149,18 +150,30 @@ class Scratch3Cognimate {
                 {
                     opcode: 'speak',
                     blockType: BlockType.COMMAND,
-                    text: 'Say: [phrase]',
+                    text: formatMessage({
+                        id: 'cognimate.say',
+                        default: 'Say',
+                        description: ''
+                    }) + ': [phrase]',
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'hey'
+                            defaultValue: formatMessage({
+                                id: 'cognimate.hey',
+                                default: 'hey',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {                
                     opcode: 'tutorVoice',
                     blockType: BlockType.COMMAND,
-                    text: 'set voice to [VOICE]',
+                    text: formatMessage({
+                        id: 'cognimate.setvoice',
+                        default: 'Set voice to [VOICE]',
+                        description: ''
+                    }),
                     arguments: {
                         VOICE: {
                             type: ArgumentType.STRING,
@@ -172,19 +185,31 @@ class Scratch3Cognimate {
                 {
                     opcode: 'mission',
                     blockType: BlockType.COMMAND,
-                    text: 'Mission number: [missionNum]',
+                    text: formatMessage({
+                        id: 'cognimate.missionNumber',
+                        default: 'Mission number',
+                        description: ''
+                    }) + ': [missionNum]',
                     arguments: {
                         missionNum: {
                             type: ArgumentType.STRING,
                             menu: 'mission',
-                            defaultValue: 'Introduction'
+                            defaultValue: formatMessage({
+                                id: 'cognimate.introduction',
+                                default: 'Introduction',
+                                description: ''
+                            })
                         }
                     }
                 },
                 {
                     opcode: 'closeMission',
                     blockType: BlockType.COMMAND,
-                    text: 'End current mission'
+                    text: formatMessage({
+                        id: 'cognimate.endMission',
+                        default: 'End current mission',
+                        description: ''
+                    })
                 }
                 // {
                 //     opcode: 'playAudio',
@@ -201,8 +226,40 @@ class Scratch3Cognimate {
             menus: {
                 voices: ['Albert','Ellen'],
             	mission: ['Introduction','2','3', '4', '5', '7', '8', '9', '10', '11', '12', '13', 'Make me happy (direct)'],
-            	lookAt: ['left', 'right', 'center', 'back'],
-             	trueFalse: ['true', 'false']
+            	lookAt: [
+                    formatMessage({
+                        id: 'general.left',
+                        default: 'left',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.right',
+                        default: 'right',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.center',
+                        default: 'center',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.back',
+                        default: 'back',
+                        description: ''
+                    })
+                ],
+             	trueFalse: [
+                    formatMessage({
+                        id: 'general.true',
+                        default: 'true',
+                        description: ''
+                    }),
+                    formatMessage({
+                        id: 'general.false',
+                        default: 'false',
+                        description: ''
+                    })
+                ]
             }
         };
     }
