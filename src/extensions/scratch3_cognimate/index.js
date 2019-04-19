@@ -3,9 +3,6 @@ const BlockType = require('../../extension-support/block-type');
 const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
-const Translations = require('../../util/translation');
-
-
 let connected = false;
 const socket = null;
 
@@ -152,18 +149,18 @@ class Scratch3Cognimate {
                 {
                     opcode: 'speak',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Say') + ' : [phrase]',
+                    text: 'Say: [phrase]',
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('hey')
+                            defaultValue: 'hey'
                         }
                     }
                 },
                 {                
                     opcode: 'tutorVoice',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set voice to') + ' [VOICE]',
+                    text: 'set voice to [VOICE]',
                     arguments: {
                         VOICE: {
                             type: ArgumentType.STRING,
@@ -175,19 +172,19 @@ class Scratch3Cognimate {
                 {
                     opcode: 'mission',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Mission number') + ': [missionNum]',
+                    text: 'Mission number: [missionNum]',
                     arguments: {
                         missionNum: {
                             type: ArgumentType.STRING,
                             menu: 'mission',
-                            defaultValue: Translations('Introduction')
+                            defaultValue: 'Introduction'
                         }
                     }
                 },
                 {
                     opcode: 'closeMission',
                     blockType: BlockType.COMMAND,
-                    text: Translations('End current mission')
+                    text: 'End current mission'
                 }
                 // {
                 //     opcode: 'playAudio',
@@ -205,7 +202,7 @@ class Scratch3Cognimate {
                 voices: ['Albert','Ellen'],
             	mission: ['Introduction','2','3', '4', '5', '7', '8', '9', '10', '11', '12', '13', 'Make me happy (direct)'],
             	lookAt: ['left', 'right', 'center', 'back'],
-             	trueFalse: [Translations('true'), Translations('false')]
+             	trueFalse: ['true', 'false']
             }
         };
     }

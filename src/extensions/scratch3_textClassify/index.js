@@ -5,7 +5,6 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const iconURI = require('./assets/text_icon');
-const Translations = require('../../util/translation');
 
 // let base_url = 'https://cognimate.me:2636/nlc';
 let base_url = 'https://cognimate.me:2635/nlc';
@@ -26,105 +25,105 @@ class Scratch3TextClassify {
     getInfo () {
         return {
             id: 'text',
-            name: Translations('Text Training'),
+            name: 'Text Training',
             blockIconURI: iconURI,
             blocks: [
                 {
                     opcode: 'setReadAPI',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set Read API key to') + ' [KEY]',
+                    text: 'Set Read API key to [KEY]',
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('key')
+                            defaultValue: 'key'
                         }
                     }
                 },
                 {
                     opcode: 'setWriteAPI',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set Write API key to') + ' [KEY]',
+                    text: 'Set Write API key to [KEY]',
                     arguments:{
                         KEY:{
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('key')
+                            defaultValue: 'key'
                         }
                     }
                 },
                 {
                     opcode: 'setUsername',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set username to') + ' [USER]',
+                    text: 'Set username to [USER]',
                     arguments:{
                         USER:{
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('user')
+                            defaultValue: 'user'
                         }
                     }
                 },
                 {
                     opcode: 'getClassifier',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Choose text model') + ': [IDSTRING]',
+                    text: 'Choose text model: [IDSTRING]',
                     arguments: {
                         IDSTRING: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('model name')
+                            defaultValue: 'model name'
                         }
                     }
                 },
                 {
                     opcode: 'getClass',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set category to train') + ': [CLASS]',
+                    text: 'Set category to train: [CLASS]',
                     arguments: {
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('category name')
+                            defaultValue: 'category name'
                         }
                     }
                 },
                 {
                     opcode: 'trainText',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Send text [TEXT] to train'),
+                    text: 'Send texts [TEXT] to train',
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('insert text')
+                            defaultValue: 'insert text'
                         }
                     }
                 },
                 {
                     opcode: 'classifyText',
                     blockType: BlockType.REPORTER,
-                    text: Translations('What kind of phrase is [TEXT]?'),
+                    text: 'What kind of phrase is [TEXT]?',
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('phrase')
+                            defaultValue: 'phrase'
                         }
                     }
                 },
                 {
                     opcode: 'getScore',
                     blockType: BlockType.REPORTER,
-                    text: Translations('How sure are you the text is a [CLASS]?'),
+                    text: 'How sure are you the text is a [CLASS]?',
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('add category here')
+                            defaultValue: 'add category here'
                         }
                     }
                 },
                 {
                     opcode: 'textHat',
                     blockType: BlockType.HAT,
-                    text: Translations('When text is [CLASS]'),
+                    text: 'When text is [CLASS]',
                     arguments:{
                         CLASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('add category here')
+                            defaultValue: 'add category here'
                         }
                     }
                 }

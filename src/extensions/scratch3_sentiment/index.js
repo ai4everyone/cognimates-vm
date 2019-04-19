@@ -5,10 +5,6 @@ const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
 const RenderedTarget = require('../../sprites/rendered-target');
-const Translations = require('../../util/translation');
-var lookupClosestLocale = require('lookup-closest-locale')
-const formatMessage = require('format-message');
-
 
 // sentiment
 var Sentiment = require('sentiment');
@@ -17,6 +13,7 @@ let localSentiment = 1;
 let server_url = 'http://text-processing.com/api/sentiment/';
 let feeling;
 const iconURI = require('./assets/sentiment_icon');
+
 
 class Scratch3Sentiment {
     constructor (runtime) {
@@ -27,43 +24,39 @@ class Scratch3Sentiment {
     getInfo () {
         return {
             id: 'sentiment',
-            name: Translations('Feelings'),
+            name: 'Feelings',
             blockIconURI: iconURI,
             blocks: [
                 {
                     opcode: 'whenPositive',
                     blockType: BlockType.HAT,
-                    //text: 'When text is positive'
-                    text: Translations("When text is positive")
+                    text: 'When text is positive'
                 },
                 {
                     opcode: 'whenNegative',
                     blockType: BlockType.HAT,
-                    //text: 'When text is negative'
-                    text: Translations("When text is negative")
+                    text: 'When text is negative'
                 },
                 {
                     opcode: 'whenNeutral',
                     blockType: BlockType.HAT,
-                    //text: 'When text is neutral'
-                    text: Translations("When text is neutral")
+                    text: 'When text is neutral'
                 },
                 {
                     opcode: 'getFeeling',
                     blockType: BlockType.REPORTER,
-                    //text: 'What is the feeling of the text: [phrase]?',
-                    text: Translations("What is the feeling of the text") + ": [phrase]?",
+                    text: 'What is the feeling of the text: [phrase]?',
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('your text here')
+                            defaultValue: 'your text here'
                         }
                     }
                 }
                 
             ],
             menus: {
-             	trueFalse: [Translations('true'), Translations('false')]
+             	trueFalse: ['true', 'false']
             }
         };
     }

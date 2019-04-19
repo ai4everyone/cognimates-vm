@@ -4,7 +4,6 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const nets = require('nets');
-const Translations = require('../../util/translation');
 
 //twitter vars
 const iconURI = require('./assets/twitter_icon');
@@ -35,7 +34,7 @@ class Scratch3Twitter {
                 {
                     opcode: 'latestUserTweet',
                     blockType: BlockType.REPORTER,
-                    text: Translations('Get the latest tweet from') +  '@[USER]',
+                    text: 'Get the latest tweet from @[USER]',
                     arguments:{
                         USER: {
                             type: ArgumentType.STRING,
@@ -46,12 +45,12 @@ class Scratch3Twitter {
                 {
                     opcode: 'getTopTweet',
                     blockType: BlockType.REPORTER,
-                    text: Translations('Most [CATEGORY] tweet containing #[HASH]'),
+                    text: 'Most [CATEGORY] tweet containing #[HASH]',
                     arguments:{
                         CATEGORY:{
                             type: ArgumentType.STRING,
                             menu: 'categories',
-                            defaultValue: Translations('recent')
+                            defaultValue: 'recent'
                         },
                         HASH:{
                             type: ArgumentType.STRING,
@@ -62,7 +61,7 @@ class Scratch3Twitter {
 
             ],
             menus: {
-             	categories: [Translations('recent'), Translations('popular')]
+             	categories: ['recent', 'popular']
             }
         };
     }

@@ -4,7 +4,6 @@ const Clone = require('../../util/clone');
 const Cast = require('../../util/cast');
 const Timer = require('../../util/timer');
 const RenderedTarget = require('../../sprites/rendered-target');
-const Translations = require('../../util/translation');
 
 
 //socket
@@ -71,43 +70,43 @@ class Scratch3Cozmo {
                 {
                     opcode: 'speak',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Speak') + ': [phrase]',
+                    text: 'Speak: [phrase]',
                     arguments: {
                         phrase: {
                             type: ArgumentType.STRING,
-                            defaultValue: Translations('hello')
+                            defaultValue: 'hello'
                         }
                     }
                 },
                 {
                     opcode: 'pickupBlock',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Pick up block')
+                    text: 'Pick up block'
                 },
                 {
                     opcode: 'setBlock',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Set down block')
+                    text: 'Set down block'
                 },
                 {
                     opcode: 'forward',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Forward')
+                    text: 'Forward'
                 },
                 {
                     opcode: 'reverse',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Reverse')
+                    text: 'Reverse'
                 },
                 {
                     opcode: 'stop',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Stop')
+                    text: 'Stop'
                 },
                 {
                     opcode: 'turn',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Turn [ANGLE] degrees'),
+                    text: 'Turn [ANGLE] degrees',
                     arguments: {
                         ANGLE: {
                             type: ArgumentType.NUMBER,
@@ -119,19 +118,19 @@ class Scratch3Cozmo {
                 {
                     opcode: 'express',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Look [EMOTION]'),
+                    text: 'Look [EMOTION]',
                     arguments: {
                         EMOTION: {
                             type: ArgumentType.NUMBER,
                             menu: 'emotions',
-                            defaultValue: Translations('happy')
+                            defaultValue: 'happy'
                         }
                     }
                 },
                 {
                     opcode: 'startHelperSocket',
                     blockType: BlockType.COMMAND,
-                    text: Translations('Connect to robot'),
+                    text: 'Connect to robot',
                     // arguments: {
                     //     ROBOT: {
                     //         type: ArgumentType.String,
@@ -144,7 +143,7 @@ class Scratch3Cozmo {
             ],
             menus: {
                 robots: ['robot1', 'robot2', 'robot3'],
-                emotions: [Translations('happy'), Translations('sad'), Translations('shocked'), Translations('bored')],
+                emotions: ['happy', 'sad', 'shocked','bored'],
                 angle:['90','180','-90', '-180']
             }
         };

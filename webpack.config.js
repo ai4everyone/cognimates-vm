@@ -86,15 +86,7 @@ module.exports = [
             'nets': true,
             'scratch-parser': true,
             'socket.io-client': true,
-            'text-encoding': true,
-            'googleapis': true,
-            'rxjs': true,
-            'muse-js': true
-        },
-        resolve: {
-            alias: {
-                'osc': path.resolve(__dirname, 'node_modules/osc/')
-            }
+            'text-encoding': true
         }
     }),
     // Playground
