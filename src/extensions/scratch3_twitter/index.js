@@ -43,7 +43,7 @@ class Scratch3Twitter {
                     arguments:{
                         USER: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'medialab'
+                            defaultValue: 'cognimates'
                         }
                     }
                 },
