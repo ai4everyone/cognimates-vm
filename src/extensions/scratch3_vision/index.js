@@ -24,10 +24,10 @@ const VideoState = {
 };
 
 //server info
-// let classifyURL = 'https://cognimate.me:2635/vision/classify';
-// let updateURL = 'https://cognimate.me:2635/vision/updateClassifier';
-let classifyURL = 'http://localhost:2634/vision/classify';
-let updateURL = 'http://localhost:2634/vision/updateClassifier';
+let classifyURL = 'https://cognimate.me:2635/vision/classify';
+let updateURL = 'https://cognimate.me:2635/vision/updateClassifier';
+// let classifyURL = 'http://localhost:2634/vision/classify';
+// let updateURL = 'http://localhost:2634/vision/updateClassifier';
 
 //classifier_id
 let classifier_id = 'general1234';
@@ -561,8 +561,8 @@ class Scratch3Watson {
                     callback(err, response);
             });
         } else{
-            let url_classify_url = "http://localhost:2634/vision/classifyURLImage";
-            // let url_classify_url = "https://cognimate.me:2635/vision/classifyURLImage";
+            // let url_classify_url = "http://localhost:2634/vision/classifyURLImage";
+            let url_classify_url = "https://cognimate.me:2635/vision/classifyURLImage";
             nets({
                 url: url_classify_url,
                 headers: {'apikey': api_key,
