@@ -544,7 +544,7 @@ class Scratch3Watson {
     }
 
     classify(classifier, image, callback) {
-        var formData = JSON.stringify({classifier_id: classifier, image_url:image});
+        var formData = JSON.stringify({classifier_id: classifier, image_data:image});
         console.log(formData);
         if(image.substring(0,4) === 'data'){
             nets({
