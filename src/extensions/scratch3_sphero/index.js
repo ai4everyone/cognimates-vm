@@ -62,7 +62,7 @@ class Scratch3Sphero {
     move (args, util){
         const steps = args.NUMBER;
         // debugger;
-        console.log("number steps is:"args.NUMBER);
+        console.log("number steps is:");
 
     }
 
