@@ -9,6 +9,7 @@ const RenderedTarget = require('../../sprites/rendered-target');
 // sentiment
 // var Sphero = require('sphero2.js');
 // var orb = new Sphero();
+const { Scanner, Utils } = require('spherov2.js');
 
 const iconURI = require('./assets/sphero_icon');
 
@@ -50,6 +51,12 @@ class Scratch3Sphero {
                     //         defaultValue: 'your text here'
                     //     }
                     // }
+                },
+                // makeItRoll();
+                {
+                    opcode: 'makeItRoll',
+                    blockType: BlockType.COMMAND,
+                    text: 'connect'
                 }
                 
             ],
@@ -75,6 +82,22 @@ class Scratch3Sphero {
     playSound (args,util){
 
     }
+    makeItRoll(args,util){
+        const sphero = Scanner.findSpheroMini();
+        
+        if (!sphero) return console.log('sphero mini not available!');
+        
+        const speed = 100;
+        const headingInDegrees = 0;
+        const timeToRollInMilliseconds = 2000;
+        const flags = [];
+        
+        sphero.rollTime(speed, headingInDegrees, timeToRollInMilliseconds, flags);
+    };
 }
 
 module.exports = Scratch3Sphero;
+
+
+
+
