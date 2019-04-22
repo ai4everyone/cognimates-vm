@@ -10,7 +10,7 @@ const RenderedTarget = require('../../sprites/rendered-target');
 // var Sphero = require('sphero2.js');
 // var orb = new Sphero();
 
-const iconURI = require('./assets/sentiment_icon');
+const iconURI = require('./assets/sphero_icon');
 
 
 class Scratch3Sphero {
