@@ -219,6 +219,16 @@ class Video {
         // from overriding forceTransparentPreview
         this.setPreviewGhost(this._ghost);
     }
+
+    /**
+     * Switch the video source.
+     */
+
+    switchSource (vidSource){
+        this._disablePreview();
+        this.provider.switchSource(vidSource);
+        this.enableVideo();
+    }
 }
 
 

@@ -93,6 +93,12 @@ class Scratch3VideoSensingBlocks {
         this._lastUpdate = null;
 
         /**
+         * Set up the different video sources
+         */
+        this._organizeDevices();
+        console.log(allDevices, videoSources);
+
+        /**
          * A flag to determine if this extension has been installed in a project.
          * It is set to false the first time getInfo is run.
          * @type {boolean}
@@ -248,6 +254,11 @@ class Scratch3VideoSensingBlocks {
                 this._lastUpdate = time;
                 this.detect.addFrame(frame.data);
             }
+        }
+
+        if(source_change_bool === true){
+            this.runtime.ioDevices.video.switchSource(chosen_source);
+            source_change_bool = false;
         }
     }
 
@@ -573,6 +584,23 @@ class Scratch3VideoSensingBlocks {
         const transparency = Cast.toNumber(args.TRANSPARENCY);
         this.globalVideoTransparency = transparency;
         this.runtime.ioDevices.video.setPreviewGhost(transparency);
+    }
+
+    /**
+     * Change/toggle video sources
+     */
+    _organizeDevices(){
+        var count = 1;
+        devicePromise.then(function(deviceInfos){
+            for (var i = 0; i !== deviceInfos.length; ++i) {
+                var deviceInfo = deviceInfos[i];
+                if (deviceInfo.kind === 'videoinput') {
+                   videoSources[count] = deviceInfo;
+                   allDevices.push(deviceInfo.label);
+                   count = count + 1;
+                }
+            }
+        });
     }
 }
 
