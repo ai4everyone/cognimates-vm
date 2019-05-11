@@ -86,7 +86,15 @@ module.exports = [
             'nets': true,
             'scratch-parser': true,
             'socket.io-client': true,
-            'text-encoding': true
+            'text-encoding': true,
+            'rxjs': true,
+            'muse-js': true
+        },
+        resolve: {
+            alias: {
+                'osc': path.resolve(__dirname, 'node_modules/osc/'),
+                'serialport': path.resolve(__dirname, 'node_modules/serialport/')
+            }
         }
     }),
     // Playground
