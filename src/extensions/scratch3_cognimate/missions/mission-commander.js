@@ -125,16 +125,7 @@ function animateBlock(block, dx, dy, seconds, optionalInterpolateFn) {
     }
   }
   step();
-};
-
-
-//Jibo functions
-function jiboSay(tts) {
-	console.log(tts);
-	//return tts;
-	//return window.robot.say(tts);
-
-}
+}; 
 
 function jiboSay(tts) {
 	console.log(tts);

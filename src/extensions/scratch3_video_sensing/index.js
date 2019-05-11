@@ -9,6 +9,12 @@ const Video = require('../../io/video');
 
 const VideoMotion = require('./library');
 
+let devicePromise = navigator.mediaDevices.enumerateDevices();
+let allDevices = [];
+let videoSources = {};
+let chosen_source;
+let source_change_bool;
+
 /**
  * Icon svg to be displayed in the blocks category menu, encoded as a data URI.
  * @type {string}
@@ -496,12 +502,28 @@ class Scratch3VideoSensingBlocks {
                             defaultValue: 50
                         }
                     }
+                },
+                {
+                    opcode: 'setVideoSource',
+                    text: formatMessage({
+                        id: 'videoSensing.setVideoSource',
+                        default: 'set video source to [SOURCE]',
+                        description: 'Controls the source of the video'
+                    }),
+                    arguments:{
+                        SOURCE: {
+                            type: ArgumentType.STRING,
+                            menu: 'VIDEO_SOURCE',
+                            defaultValue: '1'
+                        }
+                    }
                 }
             ],
             menus: {
                 ATTRIBUTE: this._buildMenu(this.ATTRIBUTE_INFO),
                 SUBJECT: this._buildMenu(this.SUBJECT_INFO),
-                VIDEO_STATE: this._buildMenu(this.VIDEO_STATE_INFO)
+                VIDEO_STATE: this._buildMenu(this.VIDEO_STATE_INFO),
+                VIDEO_SOURCE: ['1', '2']
             }
         };
     }
@@ -586,8 +608,26 @@ class Scratch3VideoSensingBlocks {
         this.runtime.ioDevices.video.setPreviewGhost(transparency);
     }
 
+
     /**
-     * Change/toggle video sources
+     * The argument will correspond with a key in the videoSources object 
+     * Set the provider to the videoSource Object
+     */
+    setVideoSource(args){
+        if(videoSources[args.SOURCE]){
+            let chosen_device = videoSources[args.SOURCE];
+            if(chosen_device.label.indexOf('USB')>=0){
+                chosen_source = 'USB';
+            } else {
+                chosen_source = "Default";
+            }
+            source_change_bool = true;
+        }
+    }
+
+
+    /**
+     * Gather the video sources
      */
     _organizeDevices(){
         var count = 1;
