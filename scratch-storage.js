@@ -2120,6 +2120,701 @@ function isnan (val) {
 
 /***/ }),
 
+/***/ "./node_modules/define-properties/index.js":
+/*!*************************************************!*\
+  !*** ./node_modules/define-properties/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var keys = __webpack_require__(/*! object-keys */ "./node_modules/object-keys/index.js");
+var hasSymbols = typeof Symbol === 'function' && typeof Symbol('foo') === 'symbol';
+
+var toStr = Object.prototype.toString;
+var concat = Array.prototype.concat;
+var origDefineProperty = Object.defineProperty;
+
+var isFunction = function (fn) {
+	return typeof fn === 'function' && toStr.call(fn) === '[object Function]';
+};
+
+var arePropertyDescriptorsSupported = function () {
+	var obj = {};
+	try {
+		origDefineProperty(obj, 'x', { enumerable: false, value: obj });
+		// eslint-disable-next-line no-unused-vars, no-restricted-syntax
+		for (var _ in obj) { // jscs:ignore disallowUnusedVariables
+			return false;
+		}
+		return obj.x === obj;
+	} catch (e) { /* this is IE 8. */
+		return false;
+	}
+};
+var supportsDescriptors = origDefineProperty && arePropertyDescriptorsSupported();
+
+var defineProperty = function (object, name, value, predicate) {
+	if (name in object && (!isFunction(predicate) || !predicate())) {
+		return;
+	}
+	if (supportsDescriptors) {
+		origDefineProperty(object, name, {
+			configurable: true,
+			enumerable: false,
+			value: value,
+			writable: true
+		});
+	} else {
+		object[name] = value;
+	}
+};
+
+var defineProperties = function (object, map) {
+	var predicates = arguments.length > 2 ? arguments[2] : {};
+	var props = keys(map);
+	if (hasSymbols) {
+		props = concat.call(props, Object.getOwnPropertySymbols(map));
+	}
+	for (var i = 0; i < props.length; i += 1) {
+		defineProperty(object, props[i], map[props[i]], predicates[props[i]]);
+	}
+};
+
+defineProperties.supportsDescriptors = !!supportsDescriptors;
+
+module.exports = defineProperties;
+
+
+/***/ }),
+
+/***/ "./node_modules/es-abstract/GetIntrinsic.js":
+/*!**************************************************!*\
+  !*** ./node_modules/es-abstract/GetIntrinsic.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* globals
+	Set,
+	Map,
+	WeakSet,
+	WeakMap,
+
+	Promise,
+
+	Symbol,
+	Proxy,
+
+	Atomics,
+	SharedArrayBuffer,
+
+	ArrayBuffer,
+	DataView,
+	Uint8Array,
+	Float32Array,
+	Float64Array,
+	Int8Array,
+	Int16Array,
+	Int32Array,
+	Uint8ClampedArray,
+	Uint16Array,
+	Uint32Array,
+*/
+
+var undefined; // eslint-disable-line no-shadow-restricted-names
+
+var ThrowTypeError = Object.getOwnPropertyDescriptor
+	? (function () { return Object.getOwnPropertyDescriptor(arguments, 'callee').get; }())
+	: function () { throw new TypeError(); };
+
+var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
+
+var getProto = Object.getPrototypeOf || function (x) { return x.__proto__; }; // eslint-disable-line no-proto
+
+var generator; // = function * () {};
+var generatorFunction = generator ? getProto(generator) : undefined;
+var asyncFn; // async function() {};
+var asyncFunction = asyncFn ? asyncFn.constructor : undefined;
+var asyncGen; // async function * () {};
+var asyncGenFunction = asyncGen ? getProto(asyncGen) : undefined;
+var asyncGenIterator = asyncGen ? asyncGen() : undefined;
+
+var TypedArray = typeof Uint8Array === 'undefined' ? undefined : getProto(Uint8Array);
+
+var INTRINSICS = {
+	'$ %Array%': Array,
+	'$ %ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined : ArrayBuffer,
+	'$ %ArrayBufferPrototype%': typeof ArrayBuffer === 'undefined' ? undefined : ArrayBuffer.prototype,
+	'$ %ArrayIteratorPrototype%': hasSymbols ? getProto([][Symbol.iterator]()) : undefined,
+	'$ %ArrayPrototype%': Array.prototype,
+	'$ %ArrayProto_entries%': Array.prototype.entries,
+	'$ %ArrayProto_forEach%': Array.prototype.forEach,
+	'$ %ArrayProto_keys%': Array.prototype.keys,
+	'$ %ArrayProto_values%': Array.prototype.values,
+	'$ %AsyncFromSyncIteratorPrototype%': undefined,
+	'$ %AsyncFunction%': asyncFunction,
+	'$ %AsyncFunctionPrototype%': asyncFunction ? asyncFunction.prototype : undefined,
+	'$ %AsyncGenerator%': asyncGen ? getProto(asyncGenIterator) : undefined,
+	'$ %AsyncGeneratorFunction%': asyncGenFunction,
+	'$ %AsyncGeneratorPrototype%': asyncGenFunction ? asyncGenFunction.prototype : undefined,
+	'$ %AsyncIteratorPrototype%': asyncGenIterator && hasSymbols && Symbol.asyncIterator ? asyncGenIterator[Symbol.asyncIterator]() : undefined,
+	'$ %Atomics%': typeof Atomics === 'undefined' ? undefined : Atomics,
+	'$ %Boolean%': Boolean,
+	'$ %BooleanPrototype%': Boolean.prototype,
+	'$ %DataView%': typeof DataView === 'undefined' ? undefined : DataView,
+	'$ %DataViewPrototype%': typeof DataView === 'undefined' ? undefined : DataView.prototype,
+	'$ %Date%': Date,
+	'$ %DatePrototype%': Date.prototype,
+	'$ %decodeURI%': decodeURI,
+	'$ %decodeURIComponent%': decodeURIComponent,
+	'$ %encodeURI%': encodeURI,
+	'$ %encodeURIComponent%': encodeURIComponent,
+	'$ %Error%': Error,
+	'$ %ErrorPrototype%': Error.prototype,
+	'$ %eval%': eval, // eslint-disable-line no-eval
+	'$ %EvalError%': EvalError,
+	'$ %EvalErrorPrototype%': EvalError.prototype,
+	'$ %Float32Array%': typeof Float32Array === 'undefined' ? undefined : Float32Array,
+	'$ %Float32ArrayPrototype%': typeof Float32Array === 'undefined' ? undefined : Float32Array.prototype,
+	'$ %Float64Array%': typeof Float64Array === 'undefined' ? undefined : Float64Array,
+	'$ %Float64ArrayPrototype%': typeof Float64Array === 'undefined' ? undefined : Float64Array.prototype,
+	'$ %Function%': Function,
+	'$ %FunctionPrototype%': Function.prototype,
+	'$ %Generator%': generator ? getProto(generator()) : undefined,
+	'$ %GeneratorFunction%': generatorFunction,
+	'$ %GeneratorPrototype%': generatorFunction ? generatorFunction.prototype : undefined,
+	'$ %Int8Array%': typeof Int8Array === 'undefined' ? undefined : Int8Array,
+	'$ %Int8ArrayPrototype%': typeof Int8Array === 'undefined' ? undefined : Int8Array.prototype,
+	'$ %Int16Array%': typeof Int16Array === 'undefined' ? undefined : Int16Array,
+	'$ %Int16ArrayPrototype%': typeof Int16Array === 'undefined' ? undefined : Int8Array.prototype,
+	'$ %Int32Array%': typeof Int32Array === 'undefined' ? undefined : Int32Array,
+	'$ %Int32ArrayPrototype%': typeof Int32Array === 'undefined' ? undefined : Int32Array.prototype,
+	'$ %isFinite%': isFinite,
+	'$ %isNaN%': isNaN,
+	'$ %IteratorPrototype%': hasSymbols ? getProto(getProto([][Symbol.iterator]())) : undefined,
+	'$ %JSON%': JSON,
+	'$ %JSONParse%': JSON.parse,
+	'$ %Map%': typeof Map === 'undefined' ? undefined : Map,
+	'$ %MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols ? undefined : getProto(new Map()[Symbol.iterator]()),
+	'$ %MapPrototype%': typeof Map === 'undefined' ? undefined : Map.prototype,
+	'$ %Math%': Math,
+	'$ %Number%': Number,
+	'$ %NumberPrototype%': Number.prototype,
+	'$ %Object%': Object,
+	'$ %ObjectPrototype%': Object.prototype,
+	'$ %ObjProto_toString%': Object.prototype.toString,
+	'$ %ObjProto_valueOf%': Object.prototype.valueOf,
+	'$ %parseFloat%': parseFloat,
+	'$ %parseInt%': parseInt,
+	'$ %Promise%': typeof Promise === 'undefined' ? undefined : Promise,
+	'$ %PromisePrototype%': typeof Promise === 'undefined' ? undefined : Promise.prototype,
+	'$ %PromiseProto_then%': typeof Promise === 'undefined' ? undefined : Promise.prototype.then,
+	'$ %Promise_all%': typeof Promise === 'undefined' ? undefined : Promise.all,
+	'$ %Promise_reject%': typeof Promise === 'undefined' ? undefined : Promise.reject,
+	'$ %Promise_resolve%': typeof Promise === 'undefined' ? undefined : Promise.resolve,
+	'$ %Proxy%': typeof Proxy === 'undefined' ? undefined : Proxy,
+	'$ %RangeError%': RangeError,
+	'$ %RangeErrorPrototype%': RangeError.prototype,
+	'$ %ReferenceError%': ReferenceError,
+	'$ %ReferenceErrorPrototype%': ReferenceError.prototype,
+	'$ %Reflect%': typeof Reflect === 'undefined' ? undefined : Reflect,
+	'$ %RegExp%': RegExp,
+	'$ %RegExpPrototype%': RegExp.prototype,
+	'$ %Set%': typeof Set === 'undefined' ? undefined : Set,
+	'$ %SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols ? undefined : getProto(new Set()[Symbol.iterator]()),
+	'$ %SetPrototype%': typeof Set === 'undefined' ? undefined : Set.prototype,
+	'$ %SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined : SharedArrayBuffer,
+	'$ %SharedArrayBufferPrototype%': typeof SharedArrayBuffer === 'undefined' ? undefined : SharedArrayBuffer.prototype,
+	'$ %String%': String,
+	'$ %StringIteratorPrototype%': hasSymbols ? getProto(''[Symbol.iterator]()) : undefined,
+	'$ %StringPrototype%': String.prototype,
+	'$ %Symbol%': hasSymbols ? Symbol : undefined,
+	'$ %SymbolPrototype%': hasSymbols ? Symbol.prototype : undefined,
+	'$ %SyntaxError%': SyntaxError,
+	'$ %SyntaxErrorPrototype%': SyntaxError.prototype,
+	'$ %ThrowTypeError%': ThrowTypeError,
+	'$ %TypedArray%': TypedArray,
+	'$ %TypedArrayPrototype%': TypedArray ? TypedArray.prototype : undefined,
+	'$ %TypeError%': TypeError,
+	'$ %TypeErrorPrototype%': TypeError.prototype,
+	'$ %Uint8Array%': typeof Uint8Array === 'undefined' ? undefined : Uint8Array,
+	'$ %Uint8ArrayPrototype%': typeof Uint8Array === 'undefined' ? undefined : Uint8Array.prototype,
+	'$ %Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined : Uint8ClampedArray,
+	'$ %Uint8ClampedArrayPrototype%': typeof Uint8ClampedArray === 'undefined' ? undefined : Uint8ClampedArray.prototype,
+	'$ %Uint16Array%': typeof Uint16Array === 'undefined' ? undefined : Uint16Array,
+	'$ %Uint16ArrayPrototype%': typeof Uint16Array === 'undefined' ? undefined : Uint16Array.prototype,
+	'$ %Uint32Array%': typeof Uint32Array === 'undefined' ? undefined : Uint32Array,
+	'$ %Uint32ArrayPrototype%': typeof Uint32Array === 'undefined' ? undefined : Uint32Array.prototype,
+	'$ %URIError%': URIError,
+	'$ %URIErrorPrototype%': URIError.prototype,
+	'$ %WeakMap%': typeof WeakMap === 'undefined' ? undefined : WeakMap,
+	'$ %WeakMapPrototype%': typeof WeakMap === 'undefined' ? undefined : WeakMap.prototype,
+	'$ %WeakSet%': typeof WeakSet === 'undefined' ? undefined : WeakSet,
+	'$ %WeakSetPrototype%': typeof WeakSet === 'undefined' ? undefined : WeakSet.prototype
+};
+
+module.exports = function GetIntrinsic(name, allowMissing) {
+	if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
+		throw new TypeError('"allowMissing" argument must be a boolean');
+	}
+
+	var key = '$ ' + name;
+	if (!(key in INTRINSICS)) {
+		throw new SyntaxError('intrinsic ' + name + ' does not exist!');
+	}
+
+	// istanbul ignore if // hopefully this is impossible to test :-)
+	if (typeof INTRINSICS[key] === 'undefined' && !allowMissing) {
+		throw new TypeError('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+	}
+	return INTRINSICS[key];
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/es-abstract/es5.js":
+/*!*****************************************!*\
+  !*** ./node_modules/es-abstract/es5.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var GetIntrinsic = __webpack_require__(/*! ./GetIntrinsic */ "./node_modules/es-abstract/GetIntrinsic.js");
+
+var $Object = GetIntrinsic('%Object%');
+var $TypeError = GetIntrinsic('%TypeError%');
+var $String = GetIntrinsic('%String%');
+
+var assertRecord = __webpack_require__(/*! ./helpers/assertRecord */ "./node_modules/es-abstract/helpers/assertRecord.js");
+var $isNaN = __webpack_require__(/*! ./helpers/isNaN */ "./node_modules/es-abstract/helpers/isNaN.js");
+var $isFinite = __webpack_require__(/*! ./helpers/isFinite */ "./node_modules/es-abstract/helpers/isFinite.js");
+
+var sign = __webpack_require__(/*! ./helpers/sign */ "./node_modules/es-abstract/helpers/sign.js");
+var mod = __webpack_require__(/*! ./helpers/mod */ "./node_modules/es-abstract/helpers/mod.js");
+
+var IsCallable = __webpack_require__(/*! is-callable */ "./node_modules/is-callable/index.js");
+var toPrimitive = __webpack_require__(/*! es-to-primitive/es5 */ "./node_modules/es-to-primitive/es5.js");
+
+var has = __webpack_require__(/*! has */ "./node_modules/has/src/index.js");
+
+// https://es5.github.io/#x9
+var ES5 = {
+	ToPrimitive: toPrimitive,
+
+	ToBoolean: function ToBoolean(value) {
+		return !!value;
+	},
+	ToNumber: function ToNumber(value) {
+		return +value; // eslint-disable-line no-implicit-coercion
+	},
+	ToInteger: function ToInteger(value) {
+		var number = this.ToNumber(value);
+		if ($isNaN(number)) { return 0; }
+		if (number === 0 || !$isFinite(number)) { return number; }
+		return sign(number) * Math.floor(Math.abs(number));
+	},
+	ToInt32: function ToInt32(x) {
+		return this.ToNumber(x) >> 0;
+	},
+	ToUint32: function ToUint32(x) {
+		return this.ToNumber(x) >>> 0;
+	},
+	ToUint16: function ToUint16(value) {
+		var number = this.ToNumber(value);
+		if ($isNaN(number) || number === 0 || !$isFinite(number)) { return 0; }
+		var posInt = sign(number) * Math.floor(Math.abs(number));
+		return mod(posInt, 0x10000);
+	},
+	ToString: function ToString(value) {
+		return $String(value);
+	},
+	ToObject: function ToObject(value) {
+		this.CheckObjectCoercible(value);
+		return $Object(value);
+	},
+	CheckObjectCoercible: function CheckObjectCoercible(value, optMessage) {
+		/* jshint eqnull:true */
+		if (value == null) {
+			throw new $TypeError(optMessage || 'Cannot call method on ' + value);
+		}
+		return value;
+	},
+	IsCallable: IsCallable,
+	SameValue: function SameValue(x, y) {
+		if (x === y) { // 0 === -0, but they are not identical.
+			if (x === 0) { return 1 / x === 1 / y; }
+			return true;
+		}
+		return $isNaN(x) && $isNaN(y);
+	},
+
+	// https://www.ecma-international.org/ecma-262/5.1/#sec-8
+	Type: function Type(x) {
+		if (x === null) {
+			return 'Null';
+		}
+		if (typeof x === 'undefined') {
+			return 'Undefined';
+		}
+		if (typeof x === 'function' || typeof x === 'object') {
+			return 'Object';
+		}
+		if (typeof x === 'number') {
+			return 'Number';
+		}
+		if (typeof x === 'boolean') {
+			return 'Boolean';
+		}
+		if (typeof x === 'string') {
+			return 'String';
+		}
+	},
+
+	// https://ecma-international.org/ecma-262/6.0/#sec-property-descriptor-specification-type
+	IsPropertyDescriptor: function IsPropertyDescriptor(Desc) {
+		if (this.Type(Desc) !== 'Object') {
+			return false;
+		}
+		var allowed = {
+			'[[Configurable]]': true,
+			'[[Enumerable]]': true,
+			'[[Get]]': true,
+			'[[Set]]': true,
+			'[[Value]]': true,
+			'[[Writable]]': true
+		};
+
+		for (var key in Desc) { // eslint-disable-line
+			if (has(Desc, key) && !allowed[key]) {
+				return false;
+			}
+		}
+
+		var isData = has(Desc, '[[Value]]');
+		var IsAccessor = has(Desc, '[[Get]]') || has(Desc, '[[Set]]');
+		if (isData && IsAccessor) {
+			throw new $TypeError('Property Descriptors may not be both accessor and data descriptors');
+		}
+		return true;
+	},
+
+	// https://ecma-international.org/ecma-262/5.1/#sec-8.10.1
+	IsAccessorDescriptor: function IsAccessorDescriptor(Desc) {
+		if (typeof Desc === 'undefined') {
+			return false;
+		}
+
+		assertRecord(this, 'Property Descriptor', 'Desc', Desc);
+
+		if (!has(Desc, '[[Get]]') && !has(Desc, '[[Set]]')) {
+			return false;
+		}
+
+		return true;
+	},
+
+	// https://ecma-international.org/ecma-262/5.1/#sec-8.10.2
+	IsDataDescriptor: function IsDataDescriptor(Desc) {
+		if (typeof Desc === 'undefined') {
+			return false;
+		}
+
+		assertRecord(this, 'Property Descriptor', 'Desc', Desc);
+
+		if (!has(Desc, '[[Value]]') && !has(Desc, '[[Writable]]')) {
+			return false;
+		}
+
+		return true;
+	},
+
+	// https://ecma-international.org/ecma-262/5.1/#sec-8.10.3
+	IsGenericDescriptor: function IsGenericDescriptor(Desc) {
+		if (typeof Desc === 'undefined') {
+			return false;
+		}
+
+		assertRecord(this, 'Property Descriptor', 'Desc', Desc);
+
+		if (!this.IsAccessorDescriptor(Desc) && !this.IsDataDescriptor(Desc)) {
+			return true;
+		}
+
+		return false;
+	},
+
+	// https://ecma-international.org/ecma-262/5.1/#sec-8.10.4
+	FromPropertyDescriptor: function FromPropertyDescriptor(Desc) {
+		if (typeof Desc === 'undefined') {
+			return Desc;
+		}
+
+		assertRecord(this, 'Property Descriptor', 'Desc', Desc);
+
+		if (this.IsDataDescriptor(Desc)) {
+			return {
+				value: Desc['[[Value]]'],
+				writable: !!Desc['[[Writable]]'],
+				enumerable: !!Desc['[[Enumerable]]'],
+				configurable: !!Desc['[[Configurable]]']
+			};
+		} else if (this.IsAccessorDescriptor(Desc)) {
+			return {
+				get: Desc['[[Get]]'],
+				set: Desc['[[Set]]'],
+				enumerable: !!Desc['[[Enumerable]]'],
+				configurable: !!Desc['[[Configurable]]']
+			};
+		} else {
+			throw new $TypeError('FromPropertyDescriptor must be called with a fully populated Property Descriptor');
+		}
+	},
+
+	// https://ecma-international.org/ecma-262/5.1/#sec-8.10.5
+	ToPropertyDescriptor: function ToPropertyDescriptor(Obj) {
+		if (this.Type(Obj) !== 'Object') {
+			throw new $TypeError('ToPropertyDescriptor requires an object');
+		}
+
+		var desc = {};
+		if (has(Obj, 'enumerable')) {
+			desc['[[Enumerable]]'] = this.ToBoolean(Obj.enumerable);
+		}
+		if (has(Obj, 'configurable')) {
+			desc['[[Configurable]]'] = this.ToBoolean(Obj.configurable);
+		}
+		if (has(Obj, 'value')) {
+			desc['[[Value]]'] = Obj.value;
+		}
+		if (has(Obj, 'writable')) {
+			desc['[[Writable]]'] = this.ToBoolean(Obj.writable);
+		}
+		if (has(Obj, 'get')) {
+			var getter = Obj.get;
+			if (typeof getter !== 'undefined' && !this.IsCallable(getter)) {
+				throw new TypeError('getter must be a function');
+			}
+			desc['[[Get]]'] = getter;
+		}
+		if (has(Obj, 'set')) {
+			var setter = Obj.set;
+			if (typeof setter !== 'undefined' && !this.IsCallable(setter)) {
+				throw new $TypeError('setter must be a function');
+			}
+			desc['[[Set]]'] = setter;
+		}
+
+		if ((has(desc, '[[Get]]') || has(desc, '[[Set]]')) && (has(desc, '[[Value]]') || has(desc, '[[Writable]]'))) {
+			throw new $TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
+		}
+		return desc;
+	}
+};
+
+module.exports = ES5;
+
+
+/***/ }),
+
+/***/ "./node_modules/es-abstract/helpers/assertRecord.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/es-abstract/helpers/assertRecord.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var GetIntrinsic = __webpack_require__(/*! ../GetIntrinsic */ "./node_modules/es-abstract/GetIntrinsic.js");
+
+var $TypeError = GetIntrinsic('%TypeError%');
+var $SyntaxError = GetIntrinsic('%SyntaxError%');
+
+var has = __webpack_require__(/*! has */ "./node_modules/has/src/index.js");
+
+var predicates = {
+  // https://ecma-international.org/ecma-262/6.0/#sec-property-descriptor-specification-type
+  'Property Descriptor': function isPropertyDescriptor(ES, Desc) {
+    if (ES.Type(Desc) !== 'Object') {
+      return false;
+    }
+    var allowed = {
+      '[[Configurable]]': true,
+      '[[Enumerable]]': true,
+      '[[Get]]': true,
+      '[[Set]]': true,
+      '[[Value]]': true,
+      '[[Writable]]': true
+    };
+
+    for (var key in Desc) { // eslint-disable-line
+      if (has(Desc, key) && !allowed[key]) {
+        return false;
+      }
+    }
+
+    var isData = has(Desc, '[[Value]]');
+    var IsAccessor = has(Desc, '[[Get]]') || has(Desc, '[[Set]]');
+    if (isData && IsAccessor) {
+      throw new $TypeError('Property Descriptors may not be both accessor and data descriptors');
+    }
+    return true;
+  }
+};
+
+module.exports = function assertRecord(ES, recordType, argumentName, value) {
+  var predicate = predicates[recordType];
+  if (typeof predicate !== 'function') {
+    throw new $SyntaxError('unknown record type: ' + recordType);
+  }
+  if (!predicate(ES, value)) {
+    throw new $TypeError(argumentName + ' must be a ' + recordType);
+  }
+  console.log(predicate(ES, value), value);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/es-abstract/helpers/isFinite.js":
+/*!******************************************************!*\
+  !*** ./node_modules/es-abstract/helpers/isFinite.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var $isNaN = Number.isNaN || function (a) { return a !== a; };
+
+module.exports = Number.isFinite || function (x) { return typeof x === 'number' && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
+
+
+/***/ }),
+
+/***/ "./node_modules/es-abstract/helpers/isNaN.js":
+/*!***************************************************!*\
+  !*** ./node_modules/es-abstract/helpers/isNaN.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = Number.isNaN || function isNaN(a) {
+	return a !== a;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/es-abstract/helpers/mod.js":
+/*!*************************************************!*\
+  !*** ./node_modules/es-abstract/helpers/mod.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function mod(number, modulo) {
+	var remain = number % modulo;
+	return Math.floor(remain >= 0 ? remain : remain + modulo);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/es-abstract/helpers/sign.js":
+/*!**************************************************!*\
+  !*** ./node_modules/es-abstract/helpers/sign.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function sign(number) {
+	return number >= 0 ? 1 : -1;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/es-to-primitive/es5.js":
+/*!*********************************************!*\
+  !*** ./node_modules/es-to-primitive/es5.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var toStr = Object.prototype.toString;
+
+var isPrimitive = __webpack_require__(/*! ./helpers/isPrimitive */ "./node_modules/es-to-primitive/helpers/isPrimitive.js");
+
+var isCallable = __webpack_require__(/*! is-callable */ "./node_modules/is-callable/index.js");
+
+// http://ecma-international.org/ecma-262/5.1/#sec-8.12.8
+var ES5internalSlots = {
+	'[[DefaultValue]]': function (O) {
+		var actualHint;
+		if (arguments.length > 1) {
+			actualHint = arguments[1];
+		} else {
+			actualHint = toStr.call(O) === '[object Date]' ? String : Number;
+		}
+
+		if (actualHint === String || actualHint === Number) {
+			var methods = actualHint === String ? ['toString', 'valueOf'] : ['valueOf', 'toString'];
+			var value, i;
+			for (i = 0; i < methods.length; ++i) {
+				if (isCallable(O[methods[i]])) {
+					value = O[methods[i]]();
+					if (isPrimitive(value)) {
+						return value;
+					}
+				}
+			}
+			throw new TypeError('No default value');
+		}
+		throw new TypeError('invalid [[DefaultValue]] hint supplied');
+	}
+};
+
+// http://ecma-international.org/ecma-262/5.1/#sec-9.1
+module.exports = function ToPrimitive(input) {
+	if (isPrimitive(input)) {
+		return input;
+	}
+	if (arguments.length > 1) {
+		return ES5internalSlots['[[DefaultValue]]'](input, arguments[1]);
+	}
+	return ES5internalSlots['[[DefaultValue]]'](input);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/es-to-primitive/helpers/isPrimitive.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/es-to-primitive/helpers/isPrimitive.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function isPrimitive(value) {
+	return value === null || (typeof value !== 'function' && typeof value !== 'object');
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/for-each/index.js":
 /*!****************************************!*\
   !*** ./node_modules/for-each/index.js ***!
@@ -2194,6 +2889,87 @@ module.exports = forEach;
 
 /***/ }),
 
+/***/ "./node_modules/function-bind/implementation.js":
+/*!******************************************************!*\
+  !*** ./node_modules/function-bind/implementation.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* eslint no-invalid-this: 1 */
+
+var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
+var slice = Array.prototype.slice;
+var toStr = Object.prototype.toString;
+var funcType = '[object Function]';
+
+module.exports = function bind(that) {
+    var target = this;
+    if (typeof target !== 'function' || toStr.call(target) !== funcType) {
+        throw new TypeError(ERROR_MESSAGE + target);
+    }
+    var args = slice.call(arguments, 1);
+
+    var bound;
+    var binder = function () {
+        if (this instanceof bound) {
+            var result = target.apply(
+                this,
+                args.concat(slice.call(arguments))
+            );
+            if (Object(result) === result) {
+                return result;
+            }
+            return this;
+        } else {
+            return target.apply(
+                that,
+                args.concat(slice.call(arguments))
+            );
+        }
+    };
+
+    var boundLength = Math.max(0, target.length - args.length);
+    var boundArgs = [];
+    for (var i = 0; i < boundLength; i++) {
+        boundArgs.push('$' + i);
+    }
+
+    bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this,arguments); }')(binder);
+
+    if (target.prototype) {
+        var Empty = function Empty() {};
+        Empty.prototype = target.prototype;
+        bound.prototype = new Empty();
+        Empty.prototype = null;
+    }
+
+    return bound;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/function-bind/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/function-bind/index.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var implementation = __webpack_require__(/*! ./implementation */ "./node_modules/function-bind/implementation.js");
+
+module.exports = Function.prototype.bind || implementation;
+
+
+/***/ }),
+
 /***/ "./node_modules/global/window.js":
 /*!***************************************!*\
   !*** ./node_modules/global/window.js ***!
@@ -2216,6 +2992,23 @@ if (typeof window !== "undefined") {
 module.exports = win;
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/has/src/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/has/src/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var bind = __webpack_require__(/*! function-bind */ "./node_modules/function-bind/index.js");
+
+module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
+
 
 /***/ }),
 
@@ -3927,6 +4720,211 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/object-keys/implementation.js":
+/*!****************************************************!*\
+  !*** ./node_modules/object-keys/implementation.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var keysShim;
+if (!Object.keys) {
+	// modified from https://github.com/es-shims/es5-shim
+	var has = Object.prototype.hasOwnProperty;
+	var toStr = Object.prototype.toString;
+	var isArgs = __webpack_require__(/*! ./isArguments */ "./node_modules/object-keys/isArguments.js"); // eslint-disable-line global-require
+	var isEnumerable = Object.prototype.propertyIsEnumerable;
+	var hasDontEnumBug = !isEnumerable.call({ toString: null }, 'toString');
+	var hasProtoEnumBug = isEnumerable.call(function () {}, 'prototype');
+	var dontEnums = [
+		'toString',
+		'toLocaleString',
+		'valueOf',
+		'hasOwnProperty',
+		'isPrototypeOf',
+		'propertyIsEnumerable',
+		'constructor'
+	];
+	var equalsConstructorPrototype = function (o) {
+		var ctor = o.constructor;
+		return ctor && ctor.prototype === o;
+	};
+	var excludedKeys = {
+		$applicationCache: true,
+		$console: true,
+		$external: true,
+		$frame: true,
+		$frameElement: true,
+		$frames: true,
+		$innerHeight: true,
+		$innerWidth: true,
+		$outerHeight: true,
+		$outerWidth: true,
+		$pageXOffset: true,
+		$pageYOffset: true,
+		$parent: true,
+		$scrollLeft: true,
+		$scrollTop: true,
+		$scrollX: true,
+		$scrollY: true,
+		$self: true,
+		$webkitIndexedDB: true,
+		$webkitStorageInfo: true,
+		$window: true
+	};
+	var hasAutomationEqualityBug = (function () {
+		/* global window */
+		if (typeof window === 'undefined') { return false; }
+		for (var k in window) {
+			try {
+				if (!excludedKeys['$' + k] && has.call(window, k) && window[k] !== null && typeof window[k] === 'object') {
+					try {
+						equalsConstructorPrototype(window[k]);
+					} catch (e) {
+						return true;
+					}
+				}
+			} catch (e) {
+				return true;
+			}
+		}
+		return false;
+	}());
+	var equalsConstructorPrototypeIfNotBuggy = function (o) {
+		/* global window */
+		if (typeof window === 'undefined' || !hasAutomationEqualityBug) {
+			return equalsConstructorPrototype(o);
+		}
+		try {
+			return equalsConstructorPrototype(o);
+		} catch (e) {
+			return false;
+		}
+	};
+
+	keysShim = function keys(object) {
+		var isObject = object !== null && typeof object === 'object';
+		var isFunction = toStr.call(object) === '[object Function]';
+		var isArguments = isArgs(object);
+		var isString = isObject && toStr.call(object) === '[object String]';
+		var theKeys = [];
+
+		if (!isObject && !isFunction && !isArguments) {
+			throw new TypeError('Object.keys called on a non-object');
+		}
+
+		var skipProto = hasProtoEnumBug && isFunction;
+		if (isString && object.length > 0 && !has.call(object, 0)) {
+			for (var i = 0; i < object.length; ++i) {
+				theKeys.push(String(i));
+			}
+		}
+
+		if (isArguments && object.length > 0) {
+			for (var j = 0; j < object.length; ++j) {
+				theKeys.push(String(j));
+			}
+		} else {
+			for (var name in object) {
+				if (!(skipProto && name === 'prototype') && has.call(object, name)) {
+					theKeys.push(String(name));
+				}
+			}
+		}
+
+		if (hasDontEnumBug) {
+			var skipConstructor = equalsConstructorPrototypeIfNotBuggy(object);
+
+			for (var k = 0; k < dontEnums.length; ++k) {
+				if (!(skipConstructor && dontEnums[k] === 'constructor') && has.call(object, dontEnums[k])) {
+					theKeys.push(dontEnums[k]);
+				}
+			}
+		}
+		return theKeys;
+	};
+}
+module.exports = keysShim;
+
+
+/***/ }),
+
+/***/ "./node_modules/object-keys/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/object-keys/index.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var slice = Array.prototype.slice;
+var isArgs = __webpack_require__(/*! ./isArguments */ "./node_modules/object-keys/isArguments.js");
+
+var origKeys = Object.keys;
+var keysShim = origKeys ? function keys(o) { return origKeys(o); } : __webpack_require__(/*! ./implementation */ "./node_modules/object-keys/implementation.js");
+
+var originalKeys = Object.keys;
+
+keysShim.shim = function shimObjectKeys() {
+	if (Object.keys) {
+		var keysWorksWithArguments = (function () {
+			// Safari 5.0 bug
+			var args = Object.keys(arguments);
+			return args && args.length === arguments.length;
+		}(1, 2));
+		if (!keysWorksWithArguments) {
+			Object.keys = function keys(object) { // eslint-disable-line func-name-matching
+				if (isArgs(object)) {
+					return originalKeys(slice.call(object));
+				}
+				return originalKeys(object);
+			};
+		}
+	} else {
+		Object.keys = keysShim;
+	}
+	return Object.keys || keysShim;
+};
+
+module.exports = keysShim;
+
+
+/***/ }),
+
+/***/ "./node_modules/object-keys/isArguments.js":
+/*!*************************************************!*\
+  !*** ./node_modules/object-keys/isArguments.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var toStr = Object.prototype.toString;
+
+module.exports = function isArguments(value) {
+	var str = toStr.call(value);
+	var isArgs = str === '[object Arguments]';
+	if (!isArgs) {
+		isArgs = str !== '[object Array]' &&
+			value !== null &&
+			typeof value === 'object' &&
+			typeof value.length === 'number' &&
+			value.length >= 0 &&
+			toStr.call(value.callee) === '[object Function]';
+	}
+	return isArgs;
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/parse-headers/parse-headers.js":
 /*!*****************************************************!*\
   !*** ./node_modules/parse-headers/parse-headers.js ***!
@@ -3934,7 +4932,7 @@ process.umask = function() { return 0; };
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var trim = __webpack_require__(/*! trim */ "./node_modules/trim/index.js")
+var trim = __webpack_require__(/*! string.prototype.trim */ "./node_modules/string.prototype.trim/index.js")
   , forEach = __webpack_require__(/*! for-each */ "./node_modules/for-each/index.js")
   , isArray = function(arg) {
       return Object.prototype.toString.call(arg) === '[object Array]';
@@ -3965,6 +4963,108 @@ module.exports = function (headers) {
 
   return result
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/string.prototype.trim/implementation.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/string.prototype.trim/implementation.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var bind = __webpack_require__(/*! function-bind */ "./node_modules/function-bind/index.js");
+var ES = __webpack_require__(/*! es-abstract/es5 */ "./node_modules/es-abstract/es5.js");
+var replace = bind.call(Function.call, String.prototype.replace);
+
+var leftWhitespace = /^[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+/;
+var rightWhitespace = /[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+$/;
+
+module.exports = function trim() {
+	var S = ES.ToString(ES.CheckObjectCoercible(this));
+	return replace(replace(S, leftWhitespace, ''), rightWhitespace, '');
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/string.prototype.trim/index.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/string.prototype.trim/index.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var bind = __webpack_require__(/*! function-bind */ "./node_modules/function-bind/index.js");
+var define = __webpack_require__(/*! define-properties */ "./node_modules/define-properties/index.js");
+
+var implementation = __webpack_require__(/*! ./implementation */ "./node_modules/string.prototype.trim/implementation.js");
+var getPolyfill = __webpack_require__(/*! ./polyfill */ "./node_modules/string.prototype.trim/polyfill.js");
+var shim = __webpack_require__(/*! ./shim */ "./node_modules/string.prototype.trim/shim.js");
+
+var boundTrim = bind.call(Function.call, getPolyfill());
+
+define(boundTrim, {
+	getPolyfill: getPolyfill,
+	implementation: implementation,
+	shim: shim
+});
+
+module.exports = boundTrim;
+
+
+/***/ }),
+
+/***/ "./node_modules/string.prototype.trim/polyfill.js":
+/*!********************************************************!*\
+  !*** ./node_modules/string.prototype.trim/polyfill.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var implementation = __webpack_require__(/*! ./implementation */ "./node_modules/string.prototype.trim/implementation.js");
+
+var zeroWidthSpace = '\u200b';
+
+module.exports = function getPolyfill() {
+	if (String.prototype.trim && zeroWidthSpace.trim() === zeroWidthSpace) {
+		return String.prototype.trim;
+	}
+	return implementation;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/string.prototype.trim/shim.js":
+/*!****************************************************!*\
+  !*** ./node_modules/string.prototype.trim/shim.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var define = __webpack_require__(/*! define-properties */ "./node_modules/define-properties/index.js");
+var getPolyfill = __webpack_require__(/*! ./polyfill */ "./node_modules/string.prototype.trim/polyfill.js");
+
+module.exports = function shimStringTrim() {
+	var polyfill = getPolyfill();
+	define(String.prototype, { trim: polyfill }, { trim: function () { return String.prototype.trim !== polyfill; } });
+	return polyfill;
+};
+
 
 /***/ }),
 
@@ -7368,31 +8468,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/trim/index.js":
-/*!************************************!*\
-  !*** ./node_modules/trim/index.js ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-exports = module.exports = trim;
-
-function trim(str){
-  return str.replace(/^\s*|\s*$/g, '');
-}
-
-exports.left = function(str){
-  return str.replace(/^\s*/, '');
-};
-
-exports.right = function(str){
-  return str.replace(/\s*$/, '');
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/webpack/buildin/amd-options.js":
 /*!****************************************!*\
   !*** (webpack)/buildin/amd-options.js ***!
@@ -7435,6 +8510,67 @@ try {
 
 module.exports = g;
 
+
+/***/ }),
+
+/***/ "./node_modules/worker-loader/dist/cjs.js?{\"inline\":true,\"fallback\":true}!./src/FetchWorkerTool.worker.js":
+/*!****************************************************************************************************************!*\
+  !*** ./node_modules/worker-loader/dist/cjs.js?{"inline":true,"fallback":true}!./src/FetchWorkerTool.worker.js ***!
+  \****************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = function() {
+  return __webpack_require__(/*! !./node_modules/worker-loader/dist/workers/InlineWorker.js */ "./node_modules/worker-loader/dist/workers/InlineWorker.js")("/******/ (function(modules) { // webpackBootstrap\n/******/ \t// The module cache\n/******/ \tvar installedModules = {};\n/******/\n/******/ \t// The require function\n/******/ \tfunction __webpack_require__(moduleId) {\n/******/\n/******/ \t\t// Check if module is in cache\n/******/ \t\tif(installedModules[moduleId]) {\n/******/ \t\t\treturn installedModules[moduleId].exports;\n/******/ \t\t}\n/******/ \t\t// Create a new module (and put it into the cache)\n/******/ \t\tvar module = installedModules[moduleId] = {\n/******/ \t\t\ti: moduleId,\n/******/ \t\t\tl: false,\n/******/ \t\t\texports: {}\n/******/ \t\t};\n/******/\n/******/ \t\t// Execute the module function\n/******/ \t\tmodules[moduleId].call(module.exports, module, module.exports, __webpack_require__);\n/******/\n/******/ \t\t// Flag the module as loaded\n/******/ \t\tmodule.l = true;\n/******/\n/******/ \t\t// Return the exports of the module\n/******/ \t\treturn module.exports;\n/******/ \t}\n/******/\n/******/\n/******/ \t// expose the modules object (__webpack_modules__)\n/******/ \t__webpack_require__.m = modules;\n/******/\n/******/ \t// expose the module cache\n/******/ \t__webpack_require__.c = installedModules;\n/******/\n/******/ \t// define getter function for harmony exports\n/******/ \t__webpack_require__.d = function(exports, name, getter) {\n/******/ \t\tif(!__webpack_require__.o(exports, name)) {\n/******/ \t\t\tObject.defineProperty(exports, name, { enumerable: true, get: getter });\n/******/ \t\t}\n/******/ \t};\n/******/\n/******/ \t// define __esModule on exports\n/******/ \t__webpack_require__.r = function(exports) {\n/******/ \t\tif(typeof Symbol !== 'undefined' && Symbol.toStringTag) {\n/******/ \t\t\tObject.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });\n/******/ \t\t}\n/******/ \t\tObject.defineProperty(exports, '__esModule', { value: true });\n/******/ \t};\n/******/\n/******/ \t// create a fake namespace object\n/******/ \t// mode & 1: value is a module id, require it\n/******/ \t// mode & 2: merge all properties of value into the ns\n/******/ \t// mode & 4: return value when already ns object\n/******/ \t// mode & 8|1: behave like require\n/******/ \t__webpack_require__.t = function(value, mode) {\n/******/ \t\tif(mode & 1) value = __webpack_require__(value);\n/******/ \t\tif(mode & 8) return value;\n/******/ \t\tif((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;\n/******/ \t\tvar ns = Object.create(null);\n/******/ \t\t__webpack_require__.r(ns);\n/******/ \t\tObject.defineProperty(ns, 'default', { enumerable: true, value: value });\n/******/ \t\tif(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));\n/******/ \t\treturn ns;\n/******/ \t};\n/******/\n/******/ \t// getDefaultExport function for compatibility with non-harmony modules\n/******/ \t__webpack_require__.n = function(module) {\n/******/ \t\tvar getter = module && module.__esModule ?\n/******/ \t\t\tfunction getDefault() { return module['default']; } :\n/******/ \t\t\tfunction getModuleExports() { return module; };\n/******/ \t\t__webpack_require__.d(getter, 'a', getter);\n/******/ \t\treturn getter;\n/******/ \t};\n/******/\n/******/ \t// Object.prototype.hasOwnProperty.call\n/******/ \t__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };\n/******/\n/******/ \t// __webpack_public_path__\n/******/ \t__webpack_require__.p = \"\";\n/******/\n/******/\n/******/ \t// Load entry module and return exports\n/******/ \treturn __webpack_require__(__webpack_require__.s = \"./node_modules/babel-loader/lib/index.js?!./src/FetchWorkerTool.worker.js\");\n/******/ })\n/************************************************************************/\n/******/ ({\n\n/***/ \"./node_modules/babel-loader/lib/index.js?!./src/FetchWorkerTool.worker.js\":\n/*!*******************************************************************************!*\\\n  !*** ./node_modules/babel-loader/lib??ref--4!./src/FetchWorkerTool.worker.js ***!\n  \\*******************************************************************************/\n/*! no static exports found */\n/***/ (function(module, exports) {\n\n/* eslint-env worker */\nvar jobsActive = 0;\nvar complete = [];\nvar intervalId = null;\n/**\n * Register a step function.\n *\n * Step checks if there are completed jobs and if there are sends them to the\n * parent. Then it checks the jobs count. If there are no further jobs, clear\n * the step.\n */\n\nvar registerStep = function registerStep() {\n  intervalId = setInterval(function () {\n    if (complete.length) {\n      // Send our chunk of completed requests and instruct postMessage to\n      // transfer the buffers instead of copying them.\n      postMessage(complete.slice(), // Instruct postMessage that these buffers in the sent message\n      // should use their Transferable trait. After the postMessage\n      // call the \"buffers\" will still be in complete if you looked,\n      // but they will all be length 0 as the data they reference has\n      // been sent to the window. This lets us send a lot of data\n      // without the normal postMessage behaviour of making a copy of\n      // all of the data for the window.\n      complete.map(function (response) {\n        return response.buffer;\n      }).filter(Boolean));\n      complete.length = 0;\n    }\n\n    if (jobsActive === 0) {\n      clearInterval(intervalId);\n      intervalId = null;\n    }\n  }, 1);\n};\n/**\n * Receive a job from the parent and fetch the requested data.\n * @param {object} options.job A job id, url, and options descriptor to perform.\n */\n\n\nvar onMessage = function onMessage(_ref) {\n  var job = _ref.data;\n\n  if (jobsActive === 0 && !intervalId) {\n    registerStep();\n  }\n\n  jobsActive++;\n  fetch(job.url, job.options).then(function (response) {\n    return response.arrayBuffer();\n  }).then(function (buffer) {\n    return complete.push({\n      id: job.id,\n      buffer: buffer\n    });\n  }).catch(function (error) {\n    return complete.push({\n      id: job.id,\n      error: error\n    });\n  }).then(function () {\n    return jobsActive--;\n  });\n};\n\nif (self.fetch) {\n  postMessage({\n    support: {\n      fetch: true\n    }\n  });\n  self.addEventListener('message', onMessage);\n} else {\n  postMessage({\n    support: {\n      fetch: false\n    }\n  });\n  self.addEventListener('message', function (_ref2) {\n    var job = _ref2.data;\n    postMessage([{\n      id: job.id,\n      error: new Error('fetch is unavailable')\n    }]);\n  });\n}\n\n/***/ })\n\n/******/ });\n//# sourceMappingURL=3325b91e8645157f8dc6.worker.js.map", __webpack_require__.p + "3325b91e8645157f8dc6.worker.js");
+};
+
+/***/ }),
+
+/***/ "./node_modules/worker-loader/dist/workers/InlineWorker.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/worker-loader/dist/workers/InlineWorker.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// http://stackoverflow.com/questions/10343913/how-to-create-a-web-worker-from-a-string
+
+var URL = window.URL || window.webkitURL;
+
+module.exports = function (content, url) {
+  try {
+    try {
+      var blob;
+
+      try {
+        // BlobBuilder = Deprecated, but widely implemented
+        var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+
+        blob = new BlobBuilder();
+
+        blob.append(content);
+
+        blob = blob.getBlob();
+      } catch (e) {
+        // The proposed API
+        blob = new Blob([content]);
+      }
+
+      return new Worker(URL.createObjectURL(blob));
+    } catch (e) {
+      return new Worker('data:application/javascript,' + encodeURIComponent(content));
+    }
+  } catch (e) {
+    if (!url) {
+      throw Error('Inline worker is not supported');
+    }
+
+    return new Worker(url);
+  }
+};
 
 /***/ }),
 
@@ -7746,9 +8882,13 @@ var _TextDecoder;
 
 var _TextEncoder;
 
-var encoding = __webpack_require__(/*! text-encoding */ "./node_modules/text-encoding/index.js");
-
 if (typeof TextDecoder === 'undefined' || typeof TextEncoder === 'undefined') {
+  // Wait to require text-encoding until we _know_ its needed. This will save
+  // evaluating ~500kb of encoding indices that we do not need to evaluate if
+  // the browser provides TextDecoder and TextEncoder.
+  // eslint-disable-next-line global-require
+  var encoding = __webpack_require__(/*! text-encoding */ "./node_modules/text-encoding/index.js");
+
   _TextDecoder = encoding.TextDecoder;
   _TextEncoder = encoding.TextEncoder;
 } else {
@@ -7757,15 +8897,69 @@ if (typeof TextDecoder === 'undefined' || typeof TextEncoder === 'undefined') {
   _TextEncoder = TextEncoder;
 }
 
-var base64js = __webpack_require__(/*! base64-js */ "./node_modules/base64-js/index.js");
-
 var md5 = __webpack_require__(/*! js-md5 */ "./node_modules/js-md5/src/md5.js");
 
 var memoizedToString = function () {
+  /**
+   * The maximum length of a chunk before encoding it into base64.
+   *
+   * 32766 is a multiple of 3 so btoa does not need to use padding characters
+   * except for the final chunk where that is fine. 32766 is also close to
+   * 32768 so it is close to a size an memory allocator would prefer.
+   * @const {number}
+   */
+  var BTOA_CHUNK_MAX_LENGTH = 32766;
+  /**
+   * An array cache of bytes to characters.
+   * @const {?Array.<string>}
+   */
+
+  var fromCharCode = null;
   var strings = {};
   return function (assetId, data) {
     if (!strings.hasOwnProperty(assetId)) {
-      strings[assetId] = base64js.fromByteArray(data);
+      if (typeof btoa === 'undefined') {
+        // Use a library that does not need btoa to run.
+
+        /* eslint-disable-next-line global-require */
+        var base64js = __webpack_require__(/*! base64-js */ "./node_modules/base64-js/index.js");
+
+        strings[assetId] = base64js.fromByteArray(data);
+      } else {
+        // Native btoa is faster than javascript translation. Use js to
+        // create a "binary" string and btoa to encode it.
+        if (fromCharCode === null) {
+          // Cache the first 256 characters for input byte values.
+          fromCharCode = new Array(256);
+
+          for (var i = 0; i < 256; i++) {
+            fromCharCode[i] = String.fromCharCode(i);
+          }
+        }
+
+        var length = data.length;
+        var s = ''; // Iterate over chunks of the binary data.
+
+        for (var _i = 0, e = 0; _i < length; _i = e) {
+          // Create small chunks to cause more small allocations and
+          // less large allocations.
+          e = Math.min(e + BTOA_CHUNK_MAX_LENGTH, length);
+          var s_ = '';
+
+          for (var j = _i; j < e; j += 1) {
+            s_ += fromCharCode[data[j]];
+          } // Encode the latest chunk so the we create one big output
+          // string instead of creating a big input string and then
+          // one big output string.
+
+          /* global btoa */
+
+
+          s += btoa(s_);
+        }
+
+        strings[assetId] = s;
+      }
     }
 
     return strings[assetId];
@@ -8111,12 +9305,18 @@ function (_Helper) {
      * Fetch an asset but don't process dependencies.
      * @param {AssetType} assetType - The type of asset to fetch.
      * @param {string} assetId - The ID of the asset to fetch: a project ID, MD5, etc.
-     * @return {Promise.<Asset>} A promise for the contents of the asset.
+     * @return {?Promise.<Asset>} A promise for the contents of the asset.
      */
 
   }, {
     key: "load",
     value: function load(assetType, assetId) {
+      if (!this.get(assetId)) {
+        // Return null immediately so Storage can quickly move to trying the
+        // next helper.
+        return null;
+      }
+
       return Promise.resolve(this.get(assetId));
     }
   }]);
@@ -8151,6 +9351,361 @@ var DataFormat = {
   WAV: 'wav'
 };
 module.exports = DataFormat;
+
+/***/ }),
+
+/***/ "./src/FetchTool.js":
+/*!**************************!*\
+  !*** ./src/FetchTool.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/* eslint-env browser */
+
+/**
+ * Get and send assets with the fetch standard web api.
+ */
+var FetchTool =
+/*#__PURE__*/
+function () {
+  function FetchTool() {
+    _classCallCheck(this, FetchTool);
+  }
+
+  _createClass(FetchTool, [{
+    key: "get",
+
+    /**
+     * Request data from a server with fetch.
+     * @param {{url:string}} reqConfig - Request configuration for data to get.
+     * @param {{method:string}} options - Additional options to configure fetch.
+     * @returns {Promise.<Uint8Array>} Resolve to Buffer of data from server.
+     */
+    value: function get(_ref) {
+      var url = _ref.url;
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        method: 'GET'
+      };
+      return fetch(url, options).then(function (result) {
+        return result.arrayBuffer();
+      }).then(function (body) {
+        return new Uint8Array(body);
+      });
+    }
+    /**
+     * Is sending supported? false if the environment does not support sending
+     * with fetch.
+     * @returns {boolean} Is sending supported?
+     */
+
+  }, {
+    key: "send",
+
+    /**
+     * Send data to a server with fetch.
+     * @param {{url:string}} reqConfig - Request configuration for data to send.
+     * @param {*} data - Data to send.
+     * @param {string} method - HTTP method to sending the data as.
+     * @returns {Promise.<string>} Server returned metadata.
+     */
+    value: function send(_ref2, data, method) {
+      var url = _ref2.url;
+      return fetch(url, {
+        method: method,
+        body: data
+      }).then(function (result) {
+        return result.text();
+      });
+    }
+  }, {
+    key: "isGetSupported",
+
+    /**
+     * Is get supported? false if the environment does not support fetch.
+     * @returns {boolean} Is get supported?
+     */
+    get: function get() {
+      return typeof fetch !== 'undefined';
+    }
+  }, {
+    key: "isSendSupported",
+    get: function get() {
+      return typeof fetch !== 'undefined';
+    }
+  }]);
+
+  return FetchTool;
+}();
+
+module.exports = FetchTool;
+
+/***/ }),
+
+/***/ "./src/FetchWorkerTool.js":
+/*!********************************!*\
+  !*** ./src/FetchWorkerTool.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/**
+ * Get and send assets with a worker that uses fetch.
+ */
+var PrivateFetchWorkerTool =
+/*#__PURE__*/
+function () {
+  function PrivateFetchWorkerTool() {
+    var _this = this;
+
+    _classCallCheck(this, PrivateFetchWorkerTool);
+
+    /**
+     * What does the worker support of the APIs we need?
+     * @type {{fetch:boolean}}
+     */
+    this._workerSupport = {
+      fetch: typeof fetch !== 'undefined'
+    };
+    /**
+     * A possible error occurred standing up the worker.
+     * @type {!Error}
+     */
+
+    this._supportError = null;
+    /**
+     * The worker that runs fetch and returns data for us.
+     * @type {!Worker}
+     */
+
+    this.worker = null;
+    /**
+     * A map of ids to fetch job objects.
+     * @type {object}
+     */
+
+    this.jobs = {};
+
+    try {
+      if (this.isGetSupported) {
+        // eslint-disable-next-line global-require
+        var FetchWorker = __webpack_require__(/*! worker-loader?{"inline":true,"fallback":true}!./FetchWorkerTool.worker */ "./node_modules/worker-loader/dist/cjs.js?{\"inline\":true,\"fallback\":true}!./src/FetchWorkerTool.worker.js");
+
+        this.worker = new FetchWorker();
+        this.worker.addEventListener('message', function (_ref) {
+          var data = _ref.data;
+
+          if (data.support) {
+            _this._workerSupport = data.support;
+            return;
+          }
+
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var message = _step.value;
+
+              if (_this.jobs[message.id]) {
+                if (message.error) {
+                  _this.jobs[message.id].reject(message.error);
+                } else {
+                  _this.jobs[message.id].resolve(message.buffer);
+                }
+
+                delete _this.jobs[message.id];
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return != null) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+        });
+      }
+    } catch (error) {
+      this._supportError = error;
+    }
+  }
+  /**
+   * Is get supported?
+   *
+   * false if the environment does not workers, fetch, or fetch from inside a
+   * worker. Finding out the worker supports fetch is asynchronous and will
+   * guess that it does if the window does until the worker can inform us.
+   * @returns {boolean} Is get supported?
+   */
+
+
+  _createClass(PrivateFetchWorkerTool, [{
+    key: "get",
+
+    /**
+     * Request data from a server with a worker using fetch.
+     * @param {{url:string}} reqConfig - Request configuration for data to get.
+     * @param {{method:string}} options - Additional options to configure fetch.
+     * @returns {Promise.<Buffer>} Resolve to Buffer of data from server.
+     */
+    value: function get(_ref2) {
+      var _this2 = this;
+
+      var url = _ref2.url;
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        method: 'GET'
+      };
+      return new Promise(function (resolve, reject) {
+        // TODO: Use a Scratch standard ID generator ...
+        var id = Math.random().toString(16).substring(2);
+
+        _this2.worker.postMessage({
+          id: id,
+          url: url,
+          options: options
+        });
+
+        _this2.jobs[id] = {
+          id: id,
+          resolve: resolve,
+          reject: reject
+        };
+      }).then(function (body) {
+        return new Uint8Array(body);
+      });
+    }
+    /**
+     * Is sending supported? always false for FetchWorkerTool.
+     * @returns {boolean} Is sending supported?
+     */
+
+  }, {
+    key: "send",
+
+    /**
+     * Send data to a server with nets.
+     * @throws {Error} A not implemented error.
+     */
+    value: function send() {
+      throw new Error('Not implemented.');
+    }
+    /**
+     * Return a static PrivateFetchWorkerTool instance on demand.
+     * @returns {PrivateFetchWorkerTool} A static PrivateFetchWorkerTool
+     *   instance
+     */
+
+  }, {
+    key: "isGetSupported",
+    get: function get() {
+      return typeof Worker !== 'undefined' && this._workerSupport.fetch && !this._supportError;
+    }
+  }, {
+    key: "isSendSupported",
+    get: function get() {
+      return false;
+    }
+  }], [{
+    key: "instance",
+    get: function get() {
+      if (!this._instance) {
+        this._instance = new PrivateFetchWorkerTool();
+      }
+
+      return this._instance;
+    }
+  }]);
+
+  return PrivateFetchWorkerTool;
+}();
+/**
+ * Get and send assets with a worker that uses fetch.
+ */
+
+
+var PublicFetchWorkerTool =
+/*#__PURE__*/
+function () {
+  function PublicFetchWorkerTool() {
+    _classCallCheck(this, PublicFetchWorkerTool);
+
+    /**
+     * Shared instance of an internal worker. PublicFetchWorkerTool proxies
+     * it.
+     * @type {PrivateFetchWorkerTool}
+     */
+    this.inner = PrivateFetchWorkerTool.instance;
+  }
+  /**
+   * Is get supported?
+   * @returns {boolean} Is get supported?
+   */
+
+
+  _createClass(PublicFetchWorkerTool, [{
+    key: "get",
+
+    /**
+     * Request data from a server with a worker that uses fetch.
+     * @param {{url:string}} reqConfig - Request configuration for data to get.
+     * @param {{method:string}} options - Additional options to configure fetch.
+     * @returns {Promise.<Buffer>} Resolve to Buffer of data from server.
+     */
+    value: function get(reqConfig, options) {
+      return this.inner.get(reqConfig, options);
+    }
+    /**
+     * Is sending supported?
+     * @returns {boolean} Is sending supported?
+     */
+
+  }, {
+    key: "send",
+
+    /**
+     * Send data to a server with a worker that uses fetch.
+     * @throws {Error} A not implemented error.
+     */
+    value: function send() {
+      throw new Error('Not implemented.');
+    }
+  }, {
+    key: "isGetSupported",
+    get: function get() {
+      return this.inner.isGetSupported;
+    }
+  }, {
+    key: "isSendSupported",
+    get: function get() {
+      return false;
+    }
+  }]);
+
+  return PublicFetchWorkerTool;
+}();
+
+module.exports = PublicFetchWorkerTool;
 
 /***/ }),
 
@@ -8199,6 +9754,274 @@ function () {
 }();
 
 module.exports = Helper;
+
+/***/ }),
+
+/***/ "./src/NetsTool.js":
+/*!*************************!*\
+  !*** ./src/NetsTool.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/**
+ * Get and send assets with the npm nets package.
+ */
+var NetsTool =
+/*#__PURE__*/
+function () {
+  function NetsTool() {
+    _classCallCheck(this, NetsTool);
+  }
+
+  _createClass(NetsTool, [{
+    key: "get",
+
+    /**
+     * Request data from a server with nets.
+     * @param {{url:string}} reqConfig - Request configuration for data to get.
+     * @returns {Promise.<Buffer>} Resolve to Buffer of data from server.
+     */
+    value: function get(reqConfig) {
+      return new Promise(function (resolve, reject) {
+        /* eslint global-require:0 */
+        // Wait to evaluate nets and its dependencies until we know we need
+        // it as NetsTool may never be used if fetch is available.
+        var nets = __webpack_require__(/*! nets */ "./node_modules/nets/index.js");
+
+        nets(Object.assign({
+          method: 'get'
+        }, reqConfig), function (err, resp, body) {
+          // body is a Buffer
+          if (err || Math.floor(resp.statusCode / 100) !== 2) {
+            reject(err || resp.statusCode);
+          } else {
+            resolve(body);
+          }
+        });
+      });
+    }
+    /**
+     * Is sending supported? false if the environment does not support sending
+     * with nets.
+     * @returns {boolean} Is sending supported?
+     */
+
+  }, {
+    key: "send",
+
+    /**
+     * Send data to a server with nets.
+     * @param {{url:string}} reqConfig - Request configuration for data to send.
+     * @param {*} data - Data to send.
+     * @param {string} method - HTTP method to sending the data as.
+     * @returns {Promise.<Buffer|string|object>} Server returned metadata.
+     */
+    value: function send(reqConfig, data, method) {
+      return new Promise(function (resolve, reject) {
+        // eslint-disable-next-lint global-require
+        // Wait to evaluate nets and its dependencies until we know we need
+        // it as NetsTool may never be used if fetch is available.
+        var nets = __webpack_require__(/*! nets */ "./node_modules/nets/index.js");
+
+        nets(Object.assign({
+          body: data,
+          method: method,
+          encoding: undefined // eslint-disable-line no-undefined
+
+        }, reqConfig), function (err, resp, body) {
+          if (err || Math.floor(resp.statusCode / 100) !== 2) {
+            reject(err || resp.statusCode);
+          } else {
+            resolve(body);
+          }
+        });
+      });
+    }
+  }, {
+    key: "isGetSupported",
+
+    /**
+     * Is get supported? false if the environment does not support nets.
+     * @returns {boolean} Is get supported?
+     */
+    get: function get() {
+      return true;
+    }
+  }, {
+    key: "isSendSupported",
+    get: function get() {
+      return true;
+    }
+  }]);
+
+  return NetsTool;
+}();
+
+module.exports = NetsTool;
+
+/***/ }),
+
+/***/ "./src/ProxyTool.js":
+/*!**************************!*\
+  !*** ./src/ProxyTool.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var FetchWorkerTool = __webpack_require__(/*! ./FetchWorkerTool */ "./src/FetchWorkerTool.js");
+
+var FetchTool = __webpack_require__(/*! ./FetchTool */ "./src/FetchTool.js");
+
+var NetsTool = __webpack_require__(/*! ./NetsTool */ "./src/NetsTool.js");
+/**
+ * Get and send assets with other tools in sequence.
+ */
+
+
+var ProxyTool =
+/*#__PURE__*/
+function () {
+  function ProxyTool() {
+    var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ProxyTool.TOOL_FILTER.ALL;
+
+    _classCallCheck(this, ProxyTool);
+
+    var tools;
+
+    if (filter === ProxyTool.TOOL_FILTER.READY) {
+      tools = [new FetchTool(), new NetsTool()];
+    } else {
+      tools = [new FetchWorkerTool(), new FetchTool(), new NetsTool()];
+    }
+    /**
+     * Sequence of tools to proxy.
+     * @type {Array.<Tool>}
+     */
+
+
+    this.tools = tools;
+  }
+  /**
+   * Is get supported? false if all proxied tool return false.
+   * @returns {boolean} Is get supported?
+   */
+
+
+  _createClass(ProxyTool, [{
+    key: "get",
+
+    /**
+     * Request data from with one of the proxied tools.
+     * @param {{url:string}} reqConfig - Request configuration for data to get.
+     * @param {{method:string}} options - Additional options to configure fetch.
+     * @returns {Promise.<Buffer>} Resolve to Buffer of data from server.
+     */
+    value: function get(reqConfig, options) {
+      var _this = this;
+
+      var toolIndex = 0;
+
+      var nextTool = function nextTool(err) {
+        var tool = _this.tools[toolIndex++];
+
+        if (!tool) {
+          throw err;
+        }
+
+        if (!tool.isGetSupported) {
+          return nextTool(err);
+        }
+
+        return tool.get(reqConfig, options).catch(nextTool);
+      };
+
+      return nextTool();
+    }
+    /**
+     * Is sending supported? false if all proxied tool return false.
+     * @returns {boolean} Is sending supported?
+     */
+
+  }, {
+    key: "send",
+
+    /**
+     * Send data to a server with one of the proxied tools.
+     * @param {{url:string}} reqConfig - Request configuration for data to send.
+     * @param {*} data - Data to send.
+     * @param {string} method - HTTP method to sending the data as.
+     * @returns {Promise.<Buffer|string|object>} Server returned metadata.
+     */
+    value: function send(reqConfig, data, method) {
+      var _this2 = this;
+
+      var toolIndex = 0;
+
+      var nextTool = function nextTool(err) {
+        var tool = _this2.tools[toolIndex++];
+
+        if (!tool) {
+          throw err;
+        }
+
+        if (!tool.isSendSupported) {
+          return nextTool(err);
+        }
+
+        return tool.send(reqConfig, data, method).catch(nextTool);
+      };
+
+      return nextTool();
+    }
+  }, {
+    key: "isGetSupported",
+    get: function get() {
+      return this.tools.some(function (tool) {
+        return tool.isGetSupported;
+      });
+    }
+  }, {
+    key: "isSendSupported",
+    get: function get() {
+      return this.tools.some(function (tool) {
+        return tool.isSendSupported;
+      });
+    }
+  }]);
+
+  return ProxyTool;
+}();
+/**
+ * Constant values that filter the set of tools in a ProxyTool instance.
+ * @enum {string}
+ */
+
+
+ProxyTool.TOOL_FILTER = {
+  /**
+   * Use all tools.
+   */
+  ALL: 'all',
+
+  /**
+   * Use tools that are ready right now.
+   */
+  READY: 'ready'
+};
+module.exports = ProxyTool;
 
 /***/ }),
 
@@ -8383,48 +10206,44 @@ function () {
   }, {
     key: "load",
     value: function load(assetType, assetId, dataFormat) {
-      var _this = this;
-
       /** @type {Helper[]} */
       var helpers = this._helpers.map(function (x) {
         return x.helper;
       });
 
       var errors = [];
-      var helperIndex = 0;
       dataFormat = dataFormat || assetType.runtimeFormat;
-      return new Promise(function (resolve, reject) {
-        var tryNextHelper = function tryNextHelper() {
-          if (helperIndex < helpers.length) {
-            var helper = helpers[helperIndex++];
-            helper.load(assetType, assetId, dataFormat).then(function (asset) {
-              if (asset === null) {
-                tryNextHelper();
-              } else {
-                // TODO? this.localHelper.cache(assetType, assetId, asset);
-                if (helper !== _this.builtinHelper && assetType.immutable) {
-                  asset.assetId = _this.builtinHelper._store(assetType, asset.dataFormat, asset.data, assetId);
-                } // Note that other attempts may have caused errors, effectively suppressed here.
+      var helperIndex = 0;
+      var helper;
+
+      var tryNextHelper = function tryNextHelper(err) {
+        if (err) {
+          errors.push(err);
+        }
+
+        helper = helpers[helperIndex++];
+
+        if (helper) {
+          var loading = helper.load(assetType, assetId, dataFormat);
+
+          if (loading === null) {
+            return tryNextHelper();
+          } // Note that other attempts may have logged errors; if this succeeds they will be suppressed.
 
 
-                resolve(asset);
-              }
-            }, function (error) {
-              errors.push(error); // TODO: maybe some types of error should prevent trying the next helper?
+          return loading // TODO: maybe some types of error should prevent trying the next helper?
+          .catch(tryNextHelper);
+        } else if (errors.length > 0) {
+          // At least one thing went wrong and also we couldn't find the
+          // asset.
+          return Promise.reject(errors);
+        } // Nothing went wrong but we couldn't find the asset.
 
-              tryNextHelper();
-            });
-          } else if (errors.length === 0) {
-            // Nothing went wrong but we couldn't find the asset.
-            resolve(null);
-          } else {
-            // At least one thing went wrong and also we couldn't find the asset.
-            reject(errors);
-          }
-        };
 
-        tryNextHelper();
-      });
+        return Promise.resolve(null);
+      };
+
+      return tryNextHelper();
     }
     /**
      * Store an asset by type & ID.
@@ -8438,12 +10257,12 @@ function () {
   }, {
     key: "store",
     value: function store(assetType, dataFormat, data, assetId) {
-      var _this2 = this;
+      var _this = this;
 
       dataFormat = dataFormat || assetType.runtimeFormat;
       return new Promise(function (resolve, reject) {
-        return _this2.webHelper.store(assetType, dataFormat, data, assetId).then(function (body) {
-          _this2.builtinHelper._store(assetType, dataFormat, data, body.id);
+        return _this.webHelper.store(assetType, dataFormat, data, assetId).then(function (body) {
+          _this.builtinHelper._store(assetType, dataFormat, data, body.id);
 
           return resolve(body);
         }).catch(function (error) {
@@ -8532,13 +10351,23 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var nets = __webpack_require__(/*! nets */ "./node_modules/nets/index.js");
-
 var log = __webpack_require__(/*! ./log */ "./src/log.js");
 
 var Asset = __webpack_require__(/*! ./Asset */ "./src/Asset.js");
 
 var Helper = __webpack_require__(/*! ./Helper */ "./src/Helper.js");
+
+var ProxyTool = __webpack_require__(/*! ./ProxyTool */ "./src/ProxyTool.js");
+
+var ensureRequestConfig = function ensureRequestConfig(reqConfig) {
+  if (typeof reqConfig === 'string') {
+    return {
+      url: reqConfig
+    };
+  }
+
+  return reqConfig;
+};
 /**
  * @typedef {function} UrlFunction - A function which computes a URL from asset information.
  * @param {Asset} - The asset for which the URL should be computed.
@@ -8568,6 +10397,21 @@ function (_Helper) {
      */
 
     _this.stores = [];
+    /**
+     * Set of tools to best load many assets in parallel. If one tool
+     * cannot be used, it will use the next.
+     * @type {ProxyTool}
+     */
+
+    _this.assetTool = new ProxyTool();
+    /**
+     * Set of tools to best load project data in parallel with assets. This
+     * tool set prefers tools that are immediately ready. Some tools have
+     * to initialize before they can load files.
+     * @type {ProxyTool}
+     */
+
+    _this.projectTool = new ProxyTool(ProxyTool.TOOL_FILTER.READY);
     return _this;
   }
   /**
@@ -8617,57 +10461,44 @@ function (_Helper) {
     value: function load(assetType, assetId, dataFormat) {
       /** @type {Array.<{url:string, result:*}>} List of URLs attempted & errors encountered. */
       var errors = [];
-      var stores = this.stores.slice();
+      var stores = this.stores.slice().filter(function (store) {
+        return store.types.indexOf(assetType.name) >= 0;
+      });
       var asset = new Asset(assetType, assetId, dataFormat);
+      var tool = this.assetTool;
+
+      if (assetType.name === 'Project') {
+        tool = this.projectTool;
+      }
+
       var storeIndex = 0;
-      return new Promise(function (resolve, reject) {
-        var tryNextSource = function tryNextSource() {
-          /** @type {UrlFunction} */
-          var reqConfigFunction;
 
-          while (storeIndex < stores.length) {
-            var store = stores[storeIndex];
-            ++storeIndex;
+      var tryNextSource = function tryNextSource() {
+        var store = stores[storeIndex++];
+        /** @type {UrlFunction} */
 
-            if (store.types.indexOf(assetType.name) >= 0) {
-              reqConfigFunction = store.get;
-              break;
-            }
+        var reqConfigFunction = store.get;
+
+        if (reqConfigFunction) {
+          var reqConfig = ensureRequestConfig(reqConfigFunction(asset));
+
+          if (reqConfig === false) {
+            return tryNextSource();
           }
 
-          if (reqConfigFunction) {
-            var reqConfig = reqConfigFunction(asset);
+          return tool.get(reqConfig).then(function (body) {
+            return asset.setData(body, dataFormat);
+          }).catch(tryNextSource);
+        } else if (errors.length > 0) {
+          return Promise.reject(errors);
+        } // no stores matching asset
 
-            if (reqConfig === false) {
-              tryNextSource();
-              return;
-            }
 
-            if (typeof reqConfig === 'string') {
-              reqConfig = {
-                url: reqConfig
-              };
-            }
+        return Promise.resolve(null);
+      };
 
-            nets(Object.assign({
-              method: 'get'
-            }, reqConfig), function (err, resp, body) {
-              // body is a Buffer
-              if (err || Math.floor(resp.statusCode / 100) !== 2) {
-                tryNextSource();
-              } else {
-                asset.setData(body, dataFormat);
-                resolve(asset);
-              }
-            });
-          } else if (errors.length > 0) {
-            reject(errors);
-          } else {
-            resolve(null); // no stores matching asset
-          }
-        };
-
-        tryNextSource();
+      return tryNextSource().then(function () {
+        return asset;
       });
     }
     /**
@@ -8694,42 +10525,31 @@ function (_Helper) {
         );
       })[0];
       var method = create ? 'post' : 'put';
-      return new Promise(function (resolve, reject) {
-        if (!store) return reject('No appropriate stores');
-        var reqConfig = create ? store.create(asset) : store.update(asset);
+      if (!store) return Promise.reject('No appropriate stores');
+      var tool = this.assetTool;
 
-        if (typeof reqConfig === 'string') {
-          reqConfig = {
-            url: reqConfig
-          };
+      if (assetType.name === 'Project') {
+        tool = this.projectTool;
+      }
+
+      var reqConfig = ensureRequestConfig(create ? store.create(asset) : store.update(asset));
+      return tool.send(reqConfig, data, method).then(function (body) {
+        // xhr makes it difficult to both send FormData and
+        // automatically parse a JSON response. So try to parse
+        // everything as JSON.
+        if (typeof body === 'string') {
+          try {
+            body = JSON.parse(body);
+          } catch (parseError) {
+            // If it's not parseable, then we can't add the id even
+            // if we want to, so stop here
+            return body;
+          }
         }
 
-        return nets(Object.assign({
-          body: data,
-          method: method,
-          encoding: undefined // eslint-disable-line no-undefined
-
-        }, reqConfig), function (err, resp, body) {
-          if (err || Math.floor(resp.statusCode / 100) !== 2) {
-            return reject(err || resp.statusCode);
-          } // xhr makes it difficult to both send FormData and automatically
-          // parse a JSON response. So try to parse everything as JSON.
-
-
-          if (typeof body === 'string') {
-            try {
-              body = JSON.parse(body);
-            } catch (parseError) {
-              // If it's not parseable, then we can't add the id even
-              // if we want to, so stop here
-              return resolve(body);
-            }
-          }
-
-          return resolve(Object.assign({
-            id: body['content-name'] || assetId
-          }, body));
-        });
+        return Object.assign({
+          id: body['content-name'] || assetId
+        }, body);
       });
     }
   }]);

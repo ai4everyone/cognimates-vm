@@ -14784,20 +14784,31 @@ var BitmapSkin = function (_Skin) {
         value: function setBitmap(bitmapData, costumeResolution, rotationCenter) {
             var gl = this._renderer.gl;
 
+            // Preferably bitmapData is ImageData. ImageData speeds up updating
+            // Silhouette and is better handled by more browsers in regards to
+            // memory.
+            var textureData = bitmapData;
+            if (bitmapData instanceof HTMLCanvasElement) {
+                // Given a HTMLCanvasElement get the image data to pass to webgl and
+                // Silhouette.
+                var context = bitmapData.getContext('2d');
+                textureData = context.getImageData(0, 0, bitmapData.width, bitmapData.height);
+            }
+
             if (this._texture) {
                 gl.bindTexture(gl.TEXTURE_2D, this._texture);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
-                this._silhouette.update(bitmapData);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureData);
+                this._silhouette.update(textureData);
             } else {
                 // TODO: mipmaps?
                 var textureOptions = {
                     auto: true,
                     wrap: gl.CLAMP_TO_EDGE,
-                    src: bitmapData
+                    src: textureData
                 };
 
                 this._texture = twgl.createTexture(gl, textureOptions);
-                this._silhouette.update(bitmapData);
+                this._silhouette.update(textureData);
             }
 
             // Do these last in case any of the above throws an exception
@@ -14887,13 +14898,13 @@ var __SilhouetteUpdateCanvas = void 0;
 var getPoint = function getPoint(_ref, x, y) {
     var width = _ref._width,
         height = _ref._height,
-        data = _ref._data;
+        data = _ref._colorData;
 
     // 0 if outside bouds, otherwise read from data.
     if (x >= width || y >= height || x < 0 || y < 0) {
         return 0;
     }
-    return data[y * width + x];
+    return data[(y * width + x) * 4 + 3];
 };
 
 /**
@@ -14946,7 +14957,6 @@ var Silhouette = function () {
          * The data representing a skin's silhouette shape.
          * @type {Uint8ClampedArray}
          */
-        this._data = null;
         this._colorData = null;
 
         this.colorAtNearest = this.colorAtLinear = function (_, dst) {
@@ -14964,28 +14974,33 @@ var Silhouette = function () {
     _createClass(Silhouette, [{
         key: 'update',
         value: function update(bitmapData) {
-            var canvas = Silhouette._updateCanvas();
-            var width = this._width = canvas.width = bitmapData.width;
-            var height = this._height = canvas.height = bitmapData.height;
-            var ctx = canvas.getContext('2d');
+            var imageData = void 0;
+            if (bitmapData instanceof ImageData) {
+                // If handed ImageData directly, use it directly.
+                imageData = bitmapData;
+                this._width = bitmapData.width;
+                this._height = bitmapData.height;
+            } else {
+                // Draw about anything else to our update canvas and poll image data
+                // from that.
+                var canvas = Silhouette._updateCanvas();
+                var width = this._width = canvas.width = bitmapData.width;
+                var height = this._height = canvas.height = bitmapData.height;
+                var ctx = canvas.getContext('2d');
 
-            if (!(width && height)) {
-                return;
+                if (!(width && height)) {
+                    return;
+                }
+                ctx.clearRect(0, 0, width, height);
+                ctx.drawImage(bitmapData, 0, 0, width, height);
+                imageData = ctx.getImageData(0, 0, width, height);
             }
-            ctx.clearRect(0, 0, width, height);
-            ctx.drawImage(bitmapData, 0, 0, width, height);
-            var imageData = ctx.getImageData(0, 0, width, height);
 
-            this._data = new Uint8ClampedArray(imageData.data.length / 4);
             this._colorData = imageData.data;
             // delete our custom overriden "uninitalized" color functions
             // let the prototype work for itself
             delete this.colorAtNearest;
             delete this.colorAtLinear;
-
-            for (var i = 0; i < imageData.data.length; i += 4) {
-                this._data[i / 4] = imageData.data[i + 3];
-            }
         }
 
         /**
@@ -15046,7 +15061,7 @@ var Silhouette = function () {
     }, {
         key: 'isTouchingNearest',
         value: function isTouchingNearest(vec) {
-            if (!this._data) return;
+            if (!this._colorData) return;
             return getPoint(this, Math.floor(vec[0] * (this._width - 1)), Math.floor(vec[1] * (this._height - 1))) > 0;
         }
 
@@ -15060,7 +15075,7 @@ var Silhouette = function () {
     }, {
         key: 'isTouchingLinear',
         value: function isTouchingLinear(vec) {
-            if (!this._data) return;
+            if (!this._colorData) return;
             var x = Math.floor(vec[0] * (this._width - 1));
             var y = Math.floor(vec[1] * (this._height - 1));
             return getPoint(this, x, y) > 0 || getPoint(this, x + 1, y) > 0 || getPoint(this, x, y + 1) > 0 || getPoint(this, x + 1, y + 1) > 0;
@@ -16622,10 +16637,14 @@ var SVGSkin = function (_Skin) {
                 this._textureScale = newScale;
                 this._svgRenderer._draw(this._textureScale, function () {
                     if (_this2._textureScale === newScale) {
+                        var canvas = _this2._svgRenderer.canvas;
+                        var context = canvas.getContext('2d');
+                        var textureData = context.getImageData(0, 0, canvas.width, canvas.height);
+
                         var gl = _this2._renderer.gl;
                         gl.bindTexture(gl.TEXTURE_2D, _this2._texture);
-                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, _this2._svgRenderer.canvas);
-                        _this2._silhouette.update(_this2._svgRenderer.canvas);
+                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureData);
+                        _this2._silhouette.update(textureData);
                     }
                 });
             }
@@ -16649,20 +16668,28 @@ var SVGSkin = function (_Skin) {
             this._svgRenderer.fromString(svgData, 1, function () {
                 var gl = _this3._renderer.gl;
                 _this3._textureScale = _this3._maxTextureScale = 1;
+
+                // Pull out the ImageData from the canvas. ImageData speeds up
+                // updating Silhouette and is better handled by more browsers in
+                // regards to memory.
+                var canvas = _this3._svgRenderer.canvas;
+                var context = canvas.getContext('2d');
+                var textureData = context.getImageData(0, 0, canvas.width, canvas.height);
+
                 if (_this3._texture) {
                     gl.bindTexture(gl.TEXTURE_2D, _this3._texture);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, _this3._svgRenderer.canvas);
-                    _this3._silhouette.update(_this3._svgRenderer.canvas);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureData);
+                    _this3._silhouette.update(textureData);
                 } else {
                     // TODO: mipmaps?
                     var textureOptions = {
                         auto: true,
                         wrap: gl.CLAMP_TO_EDGE,
-                        src: _this3._svgRenderer.canvas
+                        src: textureData
                     };
 
                     _this3._texture = twgl.createTexture(gl, textureOptions);
-                    _this3._silhouette.update(_this3._svgRenderer.canvas);
+                    _this3._silhouette.update(textureData);
                 }
 
                 var maxDimension = Math.max(_this3._svgRenderer.canvas.width, _this3._svgRenderer.canvas.height);
@@ -17001,31 +17028,25 @@ class SvgRenderer {
      * a natural and performant way.
      */
     _transformMeasurements () {
-        // Save `svgText` for later re-parsing.
-        const svgText = this.toString();
-
         // Append the SVG dom to the document.
         // This allows us to use `getBBox` on the page,
         // which returns the full bounding-box of all drawn SVG
         // elements, similar to how Scratch 2.0 did measurement.
         const svgSpot = document.createElement('span');
+        // Clone the svg tag. This tag becomes unusable/undrawable in browsers
+        // once it's appended to the page, perhaps for security reasons?
+        const tempTag = this._svgTag.cloneNode(/* deep */ true);
         let bbox;
         try {
+            svgSpot.appendChild(tempTag);
             document.body.appendChild(svgSpot);
-            svgSpot.appendChild(this._svgTag);
             // Take the bounding box.
-            bbox = this._svgTag.getBBox();
+            bbox = tempTag.getBBox();
         } finally {
             // Always destroy the element, even if, for example, getBBox throws.
             document.body.removeChild(svgSpot);
+            svgSpot.removeChild(tempTag);
         }
-
-        // Re-parse the SVG from `svgText`. The above DOM becomes
-        // unusable/undrawable in browsers once it's appended to the page,
-        // perhaps for security reasons?
-        const parser = new DOMParser();
-        this._svgDom = parser.parseFromString(svgText, 'text/xml');
-        this._svgTag = this._svgDom.documentElement;
 
         // Enlarge the bbox from the largest found stroke width
         // This may have false-positives, but at least the bbox will always
@@ -17241,6 +17262,9 @@ module.exports = function (svgString) {
     // unparseable garbage from Illustrator :(
     // Note: [\s\S] matches everything including newlines, which .* does not
     svgString = svgString.replace(/<metadata>[\s\S]*<\/metadata>/, '');
+
+    // Strip script tags and javascript executing
+    svgString = svgString.replace(/<script[\s\S]*>[\s\S]*<\/script>/, '');
 
     return svgString;
 };
