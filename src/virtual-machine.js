@@ -153,6 +153,7 @@ class VirtualMachine extends EventEmitter {
         this.flyoutBlockListener = this.flyoutBlockListener.bind(this);
         this.monitorBlockListener = this.monitorBlockListener.bind(this);
         this.variableListener = this.variableListener.bind(this);
+        this.cognimatesLoaded = false;
     }
 
     /**
@@ -174,6 +175,14 @@ class VirtualMachine extends EventEmitter {
      */
     loadCognimatesExts(){
         this.extensionManager.loadCognimatesExtensions();
+        this.cognimatesLoaded = true;
+    }
+
+    /**
+     * Check if cognimates extensions loaded
+     */
+    cognimatesLoaded(){
+        return this.cognimatesLoaded;
     }
 
     /**
