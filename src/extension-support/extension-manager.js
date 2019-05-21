@@ -131,7 +131,12 @@ class ExtensionManager {
         dispatch.setService('extensions', this).catch(e => {
             log.error(`ExtensionManager was unable to register extension service: ${JSON.stringify(e)}`);
         });
+    }
 
+    /**
+     * Loads all of the important cognimates extensions. 
+     */
+    loadCognimatesExtensions(){
         this.loadExtensionURL('vision');
         this.loadExtensionURL('text');
         this.loadExtensionURL('sentiment');

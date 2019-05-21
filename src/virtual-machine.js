@@ -170,6 +170,13 @@ class VirtualMachine extends EventEmitter {
     }
 
     /**
+     * Loads the cognimates extensions
+     */
+    loadCognimatesExts(){
+        this.extensionManager.loadCognimatesExtensions();
+    }
+
+    /**
      * Set whether the VM is in "turbo mode."
      * When true, loops don't yield to redraw.
      * @param {boolean} turboModeOn Whether turbo mode should be set.
