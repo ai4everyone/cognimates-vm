@@ -87,9 +87,7 @@ module.exports = [
         },
         resolve: {
             alias: {
-                'osc': path.resolve(__dirname, 'node_modules/osc/'),
-                'serialport': path.resolve(__dirname, 'node_modules/serialport/')
-            }
+                'osc': path.resolve(__dirname, 'node_modules/osc/'),            }
         }
     }),
     // Playground
