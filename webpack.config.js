@@ -40,11 +40,6 @@ const base = {
 };
 
 module.exports = [
-    // resolve: {
-    //     alias: {
-    //         'osc': path.join(__dirname, 'node_modules/osc/osc.js')
-    //     }
-    // },
     // Web-compatible
     defaultsDeep({}, base, {
         target: 'web',

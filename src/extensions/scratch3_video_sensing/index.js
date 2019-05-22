@@ -435,6 +435,9 @@ class Scratch3VideoSensingBlocks {
             }),
             blockIconURI: blockIconURI,
             menuIconURI: menuIconURI,
+            colour: '#330099',
+            colourSecondary: '#2a0080',
+            colourTertiary: '#2a0080',
             blocks: [
                 {
                     // @todo this hat needs to be set itself to restart existing

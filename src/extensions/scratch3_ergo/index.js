@@ -197,6 +197,9 @@ class Scratch3Ergo {
             id: 'ergo',
             name: 'Ergo',
             blockIconURI: iconURI,
+            colour: '#ac3939',
+            colourSecondary: '#993333',
+            colourTertiary: '#993333',
             blocks: [
                 {
                     opcode: 'setIPAddress',

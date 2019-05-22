@@ -44,6 +44,9 @@ class Scratch3Muse {
             id: 'muse',
             name: 'Muse',
             blockIconURI: iconURI,
+            colour: '#e6e600',
+            colourSecondary: '#cccc00',
+            colourTertiary: '#cccc00',
             blocks: [
                 {
                     opcode: 'connect',

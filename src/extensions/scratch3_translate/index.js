@@ -109,6 +109,9 @@ class Scratch3TranslateBlocks {
             }),
             blockIconURI: blockIconURI,
             menuIconURI: menuIconURI,
+            colour: '#b30000',
+            colourSecondary: '#990000',
+            colourTertiary: '#990000',
             blocks: [
                 {
                     opcode: 'getTranslate',

@@ -32,6 +32,9 @@ class Scratch3TextClassify {
                 description: ''
             }), 
             blockIconURI: iconURI,
+            colour: '#2eb82e',
+            colourSecondary: '#29a329',
+            colourTertiary: '#29a329',
             blocks: [
                 {
                     opcode: 'setReadAPI',
