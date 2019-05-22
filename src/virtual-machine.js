@@ -170,10 +170,10 @@ class VirtualMachine extends EventEmitter {
     }
 
     /**
-     * Check if cognimates extensions loaded
+     * Load the Cognimates Extensions     
      */
-    cognimatesLoaded(){
-        return this.cognimatesLoaded;
+    loadCognimatesExts(){
+        this.extensionManager.loadCognimatesExtensions();
     }
 
     /**
