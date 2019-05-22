@@ -762,6 +762,9 @@ class Scratch3MusicBlocks {
             }),
             menuIconURI: menuIconURI,
             blockIconURI: blockIconURI,
+            colour: '#666699',
+            colourSecondary: '#5c5c8a',
+            colourTertiary: '#5c5c8a',
             blocks: [
                 {
                     opcode: 'playDrumForBeats',

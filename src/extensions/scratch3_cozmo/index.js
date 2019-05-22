@@ -67,6 +67,9 @@ class Scratch3Cozmo {
             id: 'cozmo',
             name: 'Cozmo',
             blockIconURI: iconURI,
+            colour: '#e6e600',
+            colourSecondary: '#cccc00',
+            colourTertiary: '#cccc00',
             blocks: [
                 {
                     opcode: 'speak',
