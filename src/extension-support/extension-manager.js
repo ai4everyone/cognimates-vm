@@ -29,6 +29,7 @@ const Scratch3MuseBlocks = require('../extensions/scratch3_muse');
 const Scratch3WemoBlocks = require('../extensions/scratch3_wemo');
 // const Scratch3CognimateBlocks = require('../extensions/scratch3_cognimate');
 const Scratch3HueBlocks = require('../extensions/scratch3_hue');
+const Scratch3ArduinoBlocks = require('../extensions/scratch3_arduino');
 
 // todo: only load this extension once we have a compatible way to load its
 // Vernier module dependency.
@@ -56,7 +57,8 @@ const builtinExtensions = {
     wemo: Scratch3WemoBlocks,
     // cognimate: Scratch3CognimateBlocks
     muse: Scratch3MuseBlocks,
-    hue: Scratch3HueBlocks
+    hue: Scratch3HueBlocks,
+    arduino: Scratch3ArduinoBlocks
     // gdxfor: Scratch3GdxForBlocks
 };
 
