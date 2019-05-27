@@ -4761,6 +4761,8 @@ if (!Object.keys) {
 		$frames: true,
 		$innerHeight: true,
 		$innerWidth: true,
+		$onmozfullscreenchange: true,
+		$onmozfullscreenerror: true,
 		$outerHeight: true,
 		$outerWidth: true,
 		$pageXOffset: true,
@@ -9361,6 +9363,10 @@ module.exports = DataFormat;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -9389,11 +9395,12 @@ function () {
      * @returns {Promise.<Uint8Array>} Resolve to Buffer of data from server.
      */
     value: function get(_ref) {
-      var url = _ref.url;
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+      var url = _ref.url,
+          options = _objectWithoutProperties(_ref, ["url"]);
+
+      return fetch(url, Object.assign({
         method: 'GET'
-      };
-      return fetch(url, options).then(function (result) {
+      }, options)).then(function (result) {
         return result.arrayBuffer();
       }).then(function (body) {
         return new Uint8Array(body);
@@ -9410,17 +9417,18 @@ function () {
 
     /**
      * Send data to a server with fetch.
-     * @param {{url:string}} reqConfig - Request configuration for data to send.
-     * @param {*} data - Data to send.
-     * @param {string} method - HTTP method to sending the data as.
+     * @param {Request} reqConfig - Request configuration for data to send.
      * @returns {Promise.<string>} Server returned metadata.
      */
-    value: function send(_ref2, data, method) {
-      var url = _ref2.url;
-      return fetch(url, {
-        method: method,
-        body: data
-      }).then(function (result) {
+    value: function send(_ref2) {
+      var url = _ref2.url,
+          _ref2$withCredentials = _ref2.withCredentials,
+          withCredentials = _ref2$withCredentials === void 0 ? false : _ref2$withCredentials,
+          options = _objectWithoutProperties(_ref2, ["url", "withCredentials"]);
+
+      return fetch(url, Object.assign({
+        credentials: withCredentials ? 'include' : 'omit'
+      }, options)).then(function (result) {
         return result.text();
       });
     }
@@ -9454,6 +9462,10 @@ module.exports = FetchTool;
   \********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9572,10 +9584,9 @@ function () {
     value: function get(_ref2) {
       var _this2 = this;
 
-      var url = _ref2.url;
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-        method: 'GET'
-      };
+      var url = _ref2.url,
+          options = _objectWithoutProperties(_ref2, ["url"]);
+
       return new Promise(function (resolve, reject) {
         // TODO: Use a Scratch standard ID generator ...
         var id = Math.random().toString(16).substring(2);
@@ -9583,7 +9594,9 @@ function () {
         _this2.worker.postMessage({
           id: id,
           url: url,
-          options: options
+          options: Object.assign({
+            method: 'GET'
+          }, options)
         });
 
         _this2.jobs[id] = {
@@ -9669,11 +9682,10 @@ function () {
     /**
      * Request data from a server with a worker that uses fetch.
      * @param {{url:string}} reqConfig - Request configuration for data to get.
-     * @param {{method:string}} options - Additional options to configure fetch.
      * @returns {Promise.<Buffer>} Resolve to Buffer of data from server.
      */
-    value: function get(reqConfig, options) {
-      return this.inner.get(reqConfig, options);
+    value: function get(reqConfig) {
+      return this.inner.get(reqConfig);
     }
     /**
      * Is sending supported?
@@ -9818,12 +9830,10 @@ function () {
 
     /**
      * Send data to a server with nets.
-     * @param {{url:string}} reqConfig - Request configuration for data to send.
-     * @param {*} data - Data to send.
-     * @param {string} method - HTTP method to sending the data as.
+     * @param {Request} reqConfig - Request configuration for data to send.
      * @returns {Promise.<Buffer|string|object>} Server returned metadata.
      */
-    value: function send(reqConfig, data, method) {
+    value: function send(reqConfig) {
       return new Promise(function (resolve, reject) {
         // eslint-disable-next-lint global-require
         // Wait to evaluate nets and its dependencies until we know we need
@@ -9831,8 +9841,6 @@ function () {
         var nets = __webpack_require__(/*! nets */ "./node_modules/nets/index.js");
 
         nets(Object.assign({
-          body: data,
-          method: method,
           encoding: undefined // eslint-disable-line no-undefined
 
         }, reqConfig), function (err, resp, body) {
@@ -9887,6 +9895,14 @@ var FetchTool = __webpack_require__(/*! ./FetchTool */ "./src/FetchTool.js");
 
 var NetsTool = __webpack_require__(/*! ./NetsTool */ "./src/NetsTool.js");
 /**
+ * @typedef {object} Request
+ * @property {string} url
+ * @property {*} body
+ * @property {string} method
+ * @property {boolean} withCredentials
+ */
+
+/**
  * Get and send assets with other tools in sequence.
  */
 
@@ -9925,11 +9941,10 @@ function () {
 
     /**
      * Request data from with one of the proxied tools.
-     * @param {{url:string}} reqConfig - Request configuration for data to get.
-     * @param {{method:string}} options - Additional options to configure fetch.
+     * @param {Request} reqConfig - Request configuration for data to get.
      * @returns {Promise.<Buffer>} Resolve to Buffer of data from server.
      */
-    value: function get(reqConfig, options) {
+    value: function get(reqConfig) {
       var _this = this;
 
       var toolIndex = 0;
@@ -9945,7 +9960,7 @@ function () {
           return nextTool(err);
         }
 
-        return tool.get(reqConfig, options).catch(nextTool);
+        return tool.get(reqConfig).catch(nextTool);
       };
 
       return nextTool();
@@ -9960,12 +9975,10 @@ function () {
 
     /**
      * Send data to a server with one of the proxied tools.
-     * @param {{url:string}} reqConfig - Request configuration for data to send.
-     * @param {*} data - Data to send.
-     * @param {string} method - HTTP method to sending the data as.
+     * @param {Request} reqConfig - Request configuration for data to send.
      * @returns {Promise.<Buffer|string|object>} Server returned metadata.
      */
-    value: function send(reqConfig, data, method) {
+    value: function send(reqConfig) {
       var _this2 = this;
 
       var toolIndex = 0;
@@ -9981,7 +9994,7 @@ function () {
           return nextTool(err);
         }
 
-        return tool.send(reqConfig, data, method).catch(nextTool);
+        return tool.send(reqConfig).catch(nextTool);
       };
 
       return nextTool();
@@ -10533,7 +10546,11 @@ function (_Helper) {
       }
 
       var reqConfig = ensureRequestConfig(create ? store.create(asset) : store.update(asset));
-      return tool.send(reqConfig, data, method).then(function (body) {
+      var reqBodyConfig = Object.assign({
+        body: data,
+        method: method
+      }, reqConfig);
+      return tool.send(reqBodyConfig).then(function (body) {
         // xhr makes it difficult to both send FormData and
         // automatically parse a JSON response. So try to parse
         // everything as JSON.
