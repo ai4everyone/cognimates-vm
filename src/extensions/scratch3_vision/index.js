@@ -31,7 +31,7 @@ let updateURL = 'https://cognimate.me:2635/vision/updateClassifier';
 
 //classifier_id
 let classifier_id = 'general1234';
-let api_key;
+let api_key = 'ddce01b8a0504adaa59157533ea77747';
 
 //for parsing image response
 let watson_response; //the full response

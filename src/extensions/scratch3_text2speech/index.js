@@ -272,7 +272,10 @@ class Scratch3Text2SpeechBlocks {
 
         return {
             id: 'text2speech',
-            name: 'Text to Speech',
+            name: formatMessage({
+                id: 'text2speech.text2speech',
+                default: 'Text to Speech',
+            }),
             blockIconURI: blockIconURI,
             menuIconURI: menuIconURI,
             colour: '#cccc00',
