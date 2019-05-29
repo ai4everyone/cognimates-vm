@@ -577,9 +577,6 @@ class Scratch3MicroBitBlocks {
             id: Scratch3MicroBitBlocks.EXTENSION_ID,
             name: Scratch3MicroBitBlocks.EXTENSION_NAME,
             blockIconURI: blockIconURI,
-            colour: '#cc0066',
-            colourSecondary: '#b30059',
-            colourTertiary: '#b30059',
             showStatusButton: true,
             blocks: [
                 {

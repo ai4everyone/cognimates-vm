@@ -925,9 +925,6 @@ class Scratch3WeDo2Blocks {
             name: 'WeDo 2.0',
             blockIconURI: iconURI,
             showStatusButton: true,
-            colour: '#206040',
-            colourSecondary: '#194d33',
-            colourTertiary: '#194d33',
             blocks: [
                 {
                     opcode: 'motorOnFor',

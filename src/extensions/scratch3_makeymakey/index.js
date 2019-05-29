@@ -172,9 +172,6 @@ class Scratch3MakeyMakeyBlocks {
             id: 'makeymakey',
             name: 'Makey Makey',
             blockIconURI: blockIconURI,
-            colour: '#00802b',
-            colourSecondary: '#006622',
-            colourTertiary: '#006622',
             blocks: [
                 {
                     opcode: 'whenMakeyKeyPressed',

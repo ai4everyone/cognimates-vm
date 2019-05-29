@@ -39,9 +39,6 @@ class Scratch3Alexa {
             id: 'alexa',
             name: 'Alexa',
             blockIconURI: iconURI,
-            colour: '#00b3b3',
-            colourSecondary: '#009999',
-            colourTertiary: '#009999',
             blocks: [
                 {
                     opcode: 'registerUser',

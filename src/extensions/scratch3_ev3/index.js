@@ -934,9 +934,6 @@ class Scratch3Ev3Blocks {
             name: 'LEGO EV3',
             blockIconURI: blockIconURI,
             showStatusButton: true,
-            colour: '#00b386',
-            colourSecondary: '#009973',
-            colourTertiary: '#009973',
             blocks: [
                 {
                     opcode: 'motorTurnClockwise',

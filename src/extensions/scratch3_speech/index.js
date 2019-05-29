@@ -71,9 +71,6 @@ class Scratch3Speech {
                 description: ''
             }),
             blockIconURI: iconURI,
-            colour: '#ff7733',
-            colourSecondary: '#ff661a',
-            colourTertiary: '#ff661a',
             blocks: [
                 // {
                 //     opcode: 'changeState',

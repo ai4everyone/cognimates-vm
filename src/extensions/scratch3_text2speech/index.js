@@ -278,9 +278,6 @@ class Scratch3Text2SpeechBlocks {
             }),
             blockIconURI: blockIconURI,
             menuIconURI: menuIconURI,
-            colour: '#cccc00',
-            colourSecondary: '#b3b300',
-            colourTertiary: '#b3b300',
             blocks: [
                 {
                     opcode: 'speakAndWait',

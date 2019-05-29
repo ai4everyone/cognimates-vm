@@ -21,9 +21,6 @@ class Scratch3Wemo {
             id: 'wemo',
             name: 'Wemo',
             blockIconURI: iconURI,
-            colour: '#ff9900',
-            colourSecondary: '#e68a00',
-            colourTertiary: '#e68a00',
             blocks: [
                 {
                     opcode: 'turnOn',

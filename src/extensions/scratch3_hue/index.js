@@ -133,9 +133,6 @@ class Scratch3Hue {
                         default: 'Smart Lights',
                         description: ''
                     }),
-            colour: '#884dff',
-            colourSecondary: '#7733ff',
-            colourTertiary: '#7733ff', 
             blocks: [
                 {
                     opcode: 'setLightColor',

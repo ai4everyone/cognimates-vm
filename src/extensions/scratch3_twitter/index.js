@@ -31,9 +31,6 @@ class Scratch3Twitter {
             id: 'twitter',
             name: 'Twitter',
             blockIconURI: iconURI,
-            colour: '#002733',
-            colourSecondary: '#00141a',
-            colourTertiary: '#00141a',
             blocks: [
                 {
                     opcode: 'latestUserTweet',

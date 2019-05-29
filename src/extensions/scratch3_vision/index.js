@@ -238,9 +238,6 @@ class Scratch3Watson {
                         description: ''
                     }),
             blockIconURI: iconURI,
-            colour: '#0086b3',
-            colourSecondary: '#007399',
-            colourTertiary: '#007399',
             blocks: [
                 {
                     opcode: 'videoToggle',
