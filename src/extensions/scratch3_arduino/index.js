@@ -109,8 +109,9 @@ class Scratch3Arduino {
         }
     
         let view = new Uint8Array(3);
-        view[0] = parseInt(pin);
-        view[1] = parseInt(value);
+        view[0] = 0;
+        view[1] = parseInt(pin);
+        view[2] = parseInt(value);
         port.send(view);
     }
 
