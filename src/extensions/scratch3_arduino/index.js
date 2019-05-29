@@ -38,6 +38,15 @@ class Scratch3Arduino {
                         default: 'Connect to Arduino',
                         description: ''
                     }),
+                },
+                {
+                    opcode: 'analogOutput',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id:'arduino.analogOutput',
+                        default: 'Set [PIN] to [VALUE]%',
+                        description: ''
+                    })
                 }
             ],
             menus: {
@@ -86,6 +95,26 @@ class Scratch3Arduino {
             });
         }
     }
+
+    analogOutput(args, util){
+        if (!port) {
+            return;
+          }
+        let pin = args.PIN;
+        let value = args.VALUE;
+        if(value<0){
+            value = 0;
+        } else if(value > 100){
+            value = 100;
+        }
+    
+        let view = new Uint8Array(3);
+        view[0] = parseInt(pin);
+        view[1] = parseInt(value);
+        port.send(view);
+    }
+
+
   
 }
 
