@@ -31,9 +31,6 @@ class Scratch3Sentiment {
                 description: ''
             }),
             blockIconURI: iconURI,
-            colour: '#ffb3d9',
-            colourSecondary: '#ff99cc',
-            colourTertiary: '#ff99cc',
             blocks: [
                 {
                     opcode: 'whenPositive',
