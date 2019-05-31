@@ -10,6 +10,8 @@ const formatMessage = require('format-message');
 const iconURI = require('./assets/arduino_icon');
 var serial = require('./serial');
 var port;
+let response;
+let connected;
 
 /*
 0 = sending analog output
@@ -39,6 +41,15 @@ class Scratch3Arduino {
                         default: 'Connect to Arduino',
                         description: ''
                     }),
+                },
+                {
+                    opcode: 'whenConnected',
+                    blockType: BlockType.HAT,
+                    text: formatMessage({
+                        id: 'arduino.checkConnect',
+                        default: 'When Arduino is Connected',
+                        description: ''
+                    })
                 },
                 {
                     opcode: 'analogOutput',
@@ -99,17 +110,24 @@ class Scratch3Arduino {
         };
     }
 
+    whenConnected(){
+        return this.connected;
+    }
+
     connect(){
         this.port.connect().then(() => {
             this.port.onReceive = data => {
               let textDecoder = new TextDecoder();
               console.log(textDecoder.decode(data));
+              this.connected = true; 
             }
             this.port.onReceiveError = error => {
               console.log('Receive error: ' + error);
+              this.connected = false;
             };
           }, error => {
             console.log('Connection error: ' + error);
+            this.connected = false;
         });
     }
 
@@ -170,7 +188,6 @@ class Scratch3Arduino {
 
     analogRead(args, util){
         let view = new Uint8Array(3);
-        let response;
         view[0] = 2;
         view[1] = parseInt(args.PIN);
         view[2] = 0;
@@ -196,13 +213,13 @@ class Scratch3Arduino {
                 result => {
                     console.log(result);
                     let textDecoder = new TextDecoder();
-                    response = textDecoder.decode(result.data);
-                    console.log(response);
+                    this.response = textDecoder.decode(result.data);
+                    console.log(this.response);
                 }
             )
         });
-
-        return response;
+        console.log(this.response);
+        return this.response;
     }  
 }
 
