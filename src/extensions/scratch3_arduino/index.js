@@ -11,6 +11,10 @@ const iconURI = require('./assets/arduino_icon');
 var serial = require('./serial');
 var port;
 
+/*
+0 = sending analog output
+1 = sending digital output
+*/
 class Scratch3Arduino {
     constructor (runtime) {
         this.runtime = runtime;
@@ -26,9 +30,6 @@ class Scratch3Arduino {
                 description: ''
             }),
             blockIconURI: iconURI,
-            colour: '#42cef4',
-            colourSecondary: '#43b8d8',
-            colourTertiary: '#43b8d8',
             blocks: [
                 {
                     opcode: 'arduinoConnect',
@@ -44,36 +45,67 @@ class Scratch3Arduino {
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
                         id:'arduino.analogOutput',
-                        default: 'Set [PIN] to [VALUE]%',
+                        default: 'Set pin [PIN] to [VALUE]%',
                         description: ''
-                    })
+                    }),
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'pin number'
+                        },
+                        VALUE: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '0'
+                        }
+                    }
+                },
+                {
+                    opcode: 'digitalOutput',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'arduino.digitalOutput',
+                        default: 'Set pin [PIN] to [VALUE]'
+                    }),
+                    arguments:{
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'pin number'
+                        },
+                        VALUE: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'on',
+                            menu: 'onOff'
+                        }
+                    }
+                },
+                {
+                    opcode: 'analogRead',
+                    blockType: BlockType.REPORTER,
+                    text: formatMessage({
+                        id: 'arduino.analogRead',
+                        default: 'read analog pin [PIN]'
+                    }),
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'pin number'
+                        }
+                    }
                 }
             ],
             menus: {
-             	trueFalse: [
-                    formatMessage({
-                        id: 'general.true',
-                        default: 'true',
-                        description: ''
-                    }),
-                    formatMessage({
-                        id: 'general.false',
-                        default: 'false',
-                        description: ''
-                    })
-                ]
+             	onOff: ['on', 'off']
             }
         };
     }
 
     connect(){
-        port.connect().then(() => {
-            console.log(port);
-            port.onReceive = data => {
+        this.port.connect().then(() => {
+            this.port.onReceive = data => {
               let textDecoder = new TextDecoder();
               console.log(textDecoder.decode(data));
             }
-            port.onReceiveError = error => {
+            this.port.onReceiveError = error => {
               console.log('Receive error: ' + error);
             };
           }, error => {
@@ -82,14 +114,19 @@ class Scratch3Arduino {
     }
 
     arduinoConnect(args, util){
-        if (port) {
-            port.disconnect();
-            connectButton.textContent = 'Connect';
-            port = null;
-            } else {
+        if (this.port) {
+            this.port.disconnect().then(
                 serial.requestPort().then(selectedPort => {
-                port = selectedPort;
-                connect();
+                    this.port = selectedPort;
+                    this.connect();
+                    }).catch(error => {
+                    console.log('Connection error: ' + error);
+                })
+            );
+        } else {
+            serial.requestPort().then(selectedPort => {
+                this.port = selectedPort;
+                this.connect();
                 }).catch(error => {
                 console.log('Connection error: ' + error);
             });
@@ -97,9 +134,9 @@ class Scratch3Arduino {
     }
 
     analogOutput(args, util){
-        if (!port) {
+        if (!this.port) {
             return;
-          }
+        }
         let pin = args.PIN;
         let value = args.VALUE;
         if(value<0){
@@ -112,11 +149,61 @@ class Scratch3Arduino {
         view[0] = 0;
         view[1] = parseInt(pin);
         view[2] = parseInt(value);
-        port.send(view);
+        console.log(view);
+        this.port.send(view);
     }
 
+    digitalOutput(args, util){
+        let view = new Uint8Array(3);
+        if(args.VALUE == 'on'){
+            view[0] = 1;
+            view[1] = parseInt(args.PIN);
+            view[2] = 1;
+        } else {
+            view[0] = 1;
+            view[1] = parseInt(args.PIN);
+            view[2] = 0;
+        }
+        console.log(view);
+        this.port.send(view);
+    }
 
-  
+    analogRead(args, util){
+        let view = new Uint8Array(3);
+        let response;
+        view[0] = 2;
+        view[1] = parseInt(args.PIN);
+        view[2] = 0;
+        console.log(view);
+        let readLoop = () => {
+            this.port.device_.transferIn(this.port.endpointIn_, 64).then(result => {
+              this.port.onReceive(result.data);
+              readLoop();
+            }, error => {
+              this.port.onReceiveError(error);
+            });
+        };
+        this.port.send(view).then(
+            this.port.device_.transferIn(this.port.endpointIn_, 64).then(
+                result => {
+                    if(result.status !== '200'){
+                        return;
+                    }
+                }
+            )
+        ).then(()=>{
+            this.port.device_.transferIn(this.port.endpointIn_, 64).then(
+                result => {
+                    console.log(result);
+                    let textDecoder = new TextDecoder();
+                    response = textDecoder.decode(result.data);
+                    console.log(response);
+                }
+            )
+        });
+
+        return response;
+    }  
 }
 
 module.exports = Scratch3Arduino;

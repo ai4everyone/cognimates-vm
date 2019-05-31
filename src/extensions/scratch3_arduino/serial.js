@@ -88,6 +88,7 @@ var serial = {};
   };
 
   serial.Port.prototype.send = function(data) {
+    console.log('sending');
     return this.device_.transferOut(this.endpointOut_, data);
   };
 })();
