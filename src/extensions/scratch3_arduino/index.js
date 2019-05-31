@@ -102,7 +102,49 @@ class Scratch3Arduino {
                             defaultValue: 'pin number'
                         }
                     }
-                }
+                },
+                {
+                    opcode: 'isPinOn',
+                    blockType: BlockType.BOOLEAN,
+                    text: formatMessage({
+                        id: 'arduino.isPinOn',
+                        default: 'is pin [PIN] on?'
+                    }),
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'pin number'
+                        }
+                    }
+                },
+                {
+                    opcode: 'whenPinLess',
+                    blockType: BlockType.HAT,
+                    text: formatMessage({
+                        id: 'arduino.whenPinLess',
+                        default: 'is pin [PIN] < [VALUE]%'
+                    }),
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'pin number'
+                        }
+                    }
+                },
+                {
+                    opcode: 'whenPinGreater',
+                    blockType: BlockType.HAT,
+                    text: formatMessage({
+                        id: 'arduino.whenPinGreater',
+                        default: 'is pin [PIN] > [VALUE]%'
+                    }),
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'pin number'
+                        }
+                    }
+                },
             ],
             menus: {
              	onOff: ['on', 'off']
@@ -192,14 +234,10 @@ class Scratch3Arduino {
         view[1] = parseInt(args.PIN);
         view[2] = 0;
         console.log(view);
-        let readLoop = () => {
-            this.port.device_.transferIn(this.port.endpointIn_, 64).then(result => {
-              this.port.onReceive(result.data);
-              readLoop();
-            }, error => {
-              this.port.onReceiveError(error);
-            });
-        };
+        return getPinRead(view);
+    } 
+    
+    getPinRead(view){
         this.port.send(view).then(
             this.port.device_.transferIn(this.port.endpointIn_, 64).then(
                 result => {
@@ -220,7 +258,61 @@ class Scratch3Arduino {
         });
         console.log(this.response);
         return this.response;
-    }  
+    }
+
+    isPinOn(args, util){
+        let view = Uint8Array(3);
+        view[0] = 3;
+        view[1] = parseInt(args.PIN);
+        view[2] = 0;
+        let result = getPinRead(view);
+        if(result === 0){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    whenPinLess(args, util){
+        let view = new Uint8Array(3);
+        view[0] = 2;
+        view[1] = parseInt(args.PIN);
+        view[2] = 0;
+        console.log(view);
+        let val = getPinRead(view);
+        if(val/parseFloat(1024) < args.VALUE/parseFloat(100)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    whenPinGreater(args, util){
+        let view = new Uint8Array(3);
+        view[0] = 2;
+        view[1] = parseInt(args.PIN);
+        view[2] = 0;
+        console.log(view);
+        let val = getPinRead(view);
+        if(val/parseFloat(1024) > args.VALUE/parseFloat(100)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    whenPinOn(args, util){
+        let view = Uint8Array(3);
+        view[0] = 3;
+        view[1] = parseInt(args.PIN);
+        view[2] = 0;
+        let result = getPinRead(view);
+        if(result === 0){
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
 
 module.exports = Scratch3Arduino;
