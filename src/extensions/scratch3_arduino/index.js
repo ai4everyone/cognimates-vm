@@ -118,16 +118,39 @@ class Scratch3Arduino {
                     }
                 },
                 {
-                    opcode: 'whenPinLess',
+                    opcode: 'whenPinOn',
                     blockType: BlockType.HAT,
                     text: formatMessage({
-                        id: 'arduino.whenPinLess',
-                        default: 'is pin [PIN] < [VALUE]%'
+                        id:'arduino.whenPinOn',
+                        default: 'when pin [PIN] is [VALUE]'
                     }),
                     arguments: {
                         PIN: {
                             type: ArgumentType.STRING,
                             defaultValue: 'pin number'
+                        },
+                        VALUE: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'on',
+                            menu: 'onOff'
+                        }
+                    }
+                },
+                {
+                    opcode: 'whenPinLess',
+                    blockType: BlockType.HAT,
+                    text: formatMessage({
+                        id: 'arduino.whenPinLess',
+                        default: 'when pin [PIN] < [VALUE]%'
+                    }),
+                    arguments: {
+                        PIN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'pin number'
+                        },
+                        VALUE:{
+                            type: ArgumentType.STRING,
+                            defaultValue: '50'
                         }
                     }
                 },
@@ -136,12 +159,16 @@ class Scratch3Arduino {
                     blockType: BlockType.HAT,
                     text: formatMessage({
                         id: 'arduino.whenPinGreater',
-                        default: 'is pin [PIN] > [VALUE]%'
+                        default: 'when pin [PIN] > [VALUE]%'
                     }),
                     arguments: {
                         PIN: {
                             type: ArgumentType.STRING,
                             defaultValue: 'pin number'
+                        },
+                        VALUE:{
+                            type: ArgumentType.STRING,
+                            defaultValue: '50'
                         }
                     }
                 },
@@ -261,7 +288,7 @@ class Scratch3Arduino {
     }
 
     isPinOn(args, util){
-        let view = Uint8Array(3);
+        let view = new Uint8Array(3);
         view[0] = 3;
         view[1] = parseInt(args.PIN);
         view[2] = 0;
@@ -302,7 +329,7 @@ class Scratch3Arduino {
     }
 
     whenPinOn(args, util){
-        let view = Uint8Array(3);
+        let view = new Uint8Array(3);
         view[0] = 3;
         view[1] = parseInt(args.PIN);
         view[2] = 0;
