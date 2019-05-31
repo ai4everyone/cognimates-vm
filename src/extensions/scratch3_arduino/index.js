@@ -261,7 +261,7 @@ class Scratch3Arduino {
         view[1] = parseInt(args.PIN);
         view[2] = 0;
         console.log(view);
-        return getPinRead(view);
+        return this.getPinRead(view);
     } 
     
     getPinRead(view){
@@ -292,7 +292,7 @@ class Scratch3Arduino {
         view[0] = 3;
         view[1] = parseInt(args.PIN);
         view[2] = 0;
-        let result = getPinRead(view);
+        let result = this.getPinRead(view);
         if(result === 0){
             return false;
         } else {
@@ -306,7 +306,7 @@ class Scratch3Arduino {
         view[1] = parseInt(args.PIN);
         view[2] = 0;
         console.log(view);
-        let val = getPinRead(view);
+        let val = this.getPinRead(view);
         if(val/parseFloat(1024) < args.VALUE/parseFloat(100)){
             return true;
         } else {
@@ -320,7 +320,7 @@ class Scratch3Arduino {
         view[1] = parseInt(args.PIN);
         view[2] = 0;
         console.log(view);
-        let val = getPinRead(view);
+        let val = this.getPinRead(view);
         if(val/parseFloat(1024) > args.VALUE/parseFloat(100)){
             return true;
         } else {
@@ -333,7 +333,7 @@ class Scratch3Arduino {
         view[0] = 3;
         view[1] = parseInt(args.PIN);
         view[2] = 0;
-        let result = getPinRead(view);
+        let result = this.getPinRead(view);
         if(result === 0){
             return false;
         } else {
