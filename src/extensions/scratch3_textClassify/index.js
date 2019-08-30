@@ -315,12 +315,12 @@ class Scratch3TextClassify {
 
         let phrase = args.TEXT;
 
-        if (this._lastPhrase === phrase &&
-            this._lastResult !== null) {
-            return this._lastResult;
+        if (this._lastTrainPhrase === phrase &&
+            this._lastTrainResult !== null) {
+            return this._lastTrainResult;
         }
 
-        this._lastPhrase = phrase;
+        this._lastTrainPhrase = phrase;
         const _this = this;
         let promise = new Promise((resolve)=>{
         this.makeTrainingCall(phrase,
@@ -330,7 +330,7 @@ class Scratch3TextClassify {
             }
             else {
                 result = 'Text Data Sent';
-                _this._lastResult = result;
+                _this._lastTrainResult = result;
                 resolve(result);
             }});
         });
